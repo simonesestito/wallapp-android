@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.TAG
 import kotlinx.android.synthetic.main.category_fragment.*
 
 class CategoryFragment : Fragment() {
@@ -29,6 +28,7 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        singleCategoryDemoText.text = arguments?.getString("category_id").toString()
+        val args = CategoryFragmentArgs.fromBundle(arguments)
+        singleCategoryDemoText.text = args.category_id
     }
 }

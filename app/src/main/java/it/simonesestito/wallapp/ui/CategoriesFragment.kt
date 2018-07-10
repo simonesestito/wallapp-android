@@ -36,7 +36,8 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         categoriesFragmentDemoText.setOnClickListener { v ->
-            v.findNavController().navigate(R.id.categoryFragment, bundleOf("category_id" to "ciao"))
+            val direction = CategoriesFragmentDirections.action_categoriesFragment_to_categoryFragment2("ciao")
+            v.findNavController().navigate(direction)
         }
     }
 }
