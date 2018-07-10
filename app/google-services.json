@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "637150678980",
+    "firebase_url": "https://wallapp-b7805.firebaseio.com",
+    "project_id": "wallapp-b7805",
+    "storage_bucket": "wallapp-b7805.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637150678980:android:27dfde5b6c79247c",
+        "android_client_info": {
+          "package_name": "it.simonesestito.wallapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637150678980-34d9q01qdtdf0omh6v33jtk54fjkcpv3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.simonesestito.wallapp",
+            "certificate_hash": "9a7129dfcb4c5e99d8d54a71d7fe56f7ffbf9873"
+          }
+        },
+        {
+          "client_id": "637150678980-uivvlc0hfcm5tg6cb1p5cl4v8up1qa7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4kR9Bh93rTqSciKaeLnByFIELE7C2Auo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637150678980-uivvlc0hfcm5tg6cb1p5cl4v8up1qa7o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637150678980-tss55frvvgfb3c9dqjd48f7uha228qv2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "paologiubilato.wallApp"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

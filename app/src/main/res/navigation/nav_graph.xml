@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/categoriesFragment">
+
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="it.simonesestito.wallapp.ui.CategoriesFragment"
+        android:label="categories_fragment"
+        tools:layout="@layout/categories_fragment" >
+        <action
+            android:id="@+id/action_categoriesFragment_to_categoryFragment2"
+            app:destination="@id/categoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="it.simonesestito.wallapp.ui.CategoryFragment"
+        android:label="category_fragment"
+        tools:layout="@layout/category_fragment" >
+        <argument
+            android:name="category_id"
+            app:type="string" />
+    </fragment>
+    <argument
+        android:name="category_id"
+        app:type="string" />
+</navigation>
