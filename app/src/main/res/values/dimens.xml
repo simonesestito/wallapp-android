@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_drawable_padding">16dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_content_padding">8dp</dimen>
+    <dimen name="activity_content_margin">12dp</dimen>
+    <dimen name="card_cover_bottom_margin">8dp</dimen>
+    <dimen name="outline_chip_stroke_width">1dp</dimen>
+</resources>
