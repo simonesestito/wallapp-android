@@ -1,20 +1,9 @@
 package it.simonesestito.wallapp.model
 
-import android.os.Parcel
-import android.os.Parcelable
+import it.simonesestito.wallapp.annotations.WallpaperFormat
 
 
-data class Wallpaper(val id: String): Parcelable {
-    constructor(parcel: Parcel) : this(parcel.readString())
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-    }
-
-    override fun describeContents() = this.hashCode()
-
-    companion object CREATOR : Parcelable.Creator<Wallpaper> {
-        override fun createFromParcel(parcel: Parcel)= Wallpaper(parcel)
-        override fun newArray(size: Int): Array<Wallpaper?> = arrayOfNulls(size)
-    }
+data class Wallpaper(val id: String, val categoryId: String) {
+    fun getStoragePath(@WallpaperFormat format: String)
+            = "categories/$categoryId/wallpapers/$id/$format.png"
 }

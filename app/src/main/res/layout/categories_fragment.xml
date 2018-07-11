@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.CategoriesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/categoriesFragmentDemoText"
-        android:text="@string/hello_blank_fragment" />
+        android:text="TEST - REMOVE THIS" />
 
 </FrameLayout>
