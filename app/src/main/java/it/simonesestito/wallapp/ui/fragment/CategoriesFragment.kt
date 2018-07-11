@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.ui
+package it.simonesestito.wallapp.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.TAG
+import it.simonesestito.wallapp.ui.CategoriesFragmentDirections
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
 
