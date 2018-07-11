@@ -8,19 +8,17 @@
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="it.simonesestito.wallapp.ui.CategoriesFragment"
-        android:label="@string/categoriesFragmentTitle"
         tools:layout="@layout/categories_fragment" >
         <action
-            android:id="@+id/action_categoriesFragment_to_categoryFragment2"
+            android:id="@+id/toCategory"
             app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
         android:name="it.simonesestito.wallapp.ui.CategoryFragment"
-        android:label="@string/categoryFragmentTitle"
         tools:layout="@layout/category_fragment" >
         <argument
-            android:name="category_id"
+            android:name="categoryId"
             app:type="string" />
     </fragment>
     <argument
