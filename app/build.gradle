@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -34,8 +35,15 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.0-beta01'
 
     // Firebase
-    implementation "com.google.firebase:firebase-core:16.0.1"
-    implementation "com.google.firebase:firebase-firestore:17.0.2"
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-firestore:17.0.2'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+
+    // Firebase UI
+    implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.8.0-SNAPSHOT'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0-SNAPSHOT'
+
 
     // Android Testing
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
