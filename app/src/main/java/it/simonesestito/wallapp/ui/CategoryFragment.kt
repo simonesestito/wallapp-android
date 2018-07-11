@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 
 import it.simonesestito.wallapp.R
+import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.category_fragment.*
 
 class CategoryFragment : Fragment() {

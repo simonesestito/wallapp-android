@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.ui
+package it.simonesestito.wallapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import it.simonesestito.wallapp.persistence.repository.CategoryRepository

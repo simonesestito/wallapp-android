@@ -5,13 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.TAG
+import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
 
 class CategoriesFragment : Fragment() {
