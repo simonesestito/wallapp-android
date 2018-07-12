@@ -21,7 +21,4 @@
             android:name="categoryId"
             app:type="string" />
     </fragment>
-    <argument
-        android:name="category_id"
-        app:type="string" />
 </navigation>
