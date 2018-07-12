@@ -10,7 +10,7 @@ data class Category(
         val wallpapersCount: Long
 ) {
     val coverUrl: String
-        get() = "$STORAGE_CATEGORIES/$id/$FORMAT_COVER.jpg"
+        get() = "$STORAGE_CATEGORIES/$id/$FORMAT_COVER"
 
     constructor(id: String, map: Map<String, Any>) : this(
             id = id,
