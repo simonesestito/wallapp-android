@@ -7,8 +7,10 @@
     <!-- Support colors are used in pre-v27 API -->
     <color name="navigationBarColor">#FAFAFA</color>
     <color name="navigationBarSupportColor">#000000</color>
-    <color name="statusBarColor">#FFFFFF</color>
+    <color name="statusBarColor">#FAFAFA</color>
     <color name="statusBarSupportColor">@color/colorPrimaryDark</color>
+    <color name="actionBarColor">#FAFAFA</color>
+
     <color name="outline_chip_stroke_color">#424242</color>
     <color name="outline_chip_background_color">#00000000</color>
 

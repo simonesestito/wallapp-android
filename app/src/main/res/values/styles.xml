@@ -4,6 +4,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarTheme">@style/AppTheme.LightActionBar</item>
+    </style>
+
+    <style name="AppTheme.LightActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/actionBarColor</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
