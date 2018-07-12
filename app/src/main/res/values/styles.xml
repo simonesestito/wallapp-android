@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
         <item name="actionBarTheme">@style/AppTheme.LightActionBar</item>
     </style>
 
     <style name="AppTheme.LightActionBar" parent="Base.Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/actionBarColor</item>
+        <item name="android:background">@color/action_bar_color</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:navigationBarColor">@color/navigationBarSupportColor</item>
-        <item name="android:statusBarColor">@color/statusBarSupportColor</item>
+        <item name="android:navigationBarColor">@color/navigation_bar_support_color</item>
+        <item name="android:statusBarColor">@color/status_bar_support_color</item>
     </style>
 </resources>

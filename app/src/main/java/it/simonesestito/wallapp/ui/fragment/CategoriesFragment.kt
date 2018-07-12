@@ -40,15 +40,15 @@ class CategoriesFragment : Fragment() {
             if (mainActivity == null || mainActivity !is MainActivity)
                 return@onScrollListener
 
-            val adapter = recyclerView.layoutManager
-            if (adapter == null || adapter !is LinearLayoutManager)
+            val layoutManager = recyclerView.layoutManager
+            if (layoutManager == null || layoutManager !is LinearLayoutManager)
                 return@onScrollListener
 
             // Find the first completely visible item
             // If it's the first one, hide the elevation
             // Else show it
             // Show the elevation only if the RecyclerView is scrolled
-            val firstIndex = adapter.findFirstCompletelyVisibleItemPosition()
+            val firstIndex = layoutManager.findFirstCompletelyVisibleItemPosition()
             if (firstIndex == 0)
                 mainActivity.hideAppbarElevation()
             else
