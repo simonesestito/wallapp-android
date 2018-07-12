@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import it.simonesestito.wallapp.MainActivity
 import it.simonesestito.wallapp.R
+import it.simonesestito.wallapp.onScrollListener
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
@@ -33,6 +35,25 @@ class CategoriesFragment : Fragment() {
         view.categoriesRecyclerView.adapter = categoriesAdapter
         view.categoriesRecyclerView.layoutManager = LinearLayoutManager(context)
 
+        view.categoriesRecyclerView.onScrollListener { recyclerView ->
+            val mainActivity = activity
+            if (mainActivity == null || mainActivity !is MainActivity)
+                return@onScrollListener
+
+            val adapter = recyclerView.layoutManager
+            if (adapter == null || adapter !is LinearLayoutManager)
+                return@onScrollListener
+
+            // Find the first completely visible item
+            // If it's the first one, hide the elevation
+            // Else show it
+            // Show the elevation only if the RecyclerView is scrolled
+            val firstIndex = adapter.findFirstCompletelyVisibleItemPosition()
+            if (firstIndex == 0)
+                mainActivity.hideAppbarElevation()
+            else
+                mainActivity.showAppbarElevation()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,5 +80,11 @@ class CategoriesFragment : Fragment() {
                 categoriesEmptyView.visibility = View.VISIBLE
             }
         })
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        // Reset default appbar elevation on fragment detach
+        (activity as MainActivity?)?.hideAppbarElevation()
     }
 }

@@ -6,4 +6,6 @@
     <dimen name="activity_content_margin">12dp</dimen>
     <dimen name="card_cover_bottom_margin">8dp</dimen>
     <dimen name="outline_chip_stroke_width">1dp</dimen>
+    <dimen name="default_appbar_elevation">0dp</dimen>
+    <dimen name="scroll_appbar_elevation">8dp</dimen>
 </resources>
