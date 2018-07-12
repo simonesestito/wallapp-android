@@ -15,7 +15,6 @@
             android:id="@+id/categoryItemCoverImage"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginBottom="@dimen/card_cover_bottom_margin"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
