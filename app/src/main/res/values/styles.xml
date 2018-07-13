@@ -7,7 +7,7 @@
         <item name="actionBarTheme">@style/AppTheme.LightActionBar</item>
     </style>
 
-    <style name="AppTheme.LightActionBar" parent="Base.Widget.AppCompat.ActionBar">
+    <style name="AppTheme.LightActionBar" parent="Base.Widget.AppCompat.Light.ActionBar">
         <item name="android:background">@color/action_bar_color</item>
     </style>
 
