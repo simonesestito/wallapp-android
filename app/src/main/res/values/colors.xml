@@ -5,13 +5,14 @@
     <color name="color_accent">#00B0FF</color>
 
     <!-- Support colors are used in pre-v27 API -->
-    <color name="navigation_bar_color">#FAFAFA</color>
+    <color name="navigation_bar_color">@color/activity_background_color</color>
     <color name="navigation_bar_support_color">#000000</color>
-    <color name="status_bar_color">#FAFAFA</color>
+    <color name="status_bar_color">@color/activity_background_color</color>
     <color name="status_bar_support_color">@color/color_primary_dark</color>
-    <color name="action_bar_color">#FAFAFA</color>
+    <color name="action_bar_color">@color/activity_background_color</color>
 
     <color name="outline_chip_stroke_color">#424242</color>
     <color name="outline_chip_background_color">#00000000</color>
+    <color name="activity_background_color">#FAFAFA</color>
 
 </resources>

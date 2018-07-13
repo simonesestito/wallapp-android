@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import it.simonesestito.wallapp.MainActivity
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.onScrollListener
+import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
@@ -53,6 +54,11 @@ class CategoriesFragment : Fragment() {
                 mainActivity.hideAppbarElevation()
             else
                 mainActivity.showAppbarElevation()
+        }
+        categoriesAdapter.onItemClick {
+            val direction = CategoriesFragmentDirections.toCategory(it.id)
+            NavHostFragment.findNavController(this)
+                    .navigate(direction)
         }
     }
 

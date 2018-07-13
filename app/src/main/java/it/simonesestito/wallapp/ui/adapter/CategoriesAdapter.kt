@@ -15,11 +15,16 @@ import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
 class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<CategoriesVH>() {
     private val data = mutableListOf<Category>()
+    private var onItemClickListener: ((Category) -> Unit)? = null
 
     fun updateDataSet(newData: List<Category>) {
         data.clear()
         data.addAll(newData)
         notifyDataSetChanged()
+    }
+
+    fun onItemClick(listener: (Category) -> Unit) {
+        this.onItemClickListener = listener
     }
 
     override fun getItemCount() = data.size
@@ -35,6 +40,11 @@ class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<Cat
             setDescription(category.description)
             setWallpapersCount(category.wallpapersCount)
             loadImage(ref)
+        }
+        holder.itemView.tag = position
+        holder.itemView.setOnClickListener {
+            val index = it.tag as Int
+            onItemClickListener?.invoke(data[index])
         }
     }
 

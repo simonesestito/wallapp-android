@@ -1,9 +1,10 @@
-package it.simonesestito.wallapp
+package it.simonesestito.wallapp.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import it.simonesestito.wallapp.R
 
 class MainActivity : AppCompatActivity() {
     private val defaultAppbarElevation by lazy {

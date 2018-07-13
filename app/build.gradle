@@ -42,8 +42,8 @@ dependencies {
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0-SNAPSHOT'
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     kapt 'com.github.bumptech.glide:compiler:4.8.0-SNAPSHOT'
-
 
     // Android Testing
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
