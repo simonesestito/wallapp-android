@@ -14,5 +14,6 @@
     <color name="outline_chip_stroke_color">#424242</color>
     <color name="outline_chip_background_color">#00000000</color>
     <color name="activity_background_color">#FAFAFA</color>
+    <color name="placeholder_image_background">#bdbdbd</color>
 
 </resources>

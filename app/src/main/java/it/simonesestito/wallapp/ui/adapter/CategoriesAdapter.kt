@@ -31,7 +31,6 @@ class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<Cat
 
     override fun onBindViewHolder(holder: CategoriesVH, position: Int) {
         val category = data[position]
-
         val ref = FirebaseStorage.getInstance()
                 .getReference(category.coverUrl)
 
@@ -46,6 +45,13 @@ class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<Cat
             val index = it.tag as Int
             onItemClickListener?.invoke(data[index])
         }
+    }
+
+    override fun onViewDetachedFromWindow(holder: CategoriesVH) {
+        super.onViewDetachedFromWindow(holder)
+        holder.itemView
+                .categoryItemCoverImage
+                .setImageDrawable(context.getDrawable(R.drawable.ic_image_placeholder))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesVH {
@@ -67,13 +73,14 @@ class CategoriesVH(item: View, private val context: Context) : RecyclerView.View
 
     fun setWallpapersCount(count: Long) {
         itemView.categoryItemWallpapersCount.text =
-            context.getString(R.string.category_wallpapers_count_prefix, count)
+                context.getString(R.string.category_wallpapers_count_prefix, count)
     }
 
     fun loadImage(imageRef: StorageReference) {
         GlideApp
                 .with(context)
                 .load(imageRef)
+                .placeholder(R.drawable.ic_image_placeholder)
                 .into(itemView.categoryItemCoverImage)
     }
 }
