@@ -13,8 +13,12 @@ import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.category_fragment.*
 
 class CategoryFragment : Fragment() {
-    private lateinit var viewModel: MainViewModel
-    private lateinit var args: CategoryFragmentArgs
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+    private val args: CategoryFragmentArgs by lazy {
+        CategoryFragmentArgs.fromBundle(arguments)
+    }
 
     private val categoryArgsKey = "categoryId"
 
@@ -26,8 +30,6 @@ class CategoryFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        args = CategoryFragmentArgs.fromBundle(arguments)
         viewModel.getCategoryById(args.categoryId).observe(this, Observer {
             singleCategoryDemoText.text = it.displayName
         })
