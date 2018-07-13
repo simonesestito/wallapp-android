@@ -18,7 +18,9 @@ import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 
 class CategoriesFragment : Fragment() {
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
     private lateinit var categoriesAdapter: CategoriesAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +66,6 @@ class CategoriesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.getCategories().observe(this, Observer { list ->
             // Hide loading spinner
             categoriesLoadingBar.hide()
