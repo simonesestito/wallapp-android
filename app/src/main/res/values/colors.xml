@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">#FFFFFF</color>
+    <color name="color_primary">#FAFAFA</color>
     <color name="color_primary_dark">#757575</color>
     <color name="color_accent">#00B0FF</color>
 
@@ -13,7 +13,7 @@
 
     <color name="outline_chip_stroke_color">#424242</color>
     <color name="outline_chip_background_color">#00000000</color>
-    <color name="activity_background_color">#FAFAFA</color>
+    <color name="activity_background_color">@color/color_primary</color>
     <color name="placeholder_image_background">#bdbdbd</color>
 
 </resources>
