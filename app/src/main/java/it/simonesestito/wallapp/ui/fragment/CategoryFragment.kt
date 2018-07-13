@@ -9,13 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.ui.activity.CategoryActivityArgs
-import it.simonesestito.wallapp.viewmodel.CategoryViewModel
+import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.category_fragment.*
 
 class CategoryFragment : Fragment() {
-    private lateinit var viewModel: CategoryViewModel
-    private lateinit var args: CategoryActivityArgs
+    private lateinit var viewModel: MainViewModel
+    private lateinit var args: CategoryFragmentArgs
 
     private val categoryArgsKey = "categoryId"
 
@@ -27,13 +26,12 @@ class CategoryFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
-        args = CategoryActivityArgs.fromBundle(arguments)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        args = CategoryFragmentArgs.fromBundle(arguments)
         viewModel.getCategoryById(args.categoryId).observe(this, Observer {
             singleCategoryDemoText.text = it.displayName
         })
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(categoryArgsKey, args.categoryId)
