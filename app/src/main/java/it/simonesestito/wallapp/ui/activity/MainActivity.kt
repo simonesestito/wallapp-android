@@ -21,8 +21,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        setupActionBarWithNavController(this, findNavController(R.id.navHostFragment))
+        val navController = findNavController(R.id.navHostFragment)
+        setupActionBarWithNavController(this, navController)
         hideAppbarElevation()
+        navController.addOnNavigatedListener { _, _ ->
+            hideAppbarElevation()
+        }
     }
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
