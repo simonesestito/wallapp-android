@@ -5,9 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import it.simonesestito.wallapp.FIRESTORE_CATEGORIES
 import it.simonesestito.wallapp.livedata.FirestoreLiveCollection
 import it.simonesestito.wallapp.livedata.FirestoreLiveDocument
-import it.simonesestito.wallapp.map
-import it.simonesestito.wallapp.mapList
 import it.simonesestito.wallapp.model.Category
+import it.simonesestito.wallapp.utils.map
+import it.simonesestito.wallapp.utils.mapList
 
 
 object CategoryRepository {
