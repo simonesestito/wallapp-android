@@ -1,9 +1,10 @@
 package it.simonesestito.wallapp.model
 
 import it.simonesestito.wallapp.annotations.WallpaperFormat
+import it.simonesestito.wallapp.utils.Identifiable
 
 
-data class Wallpaper(val id: String, val categoryId: String) {
+data class Wallpaper(override val id: String, val categoryId: String) : Identifiable<String> {
     fun getStoragePath(@WallpaperFormat format: String)
             = "categories/$categoryId/wallpapers/$id/$format"
 }

@@ -2,13 +2,14 @@ package it.simonesestito.wallapp.model
 
 import it.simonesestito.wallapp.STORAGE_CATEGORIES
 import it.simonesestito.wallapp.annotations.FORMAT_COVER
+import it.simonesestito.wallapp.utils.Identifiable
 
 data class Category(
-        val id: String,
+        override val id: String,
         val displayName: String,
         val description: String,
         val wallpapersCount: Long
-) {
+) : Identifiable<String> {
     val coverUrl: String
         get() = "$STORAGE_CATEGORIES/$id/$FORMAT_COVER"
 
