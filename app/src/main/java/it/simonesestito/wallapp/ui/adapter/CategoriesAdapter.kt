@@ -4,12 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import it.simonesestito.wallapp.GlideApp
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.model.Category
+import it.simonesestito.wallapp.utils.DiffUtilCallback
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
 
@@ -18,9 +20,16 @@ class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<Cat
     private var onItemClickListener: ((Category) -> Unit)? = null
 
     fun updateDataSet(newData: List<Category>) {
+        // Calculate diff between lists using DiffUtil
+        val callback = DiffUtilCallback(data, newData)
+        val result = DiffUtil.calculateDiff(callback)
+
+        // Update the local adapter list
         data.clear()
         data.addAll(newData)
-        notifyDataSetChanged()
+
+        // Dispatch calculated changes
+        result.dispatchUpdatesTo(this)
     }
 
     fun onItemClick(listener: (Category) -> Unit) {
