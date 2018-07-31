@@ -58,7 +58,7 @@ class CategoriesListFragment : Fragment() {
                 mainActivity.showAppbarElevation()
         }
         categoriesAdapter.onItemClick {
-            val direction = CategoriesFragmentDirections.toCategory(it.id)
+            val direction = CategoriesListFragmentDirections.toCategory(it.id)
             NavHostFragment.findNavController(this)
                     .navigate(direction)
         }

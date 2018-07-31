@@ -16,8 +16,8 @@ class SingleCategoryFragment : Fragment() {
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
-    private val args: CategoryFragmentArgs by lazy {
-        CategoryFragmentArgs.fromBundle(arguments)
+    private val args by lazy {
+        SingleCategoryFragmentArgs.fromBundle(arguments)
     }
 
     private val categoryArgsKey = "categoryId"
