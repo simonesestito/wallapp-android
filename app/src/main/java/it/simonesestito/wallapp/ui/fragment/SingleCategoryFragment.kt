@@ -12,7 +12,7 @@ import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.category_fragment.*
 
-class CategoryFragment : Fragment() {
+class SingleCategoryFragment : Fragment() {
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
