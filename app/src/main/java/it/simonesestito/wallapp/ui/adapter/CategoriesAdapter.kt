@@ -47,13 +47,6 @@ class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<Cat
         }
     }
 
-    override fun onViewDetachedFromWindow(holder: CategoriesVH) {
-        super.onViewDetachedFromWindow(holder)
-        holder.itemView
-                .categoryItemCoverImage
-                .setImageDrawable(context.getDrawable(R.drawable.ic_image_placeholder))
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesVH {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.categories_recycler_item, parent, false)
