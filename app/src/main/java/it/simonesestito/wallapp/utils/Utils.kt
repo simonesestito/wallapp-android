@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp
+package it.simonesestito.wallapp.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations

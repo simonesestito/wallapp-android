@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.onScrollListener
 import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
+import it.simonesestito.wallapp.utils.onScrollListener
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
