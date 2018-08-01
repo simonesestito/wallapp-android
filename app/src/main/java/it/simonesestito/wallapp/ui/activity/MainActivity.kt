@@ -23,13 +23,18 @@ class MainActivity : AppCompatActivity() {
         super.onPostCreate(savedInstanceState)
         val navController = findNavController(R.id.navHostFragment)
         setupActionBarWithNavController(this, navController)
-        hideAppbarElevation()
+        resetAppbar()
         navController.addOnNavigatedListener { _, _ ->
-            hideAppbarElevation()
+            resetAppbar() // Reset appbar to default when fragment changed
         }
     }
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
+
+    private fun resetAppbar() {
+        hideAppbarElevation()
+        title = getString(R.string.app_name)
+    }
 
     fun showAppbarElevation() {
         supportActionBar?.elevation = scrollAppbarElevation

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ ~ Apply this drawable as background on an ImageView
+ ~ and call setClipToOutline(true)
+ -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/imageview_rounded_corner" />
+</shape>

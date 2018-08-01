@@ -1,8 +1,12 @@
 package it.simonesestito.wallapp.utils
 
+import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.storage.StorageReference
+import it.simonesestito.wallapp.GlideApp
+import it.simonesestito.wallapp.R
 
 val Any.TAG: String
     get() = this.javaClass.simpleName
@@ -24,4 +28,12 @@ inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) ->
             listener(recyclerView)
         }
     })
+}
+
+fun ImageView.setFirebaseImage(imageRef: StorageReference) {
+    GlideApp
+            .with(this.context)
+            .load(imageRef)
+            .placeholder(R.drawable.ic_image_placeholder)
+            .into(this)
 }
