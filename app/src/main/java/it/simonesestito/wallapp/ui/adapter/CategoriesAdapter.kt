@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import it.simonesestito.wallapp.GlideApp
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.model.Category
 import it.simonesestito.wallapp.utils.DiffUtilCallback
+import it.simonesestito.wallapp.utils.setFirebaseImage
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
 
@@ -47,7 +46,7 @@ class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<Cat
             setName(category.displayName)
             setDescription(category.description)
             setWallpapersCount(category.wallpapersCount)
-            loadImage(ref)
+            itemView.categoryItemCoverImage.setFirebaseImage(ref)
         }
         holder.itemView.tag = position
         holder.itemView.setOnClickListener {
@@ -76,13 +75,5 @@ class CategoriesVH(item: View, private val context: Context) : RecyclerView.View
     fun setWallpapersCount(count: Long) {
         itemView.categoryItemWallpapersCount.text =
                 context.getString(R.string.category_wallpapers_count_prefix, count)
-    }
-
-    fun loadImage(imageRef: StorageReference) {
-        GlideApp
-                .with(context)
-                .load(imageRef)
-                .placeholder(R.drawable.ic_image_placeholder)
-                .into(itemView.categoryItemCoverImage)
     }
 }

@@ -37,6 +37,7 @@ class CategoriesListFragment : Fragment() {
         // Set initial RecyclerView status, without any data
         view.categoriesRecyclerView.adapter = categoriesAdapter
         view.categoriesRecyclerView.layoutManager = LinearLayoutManager(context)
+        view.categoriesRecyclerView.setHasFixedSize(true)
 
         view.categoriesRecyclerView.onScrollListener { recyclerView ->
             val mainActivity = activity
@@ -59,6 +60,7 @@ class CategoriesListFragment : Fragment() {
         }
         categoriesAdapter.onItemClick {
             val direction = CategoriesListFragmentDirections.toCategory(it.id)
+                    .setCategoryTitle(it.displayName)
             NavHostFragment.findNavController(this)
                     .navigate(direction)
         }
