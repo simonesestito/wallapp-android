@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import it.simonesestito.wallapp.GlideApp
 import it.simonesestito.wallapp.R
@@ -32,8 +33,13 @@ inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) ->
 
 fun ImageView.setFirebaseImage(imageRef: StorageReference) {
     GlideApp
-            .with(this.context)
+            .with(context)
             .load(imageRef)
             .placeholder(R.drawable.ic_image_placeholder)
             .into(this)
 }
+
+fun ImageView.setFirebaseImage(url: String) = setFirebaseImage(
+        FirebaseStorage.getInstance()
+                .getReference(url)
+)

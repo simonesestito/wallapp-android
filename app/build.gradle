@@ -25,18 +25,19 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
 
     // AndroidX
     implementation 'com.google.android.material:material:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha02'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha02'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha04'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha04'
     implementation 'androidx.core:core-ktx:1.0.0-beta01'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-firestore:17.0.2'
+    implementation 'com.google.firebase:firebase-firestore:17.0.4'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
 
     // Firebase UI
@@ -48,8 +49,8 @@ dependencies {
     // Android Testing
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -41,7 +41,7 @@ class CategoriesListFragment : Fragment() {
 
         view.categoriesRecyclerView.onScrollListener { recyclerView ->
             val mainActivity = activity
-            if (mainActivity == null || mainActivity !is MainActivity)
+            if (mainActivity == null || mainActivity !is MainActivity?)
                 return@onScrollListener
 
             val layoutManager = recyclerView.layoutManager
