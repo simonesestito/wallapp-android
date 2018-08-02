@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.model.Category
-import it.simonesestito.wallapp.model.Wallpaper
+import it.simonesestito.wallapp.data.model.Category
+import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.single_category_fragment.*

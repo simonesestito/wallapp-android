@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
-import it.simonesestito.wallapp.model.Wallpaper
+import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.utils.setFirebaseImage
 import kotlinx.android.synthetic.main.wallpaper_item.view.*
 
