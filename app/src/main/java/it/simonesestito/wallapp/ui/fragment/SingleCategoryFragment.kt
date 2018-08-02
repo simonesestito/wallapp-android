@@ -1,6 +1,7 @@
 package it.simonesestito.wallapp.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.data.model.Category
 import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
+import it.simonesestito.wallapp.utils.TAG
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
@@ -21,10 +23,10 @@ class SingleCategoryFragment : Fragment() {
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
-    private val args by lazy {
+    private val args: SingleCategoryFragmentArgs by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments)
     }
-    private lateinit var adapter: WallpapersAdapter
+    private val adapter: WallpapersAdapter by lazy { WallpapersAdapter() }
 
     // Keep the current live data in memory
     // So in case of necessity, we can remove any observer
@@ -52,10 +54,23 @@ class SingleCategoryFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.onItemClickListener = { wallpaper ->
+            Log.d(TAG, "onItemClick received with ID ${wallpaper.id}")
+            SingleCategoryFragmentDirections
+                    .toWallpaperDetails(wallpaper.categoryId, wallpaper.id)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        adapter.onItemClickListener = null
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.getCategoryById(args.categoryId).observe(this, Observer { category ->
-            adapter = WallpapersAdapter()
             activity?.title = category.displayName
             populateView(category)
         })

@@ -58,7 +58,7 @@ class CategoriesListFragment : Fragment() {
             else
                 mainActivity.showAppbarElevation()
         }
-        categoriesAdapter.onItemClick {
+        categoriesAdapter.onItemClickListener = {
             val direction = CategoriesListFragmentDirections.toCategory(it.id)
                     .setCategoryTitle(it.displayName)
             NavHostFragment.findNavController(this)
@@ -68,7 +68,7 @@ class CategoriesListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.getCategories().observe(this, Observer { list ->
+        viewModel.categories.observe(this, Observer { list ->
             // Hide loading spinner
             categoriesLoadingBar.hide()
 
