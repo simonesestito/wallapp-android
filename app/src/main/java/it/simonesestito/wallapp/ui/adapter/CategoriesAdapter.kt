@@ -12,11 +12,7 @@ import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
 
 class CategoriesAdapter(private val context: Context) : AsyncAdapter<Category, CategoriesVH>() {
-    private var onItemClickListener: ((Category) -> Unit)? = null
-
-    fun onItemClick(listener: (Category) -> Unit) {
-        this.onItemClickListener = listener
-    }
+    var onItemClickListener: ((Category) -> Unit)? = null
 
     override fun onBindViewHolder(holder: CategoriesVH, position: Int) {
         val category = data[position]
@@ -27,7 +23,7 @@ class CategoriesAdapter(private val context: Context) : AsyncAdapter<Category, C
             setWallpapersCount(category.wallpapersCount)
             setImage(category.coverUrl)
             itemView.setOnClickListener {
-                onItemClickListener?.invoke(data[position])
+                onItemClickListener?.invoke(category)
             }
         }
     }

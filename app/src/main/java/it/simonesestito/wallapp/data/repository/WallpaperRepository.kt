@@ -6,6 +6,8 @@ import it.simonesestito.wallapp.FIRESTORE_CATEGORIES
 import it.simonesestito.wallapp.FIRESTORE_WALLPAPERS
 import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.livedata.FirestoreLiveCollection
+import it.simonesestito.wallapp.livedata.FirestoreLiveDocument
+import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 
 object WallpaperRepository {
@@ -13,6 +15,17 @@ object WallpaperRepository {
         val ref = FirebaseFirestore.getInstance()
                 .collection("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS")
 
-        return FirestoreLiveCollection(ref).mapList { Wallpaper(it.id, categoryId) }
+        return FirestoreLiveCollection(ref).mapList {
+            Wallpaper(it.id, categoryId)
+        }
+    }
+
+    fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper> {
+        val ref = FirebaseFirestore.getInstance()
+                .document("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS/$wallpaperId")
+
+        return FirestoreLiveDocument(ref).map {
+            Wallpaper(it.id, categoryId)
+        }
     }
 }
