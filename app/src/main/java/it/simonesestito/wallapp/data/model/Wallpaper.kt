@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.model
+package it.simonesestito.wallapp.data.model
 
 import it.simonesestito.wallapp.annotations.WallpaperFormat
 import it.simonesestito.wallapp.utils.Identifiable

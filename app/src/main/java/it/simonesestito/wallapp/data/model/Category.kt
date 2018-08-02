@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.model
+package it.simonesestito.wallapp.data.model
 
 import it.simonesestito.wallapp.STORAGE_CATEGORIES
 import it.simonesestito.wallapp.annotations.FORMAT_COVER

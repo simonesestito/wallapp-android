@@ -1,8 +1,8 @@
 package it.simonesestito.wallapp.viewmodel
 
 import androidx.lifecycle.ViewModel
-import it.simonesestito.wallapp.persistence.repository.CategoryRepository
-import it.simonesestito.wallapp.persistence.repository.WallpaperRepository
+import it.simonesestito.wallapp.data.repository.CategoryRepository
+import it.simonesestito.wallapp.data.repository.WallpaperRepository
 
 class MainViewModel : ViewModel() {
     private val categories = CategoryRepository.getCategories()

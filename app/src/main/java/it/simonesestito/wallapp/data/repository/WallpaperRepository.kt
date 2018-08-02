@@ -1,11 +1,11 @@
-package it.simonesestito.wallapp.persistence.repository
+package it.simonesestito.wallapp.data.repository
 
 import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import it.simonesestito.wallapp.FIRESTORE_CATEGORIES
 import it.simonesestito.wallapp.FIRESTORE_WALLPAPERS
+import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.livedata.FirestoreLiveCollection
-import it.simonesestito.wallapp.model.Wallpaper
 import it.simonesestito.wallapp.utils.mapList
 
 object WallpaperRepository {
