@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="it.simonesestito.wallapp.ui.fragment.CategoriesListFragment"
-        tools:layout="@layout/categories_fragment" >
+        tools:layout="@layout/categories_fragment">
         <action
             android:id="@+id/toCategory"
             app:destination="@id/categoryFragment"
@@ -20,13 +20,15 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="it.simonesestito.wallapp.ui.fragment.SingleCategoryFragment"
-        tools:layout="@layout/category_fragment" >
+        tools:layout="@layout/single_category_fragment">
         <argument
             android:name="categoryId"
-            app:type="string" />
+            app:argType="string"
+            app:nullable="false" />
         <argument
             android:name="categoryTitle"
             android:defaultValue="@string/app_name"
-            app:type="string" />
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 </navigation>

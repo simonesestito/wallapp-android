@@ -9,4 +9,6 @@
     <dimen name="scroll_appbar_elevation">8dp</dimen>
     <dimen name="single_category_details_margin">48dp</dimen>
     <dimen name="imageview_rounded_corner">8dp</dimen>
+    <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="wallpaper_item_card_width">280dp</dimen>
 </resources>
