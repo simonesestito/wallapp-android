@@ -11,7 +11,7 @@
         android:layout_margin="36dp"
         android:gravity="center" />
 
-    <com.yarolegovich.discretescrollview.DiscreteScrollView
+    <it.simonesestito.wallapp.ui.DiscreteRecyclerView
         android:id="@+id/wallpapersRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

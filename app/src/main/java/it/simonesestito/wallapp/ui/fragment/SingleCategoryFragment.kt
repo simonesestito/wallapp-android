@@ -1,7 +1,6 @@
 package it.simonesestito.wallapp.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.data.model.Category
 import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
-import it.simonesestito.wallapp.utils.TAG
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
@@ -57,9 +56,10 @@ class SingleCategoryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         adapter.onItemClickListener = { wallpaper ->
-            Log.d(TAG, "onItemClick received with ID ${wallpaper.id}")
-            SingleCategoryFragmentDirections
+            val directions = SingleCategoryFragmentDirections
                     .toWallpaperDetails(wallpaper.categoryId, wallpaper.id)
+            NavHostFragment.findNavController(this)
+                    .navigate(directions)
         }
     }
 
@@ -79,11 +79,6 @@ class SingleCategoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.title = args.categoryTitle
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(categoryArgsKey, args.categoryId)
-        super.onSaveInstanceState(outState)
     }
 
     private fun populateView(category: Category) {
