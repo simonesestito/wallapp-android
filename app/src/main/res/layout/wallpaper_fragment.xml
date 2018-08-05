@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- From https://gist.github.com/simonesestito/edf434544ed8bf6ef23ae5e9af625149 -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,13 +7,51 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/wallpaperImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        app:backgroundTint="@color/activity_background_color"
         app:layout_anchor="@+id/wallpaperImage"
         app:layout_anchorGravity="bottom|center" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab"
+        style="@style/Widget.MaterialComponents.Button.TextButton.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:elevation="4dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/fab_wallpaper_action_download"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:backgroundTint="?attr/colorAccent"
+        app:cornerRadius="32dp"
+        app:icon="@drawable/ic_file_download_black_24dp"
+        app:iconPadding="12dp"
+        app:iconSize="24dp"
+        app:iconTint="@android:color/white"
+        app:layout_anchor="@+id/bottomAppBar"
+        app:layout_anchorGravity="top|center" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/backButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@android:color/transparent"
+        android:tint="@android:color/white"
+        app:layout_anchor="@+id/wallpaperImage"
+        app:layout_anchorGravity="left|top"
+        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
