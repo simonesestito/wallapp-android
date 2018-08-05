@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">WallApp</string>
     <string name="categories_empty_view_text">No categories found :/</string>
-    <string name="category_wallpapers_count_prefix">Wallpapers: %d</string>
+    <string name="category_wallpapers_count_prefix">%d wallpapers</string>
 </resources>

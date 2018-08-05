@@ -21,13 +21,13 @@ class CategoriesListFragment : Fragment() {
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
-    private lateinit var categoriesAdapter: CategoriesAdapter
+    private val categoriesAdapter: CategoriesAdapter by lazy {
+        CategoriesAdapter()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        categoriesAdapter = CategoriesAdapter(inflater.context)
-        return inflater.inflate(R.layout.categories_fragment, container, false)
-    }
+                              savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.categories_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

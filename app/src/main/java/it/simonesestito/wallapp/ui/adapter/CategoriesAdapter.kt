@@ -11,7 +11,7 @@ import it.simonesestito.wallapp.utils.setFirebaseImage
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
 
-class CategoriesAdapter(private val context: Context) : AsyncAdapter<Category, CategoriesVH>() {
+class CategoriesAdapter : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
 
     override fun onBindViewHolder(holder: CategoriesVH, position: Int) {
@@ -31,7 +31,7 @@ class CategoriesAdapter(private val context: Context) : AsyncAdapter<Category, C
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesVH {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.categories_recycler_item, parent, false)
-        return CategoriesVH(view, context)
+        return CategoriesVH(view, parent.context)
     }
 
 }

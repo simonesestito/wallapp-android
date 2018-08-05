@@ -31,14 +31,10 @@ class SingleCategoryFragment : Fragment() {
     // So in case of necessity, we can remove any observer
     private var oldLiveData: LiveData<List<Wallpaper>>? = null
 
-    // Used to save the current category ID on state
-    private val categoryArgsKey = "categoryId"
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View? =
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.single_category_fragment, container, false)
-    }
+            inflater.inflate(R.layout.single_category_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,7 +44,7 @@ class SingleCategoryFragment : Fragment() {
             setSlideOnFlingThreshold(500)
             setItemTransformer(ScaleTransformer.Builder()
                     .setMaxScale(1.0f)
-                    .setMinScale(0.7f)
+                    .setMinScale(0.85f)
                     .build())
         }
     }
