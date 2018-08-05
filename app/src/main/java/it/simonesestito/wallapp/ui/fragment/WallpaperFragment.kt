@@ -1,15 +1,16 @@
 package it.simonesestito.wallapp.ui.fragment
 
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.data.model.Wallpaper
 import it.simonesestito.wallapp.ui.activity.MainActivity
+import it.simonesestito.wallapp.utils.TAG
+import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
 import it.simonesestito.wallapp.utils.setFirebaseImage
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 
@@ -24,15 +25,15 @@ class WallpaperFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // TODO: change format to display here
-        view.wallpaperImage.setFirebaseImage(currentWallpaper.getStoragePath(FORMAT_PREVIEW))
+        val format = getSuggestedWallpaperFormat(resources.displayMetrics)
+        Log.d(TAG, format)
+        view.wallpaperImage.setFirebaseImage(currentWallpaper.getStoragePath(format))
     }
 
     override fun onResume() {
         super.onResume()
         if (activity is MainActivity) {
             (activity as MainActivity).supportActionBar?.hide()
-            activity?.window?.statusBarColor = Color.TRANSPARENT
         }
     }
 
@@ -40,7 +41,6 @@ class WallpaperFragment : Fragment() {
         super.onPause()
         if (activity is MainActivity) {
             (activity as MainActivity).supportActionBar?.show()
-            // TODO: reset status bar color
         }
     }
 }
