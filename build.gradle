@@ -22,10 +22,12 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenLocal()
         maven {
             name 'glide-snapshot'
             url 'http://oss.sonatype.org/content/repositories/snapshots'
         }
+        maven { url "https://dl.bintray.com/lion4ik/maven" }
     }
 }
 

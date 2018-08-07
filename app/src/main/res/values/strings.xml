@@ -3,4 +3,6 @@
     <string name="categories_empty_view_text">No categories found :/</string>
     <string name="category_wallpapers_count_prefix">%d wallpapers</string>
     <string name="fab_wallpaper_action_download">Download</string>
+    <string name="wallpaper_action_share">Share link</string>
+    <string name="fab_wallpaper_action_preview">Try it</string>
 </resources>

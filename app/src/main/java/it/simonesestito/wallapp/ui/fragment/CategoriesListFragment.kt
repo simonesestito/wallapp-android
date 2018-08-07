@@ -4,20 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
+import it.simonesestito.wallapp.utils.findNavController
 import it.simonesestito.wallapp.utils.onScrollListener
 import it.simonesestito.wallapp.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 
-class CategoriesListFragment : Fragment() {
+class CategoriesListFragment : AbstractAppFragment() {
+    override val title
+        get() = getString(R.string.app_name)
+
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
@@ -40,10 +41,6 @@ class CategoriesListFragment : Fragment() {
         view.categoriesRecyclerView.setHasFixedSize(true)
 
         view.categoriesRecyclerView.onScrollListener { recyclerView ->
-            val mainActivity = activity
-            if (mainActivity == null || mainActivity !is MainActivity?)
-                return@onScrollListener
-
             val layoutManager = recyclerView.layoutManager
             if (layoutManager == null || layoutManager !is LinearLayoutManager)
                 return@onScrollListener
@@ -54,15 +51,13 @@ class CategoriesListFragment : Fragment() {
             // Show the elevation only if the RecyclerView is scrolled
             val firstIndex = layoutManager.findFirstCompletelyVisibleItemPosition()
             if (firstIndex == 0)
-                mainActivity.hideAppbarElevation()
+                hideAppbarElevation()
             else
-                mainActivity.showAppbarElevation()
+                showAppbarElevation()
         }
         categoriesAdapter.onItemClickListener = {
-            val direction = CategoriesListFragmentDirections.toCategory(it.id)
-                    .setCategoryTitle(it.displayName)
-            NavHostFragment.findNavController(this)
-                    .navigate(direction)
+            val direction = CategoriesListFragmentDirections.toCategory(it)
+            findNavController().navigate(direction)
         }
     }
 
@@ -89,11 +84,5 @@ class CategoriesListFragment : Fragment() {
                 categoriesEmptyView.visibility = View.VISIBLE
             }
         })
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        // Reset default appbar elevation on fragment detach
-        (activity as MainActivity?)?.hideAppbarElevation()
     }
 }

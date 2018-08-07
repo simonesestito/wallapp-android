@@ -1,62 +1,46 @@
 package it.simonesestito.wallapp.ui
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import androidx.core.os.postDelayed
-import androidx.customview.view.AbsSavedState
 import androidx.recyclerview.widget.RecyclerView
 import com.yarolegovich.discretescrollview.DiscreteScrollView
+import it.simonesestito.wallapp.utils.TAG
+
+const val KEY_SAVED_SUPER_STATE = "super_state"
+const val KEY_SAVED_LAYOUT_STATE = "layout_state"
 
 class DiscreteRecyclerView(context: Context, attributeSet: AttributeSet) : DiscreteScrollView(context, attributeSet) {
 
-    override fun onSaveInstanceState(): Parcelable? {
-        val superState = super.onSaveInstanceState()!!
-        return DiscreteState(currentItem, superState)
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putParcelable(KEY_SAVED_SUPER_STATE, super.onSaveInstanceState())
+        bundle.putInt(KEY_SAVED_LAYOUT_STATE, currentItem)
+        return bundle
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        if (state is DiscreteState) {
-            delayedScrollToPosition(state.currentItem)
-            super.onRestoreInstanceState(state.superState)
+        if (state is Bundle) {
+            super.onRestoreInstanceState(state.getParcelable<Parcelable>(KEY_SAVED_SUPER_STATE))
+            delayedScrollToPosition(state.getInt(KEY_SAVED_LAYOUT_STATE))
         } else {
             super.onRestoreInstanceState(state)
         }
     }
 
-    fun delayedScrollToPosition(currentItem: Int, delay: Long = 150) {
-        Handler(Looper.getMainLooper()).postDelayed(delay) {
-            scrollToPosition(currentItem)
-        }
+    override fun setAdapter(adapter: RecyclerView.Adapter<*>?) {
+        super.setAdapter(adapter)
+        Log.d(TAG, "Discrete adapter set")
     }
 
-    /**
-     * Implementation similar to RecyclerView.SavedState
-     */
-    class DiscreteState : AbsSavedState {
-        val layoutState: Parcelable
-        val currentItem: Int
-
-        // Called by onRestoreInstanceState() when Parcelable needs to be recreated
-        constructor(input: Parcel, classLoader: ClassLoader?) : super(input, classLoader) {
-            this.layoutState = input.readParcelable(classLoader
-                    ?: RecyclerView.LayoutManager::class.java.classLoader)
-            this.currentItem = input.readInt()
-        }
-
-        // Called by onSaveInstanceState() to save state as a Parcelable
-        constructor(currentItem: Int, layoutState: Parcelable) : super(layoutState) {
-            this.layoutState = layoutState
-            this.currentItem = currentItem
-        }
-
-        override fun writeToParcel(dest: Parcel?, flags: Int) {
-            super.writeToParcel(dest, flags)
-            dest?.writeParcelable(layoutState, 0)
-            dest?.writeInt(currentItem)
+    private fun delayedScrollToPosition(currentItem: Int, delay: Long = 150) {
+        Handler(Looper.getMainLooper()).postDelayed(delay) {
+            scrollToPosition(currentItem)
         }
     }
 }
