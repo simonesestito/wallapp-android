@@ -1,17 +1,17 @@
 package it.simonesestito.wallapp.viewmodel
 
 import androidx.lifecycle.ViewModel
-import it.simonesestito.wallapp.data.repository.CategoryRepository
-import it.simonesestito.wallapp.data.repository.WallpaperRepository
+import it.simonesestito.wallapp.backend.service.CategoryService
+import it.simonesestito.wallapp.backend.service.WallpaperService
 
 class MainViewModel : ViewModel() {
-    val categories by lazy { CategoryRepository.getCategories() }
+    val categories by lazy { CategoryService.getCategories() }
 
-    fun getCategoryById(id: String) = CategoryRepository.getCategoryById(id)
+    fun getCategoryById(id: String) = CategoryService.getCategoryById(id)
 
     fun getWallpapersByCategoryId(categoryId: String) =
-            WallpaperRepository.getWallpapersByCategoryId(categoryId)
+            WallpaperService.getWallpapersByCategoryId(categoryId)
 
     fun getWallpaperById(categoryId: String, wallpaperId: String) =
-            WallpaperRepository.getWallpaper(categoryId, wallpaperId)
+            WallpaperService.getWallpaper(categoryId, wallpaperId)
 }

@@ -19,35 +19,24 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="it.simonesestito.wallapp.ui.fragment.SingleCategoryFragment"
-        tools:layout="@layout/single_category_fragment">
-        <argument
-            android:name="categoryId"
-            app:argType="string"
-            app:nullable="false" />
-        <argument
-            android:name="categoryTitle"
-            android:defaultValue="@string/app_name"
-            app:argType="string"
-            app:nullable="false" />
+        android:name="it.simonesestito.wallapp.ui.fragment.SingleCategoryFragment">
         <action
             android:id="@+id/toWallpaperDetails"
-            app:destination="@id/wallpaperFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fast_fade_out"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/wallpaperFragment" />
+        <argument
+            android:name="category"
+            app:argType="it.simonesestito.wallapp.backend.model.Category" />
     </fragment>
     <fragment
         android:id="@+id/wallpaperFragment"
         android:name="it.simonesestito.wallapp.ui.fragment.WallpaperFragment">
         <argument
-            android:name="categoryId"
-            app:argType="string"
-            app:nullable="false" />
+            android:name="wallpaper"
+            app:argType="it.simonesestito.wallapp.backend.model.Wallpaper" />
         <argument
-            android:name="wallpaperId"
+            android:name="transitionName"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="false" />
+            app:nullable="true" />
     </fragment>
 </navigation>

@@ -1,10 +1,12 @@
 package it.simonesestito.wallapp.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import it.simonesestito.wallapp.R
+import it.simonesestito.wallapp.utils.TAG
 
 class MainActivity : AppCompatActivity() {
     private val defaultAppbarElevation by lazy {
@@ -21,18 +23,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
+        hideAppbarElevation()
         val navController = findNavController(R.id.navHostFragment)
         setupActionBarWithNavController(this, navController)
-        navController.addOnNavigatedListener { _, _ ->
-            resetAppbar() // Reset appbar to default when fragment changed
-        }
     }
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 
-    private fun resetAppbar() {
-        title = getString(R.string.app_name)
-        hideAppbarElevation()
+    override fun setTitle(title: CharSequence?) {
+        super.setTitle(title)
+        Log.e((this as Any).TAG, title.toString())
     }
 
     fun showAppbarElevation() {

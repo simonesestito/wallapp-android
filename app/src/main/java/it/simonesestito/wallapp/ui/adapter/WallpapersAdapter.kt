@@ -3,15 +3,16 @@ package it.simonesestito.wallapp.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
-import it.simonesestito.wallapp.data.model.Wallpaper
-import it.simonesestito.wallapp.utils.setFirebaseImage
+import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.backend.service.WallpaperService
 import kotlinx.android.synthetic.main.wallpaper_item.view.*
 
 class WallpapersAdapter : AsyncAdapter<Wallpaper, WallpapersVH>() {
-    var onItemClickListener: ((Wallpaper) -> Unit)? = null
+    var onItemClickListener: WallpaperClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WallpapersVH {
         val view = LayoutInflater.from(parent.context)
@@ -22,9 +23,14 @@ class WallpapersAdapter : AsyncAdapter<Wallpaper, WallpapersVH>() {
     override fun onBindViewHolder(holder: WallpapersVH, position: Int) {
         val wallpaper = data[position]
         holder.apply {
-            setImage(wallpaper.getStoragePath(FORMAT_PREVIEW))
+            WallpaperService.loadWallpaperOn(
+                    wallpaper,
+                    FORMAT_PREVIEW,
+                    wallpaperView
+            )
+            ViewCompat.setTransitionName(itemView, wallpaper.id)
             itemView.setOnClickListener {
-                onItemClickListener?.invoke(wallpaper)
+                onItemClickListener?.invoke(wallpaper, it)
             }
         }
     }
@@ -32,7 +38,7 @@ class WallpapersAdapter : AsyncAdapter<Wallpaper, WallpapersVH>() {
 }
 
 class WallpapersVH(view: View) : RecyclerView.ViewHolder(view) {
-    fun setImage(ref: String) {
-        itemView.wallpaperImagePreview.setFirebaseImage(ref)
-    }
+    val wallpaperView = itemView.wallpaperImagePreview!!
 }
+
+typealias WallpaperClickListener = (Wallpaper, View) -> Unit
