@@ -33,7 +33,7 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
 
     /**
      * Keep the current live data in memory
-     * So in case of necessity, we can remove any observer
+     * In case of necessity, we can remove any observer
      */
     private var oldLiveData: LiveData<List<Wallpaper>>? = null
 

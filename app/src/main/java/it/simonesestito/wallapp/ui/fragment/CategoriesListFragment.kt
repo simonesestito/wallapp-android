@@ -22,9 +22,7 @@ class CategoriesListFragment : AbstractAppFragment() {
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
-    private val categoriesAdapter: CategoriesAdapter by lazy {
-        CategoriesAdapter()
-    }
+    private val categoriesAdapter: CategoriesAdapter by lazy { CategoriesAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? =
