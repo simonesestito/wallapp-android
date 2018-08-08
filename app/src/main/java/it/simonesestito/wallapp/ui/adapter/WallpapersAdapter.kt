@@ -11,6 +11,9 @@ import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.service.WallpaperService
 import kotlinx.android.synthetic.main.wallpaper_item.view.*
 
+/**
+ * Wallpapers Adapter (format PREVIEW)
+ */
 class WallpapersAdapter : AsyncAdapter<Wallpaper, WallpapersVH>() {
     var onItemClickListener: WallpaperClickListener? = null
 
@@ -23,10 +26,10 @@ class WallpapersAdapter : AsyncAdapter<Wallpaper, WallpapersVH>() {
     override fun onBindViewHolder(holder: WallpapersVH, position: Int) {
         val wallpaper = data[position]
         holder.apply {
-            WallpaperService.loadWallpaperOn(
+            WallpaperService.loadWallpaper(
                     wallpaper,
                     FORMAT_PREVIEW,
-                    wallpaperView
+                    holder.wallpaperView
             )
             ViewCompat.setTransitionName(itemView, wallpaper.id)
             itemView.setOnClickListener {

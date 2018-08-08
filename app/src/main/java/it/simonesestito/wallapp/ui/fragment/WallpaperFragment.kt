@@ -13,7 +13,6 @@ import androidx.core.view.forEach
 import androidx.palette.graphics.Palette
 import androidx.transition.TransitionInflater
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.WallpaperService
 import it.simonesestito.wallapp.utils.*
@@ -78,13 +77,11 @@ class WallpaperFragment : AbstractAppFragment() {
 
         view.downloadFab.setOnClickListener { bottomSheetBehavior.show() }
 
-        WallpaperService.getWallpaperColor(context!!, args.wallpaper) { applyLayoutColor(it) }
-
-        WallpaperService.loadWallpaperOn(
+        WallpaperService.loadWallpaper(
                 args.wallpaper,
                 getSuggestedWallpaperFormat(resources.displayMetrics),
-                wallpaperImage,
-                showPlaceholder = true
+                imageView = wallpaperImage,
+                onPaletteReady = { applyLayoutColor(it) }
         )
     }
 

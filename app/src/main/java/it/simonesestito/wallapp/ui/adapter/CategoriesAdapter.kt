@@ -9,7 +9,9 @@ import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.service.CategoryService
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
-
+/**
+ * Adapter for categories list
+ */
 class CategoriesAdapter : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
 

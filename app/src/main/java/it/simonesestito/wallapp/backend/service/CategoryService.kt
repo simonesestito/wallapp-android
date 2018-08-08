@@ -13,7 +13,6 @@ import it.simonesestito.wallapp.utils.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 
-
 object CategoryService {
     fun getCategories(): LiveData<List<Category>> {
         val ref = FirebaseFirestore.getInstance()
