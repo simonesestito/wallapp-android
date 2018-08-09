@@ -2,7 +2,18 @@
     <string name="app_name">WallApp</string>
     <string name="categories_empty_view_text">No categories found :/</string>
     <string name="category_wallpapers_count_prefix">%d wallpapers</string>
-    <string name="fab_wallpaper_action_download">Download</string>
+    <string name="fab_wallpaper_action_download">Download wallpaper</string>
     <string name="wallpaper_action_share">Share link</string>
     <string name="fab_wallpaper_action_preview">Try it</string>
+    <string name="wallpaper_setup_bottom_sheet_location">Where to apply?</string>
+    <string name="wallpaper_setup_location_home">Home screen</string>
+    <string name="wallpaper_setup_location_lock">Lock screen</string>
+    <string name="wallpaper_setup_location_both">Both</string>
+    <string name="wallpaper_setup_bottom_sheet_format">Choose a format</string>
+    <string name="wallpaper_setup_bottom_sheet_format_description">Our wallpapers are available in different optimized sizes</string>
+    <string name="wallpaper_setup_apply_button">Apply</string>
+    <string name="wallpaper_format_16_9" translatable="false">16:9</string>
+    <string name="wallpaper_format_18_9" translatable="false">18:9</string>
+    <string name="wallpaper_format_iphone" translatable="false">Standard iPhone</string>
+    <string name="wallpaper_format_iphone_x" translatable="false">iPhone X</string>
 </resources>

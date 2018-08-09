@@ -29,6 +29,13 @@ const val FORMAT_PREVIEW = "preview.jpg"
 // It's used in categories only
 const val FORMAT_COVER = "cover.jpg"
 
+val downloadableFormats = arrayOf(
+        FORMAT_16_9,
+        FORMAT_18_9,
+        FORMAT_IPHONE,
+        FORMAT_IPHONE_X
+)
+
 val @receiver:WallpaperFormat String.dimensions: Dimensions
     get() = when (this) {
         FORMAT_16_9 -> Dimensions(1440, 2560)
