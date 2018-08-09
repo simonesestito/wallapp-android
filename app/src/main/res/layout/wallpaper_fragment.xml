@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.WallpaperFragment">
 
+    <!--
+     ~ Needed to anchor every view to a full parent view
+     ~ Don't use wallpaperImage because it moves in SharedElements transition
+    -->
     <View
         android:id="@+id/fake_content"
         android:layout_width="match_parent"
@@ -46,23 +50,5 @@
         app:layout_anchor="@+id/fake_content"
         app:layout_anchorGravity="left|top"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
-
-    <LinearLayout
-        android:id="@+id/wallpaperBottomSheet"
-        style="?attr/bottomSheetStyle"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@android:color/white"
-        android:elevation="@dimen/bottom_sheet_elevation"
-        app:behavior_hideable="true"
-        app:behavior_skipCollapsed="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-        <!-- TODO -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="TODO -- Empty BottomSheet" />
-    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:statusBarColor">@color/status_bar_color</item>
+
+    <style name="Base.V23.AppTheme" parent="Base.V21.AppTheme">
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
     </style>
+
+    <style name="AppTheme" parent="Base.V23.AppTheme" />
+
+    <style name="Base.V23.AppTheme.BottomSheet.Dialog" parent="Base.V21.AppTheme.BottomSheet.Dialog">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="AppTheme.BottomSheet.Dialog" parent="Base.V23.AppTheme.BottomSheet.Dialog" />
 </resources>
