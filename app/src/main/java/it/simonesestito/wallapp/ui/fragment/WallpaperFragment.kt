@@ -8,10 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.animation.DecelerateInterpolator
 import androidx.core.view.forEach
 import androidx.palette.graphics.Palette
-import androidx.transition.TransitionInflater
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.WallpaperService
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
@@ -23,38 +21,11 @@ import kotlinx.android.synthetic.main.wallpaper_fragment.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import com.bumptech.glide.request.transition.Transition as GlideTransition
 
-class WallpaperFragment : AbstractAppFragment() {
+class WallpaperFragment : SharedElementsDestination() {
     override val title = ""
 
     private val args by lazy {
         WallpaperFragmentArgs.fromBundle(arguments)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Pause enter transition and setup sharedElements one
-        postponeEnterTransition()
-        sharedElementEnterTransition = TransitionInflater.from(context)
-                .inflateTransition(android.R.transition.move)
-                .apply {
-                    interpolator = DecelerateInterpolator(2.0f)
-                    duration = 400
-                }
-                .addListener(
-                        onStart = {
-                            bottomAppBar?.visibility = View.INVISIBLE
-                            downloadFab?.hide()
-                        },
-                        onEnd = {
-                            bottomAppBar?.visibility = View.VISIBLE
-                            context ?: return@addListener
-                            val animation = AnimationUtils.loadAnimation(context, R.anim.bottom_bar_up)
-                                    .addListener(
-                                            onEnd = { downloadFab?.show() }
-                                    )
-                            bottomAppBar?.startAnimation(animation)
-                        }
-                )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -62,11 +33,6 @@ class WallpaperFragment : AbstractAppFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Finish to setup views for Shared Elements
-        view.wallpaperImage.transitionName = args.transitionName
-        prepareBottomMenu()
-        startPostponedEnterTransition()
-
         view.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -110,4 +76,28 @@ class WallpaperFragment : AbstractAppFragment() {
         val primaryIcons = if (isPrimaryLight) Color.DKGRAY else primary
         bottomAppBar.menu?.forEach { it.icon.setColorFilter(primaryIcons, PorterDuff.Mode.SRC_ATOP) }
     }
+
+    //region SharedElements methods
+    override fun onPreSharedElementsTransition() {
+        super.onPreSharedElementsTransition()
+        bottomAppBar?.visibility = View.INVISIBLE
+        downloadFab?.hide()
+    }
+
+    override fun onPostSharedElementsTransition() {
+        super.onPostSharedElementsTransition()
+        context ?: return
+        bottomAppBar?.visibility = View.VISIBLE
+        val animation = AnimationUtils.loadAnimation(context, R.anim.bottom_bar_up)
+                .addListener(
+                        onEnd = { downloadFab?.show() }
+                )
+        bottomAppBar?.startAnimation(animation)
+    }
+
+    override fun onPrepareSharedElements(createdView: View) {
+        createdView.wallpaperImage.transitionName = args.transitionName
+        prepareBottomMenu()
+    }
+    //endregion
 }
