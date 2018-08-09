@@ -4,7 +4,6 @@
     android:id="@+id/wallpaperBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
     android:elevation="@dimen/bottom_sheet_elevation"
     android:minHeight="200dp"
     android:orientation="vertical"
