@@ -1,0 +1,28 @@
+<androidx.appcompat.widget.ContentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wallpaperBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/bottom_sheet_elevation">
+
+    <include
+        android:id="@+id/wallpaperSetup"
+        layout="@layout/wallpaper_bottomsheet_setup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/wallpaperDownloading"
+        layout="@layout/wallpaper_bottomsheet_download"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/wallpaperFeedback"
+        layout="@layout/wallpaper_bottomsheet_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+
+</androidx.appcompat.widget.ContentFrameLayout>

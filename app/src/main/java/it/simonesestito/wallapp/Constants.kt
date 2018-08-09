@@ -12,3 +12,5 @@ const val KEY_CREATION_DATE = "creationDate"
 const val KEY_DISPLAY_NAME = "displayName"
 const val KEY_DESCRIPTION = "description"
 const val KEY_COUNT = "count"
+
+const val ARG_WALLPAPER_SETUP_PARCELABLE = "wallpaper_arg"

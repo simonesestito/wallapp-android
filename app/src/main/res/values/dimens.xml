@@ -14,4 +14,5 @@
     <dimen name="margin_separator_small">8dp</dimen>
     <dimen name="margin_separator_normal">16dp</dimen>
     <dimen name="bottom_appbar_cradle_radius">6dp</dimen>
+    <dimen name="wallpaper_feedback_image_size">48dp</dimen>
 </resources>
