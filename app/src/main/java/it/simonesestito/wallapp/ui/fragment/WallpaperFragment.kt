@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.os.bundleOf
 import androidx.core.view.forEach
 import androidx.palette.graphics.Palette
+import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.ARG_WALLPAPER_SETUP_PARCELABLE
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.WallpaperService
@@ -35,6 +36,13 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        WallpaperService.loadWallpaper(
+                args.wallpaper,
+                getSuggestedWallpaperFormat(resources.displayMetrics),
+                imageView = wallpaperImage,
+                onPaletteReady = { applyLayoutColor(it) }
+        )
+
         view.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -49,12 +57,14 @@ class WallpaperFragment : SharedElementsDestination() {
                     .show(childFragmentManager, null)
         }
 
-        WallpaperService.loadWallpaper(
-                args.wallpaper,
-                getSuggestedWallpaperFormat(resources.displayMetrics),
-                imageView = wallpaperImage,
-                onPaletteReady = { applyLayoutColor(it) }
-        )
+        view.bottomAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.wallpaperShare -> doShare()
+                R.id.wallpaperPreview -> doPreview()
+                else -> return@setOnMenuItemClickListener false
+            }
+            return@setOnMenuItemClickListener true
+        }
     }
 
     override fun onPause() {
@@ -65,10 +75,6 @@ class WallpaperFragment : SharedElementsDestination() {
     override fun onStart() {
         super.onStart()
         hideAppbar()
-    }
-
-    private fun prepareBottomMenu() {
-        bottomAppBar?.replaceMenu(R.menu.wallpaper_fragment_bottom_bar_menu)
     }
 
     private fun applyLayoutColor(palette: Palette) {
@@ -83,6 +89,16 @@ class WallpaperFragment : SharedElementsDestination() {
 
         val primaryIcons = if (isPrimaryLight) Color.DKGRAY else primary
         bottomAppBar.menu?.forEach { it.icon.setColorFilter(primaryIcons, PorterDuff.Mode.SRC_ATOP) }
+    }
+
+    private fun doShare() {
+        Snackbar.make(coordinatorRoot, R.string.available_soon, Snackbar.LENGTH_LONG).show()
+        // TODO
+    }
+
+    private fun doPreview() {
+        Snackbar.make(coordinatorRoot, R.string.available_soon, Snackbar.LENGTH_LONG).show()
+        // TODO
     }
 
     //region SharedElements methods
@@ -105,7 +121,7 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onPrepareSharedElements(createdView: View) {
         createdView.wallpaperImage.transitionName = args.transitionName
-        prepareBottomMenu()
+        bottomAppBar?.replaceMenu(R.menu.wallpaper_fragment_bottom_bar_menu)
     }
     //endregion
 }
