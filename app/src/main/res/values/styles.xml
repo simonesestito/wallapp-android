@@ -51,4 +51,10 @@
         <item name="chipStrokeColor">@color/outline_chip_stroke_color</item>
         <item name="android:textColor">@color/outline_chip_text_color</item>
     </style>
+
+    <!-- BottomAppBar theme -->
+    <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar">
+        <item name="fabCradleRoundedCornerRadius">@dimen/bottom_appbar_cradle_radius</item>
+        <item name="backgroundTint">@color/activity_background_color</item>
+    </style>
 </resources>

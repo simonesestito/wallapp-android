@@ -24,12 +24,12 @@
         android:scaleType="centerCrop" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
+        style="@style/AppTheme.BottomAppBar"
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        app:backgroundTint="@color/activity_background_color"
         app:fabAlignmentMode="center"
         app:layout_anchor="@+id/fake_content"
         app:layout_anchorGravity="bottom|center" />
