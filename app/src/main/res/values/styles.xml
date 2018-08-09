@@ -29,6 +29,7 @@
         <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+        <item name="colorAccent">@color/color_accent</item>
     </style>
 
     <style name="AppTheme.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
