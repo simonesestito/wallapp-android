@@ -20,4 +20,5 @@
     <string name="wallpaper_setup_status_success">Wallpaper applied! Enjoy</string>
     <string name="wallpaper_setup_status_failed">An error has occurred, please retry</string>
     <string name="wallpaper_setup_status_finalizing">Applying your wallpaper…</string>
+    <string name="available_soon">Coming soon, stay tuned!</string>
 </resources>

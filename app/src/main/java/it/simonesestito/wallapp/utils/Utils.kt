@@ -16,11 +16,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import it.simonesestito.wallapp.GlideRequest
 import it.simonesestito.wallapp.annotations.WallpaperFormat
 import it.simonesestito.wallapp.annotations.dimensions
 import it.simonesestito.wallapp.annotations.downloadableFormats
@@ -120,17 +115,3 @@ inline fun Animation.addListener(crossinline onStart: () -> Unit = {},
     })
     return this
 }
-
-inline fun <T> GlideRequest<T>.addListener(crossinline onFailed: () -> Unit = {},
-                                           crossinline onSuccess: (T) -> Unit = {}) =
-        addListener(object : RequestListener<T> {
-            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<T>?, isFirstResource: Boolean): Boolean {
-                onFailed()
-                return false
-            }
-
-            override fun onResourceReady(resource: T?, model: Any?, target: Target<T>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                onSuccess(resource!!)
-                return false
-            }
-        })
