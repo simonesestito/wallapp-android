@@ -68,7 +68,7 @@ object WallpaperService {
                 .getReference(wallpaper.getStorageFilePath(format))
 
         GlideApp
-                .with(imageView.context)
+                .with(imageView)
                 .asBitmap()
                 .load(imageRef)
                 .placeholder(R.drawable.ic_image_placeholder)
