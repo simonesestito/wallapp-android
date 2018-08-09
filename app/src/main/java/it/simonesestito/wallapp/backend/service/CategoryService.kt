@@ -46,7 +46,7 @@ object CategoryService {
                 .getReference("$STORAGE_CATEGORIES/$categoryId/$FORMAT_COVER")
 
         GlideApp
-                .with(imageView.context)
+                .with(imageView)
                 .load(imageRef)
                 .placeholder(R.drawable.ic_image_placeholder)
                 .into(imageView)
