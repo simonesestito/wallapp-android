@@ -20,7 +20,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import it.simonesestito.wallapp.GlideRequest
 import it.simonesestito.wallapp.annotations.WallpaperFormat
 import it.simonesestito.wallapp.annotations.dimensions
@@ -134,26 +133,4 @@ inline fun <T> GlideRequest<T>.addListener(crossinline onFailed: () -> Unit = {}
                 onSuccess(resource!!)
                 return false
             }
-        })
-
-fun BottomSheetBehavior<out View>.show() {
-    this.state = BottomSheetBehavior.STATE_EXPANDED
-}
-
-fun BottomSheetBehavior<out View>.hide() {
-    this.state = BottomSheetBehavior.STATE_HIDDEN
-}
-
-inline fun BottomSheetBehavior<out View>.setListener(crossinline onVisible: () -> Unit = {},
-                                                     crossinline onHidden: () -> Unit = {}) =
-        this.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(v: View, state: Int) {
-                if (state == BottomSheetBehavior.STATE_HIDDEN) {
-                    onHidden()
-                } else {
-                    onVisible()
-                }
-            }
-
-            override fun onSlide(v: View, offset: Float) {}
         })
