@@ -12,10 +12,13 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.view.forEach
 import androidx.palette.graphics.Palette
 import androidx.transition.TransitionInflater
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.WallpaperService
-import it.simonesestito.wallapp.utils.*
+import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
+import it.simonesestito.wallapp.utils.addListener
+import it.simonesestito.wallapp.utils.findNavController
+import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
+import it.simonesestito.wallapp.utils.isLightColor
 import kotlinx.android.synthetic.main.wallpaper_fragment.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import com.bumptech.glide.request.transition.Transition as GlideTransition
@@ -25,10 +28,6 @@ class WallpaperFragment : AbstractAppFragment() {
 
     private val args by lazy {
         WallpaperFragmentArgs.fromBundle(arguments)
-    }
-
-    private val bottomSheetBehavior: BottomSheetBehavior<out View> by lazy {
-        BottomSheetBehavior.from(wallpaperBottomSheet)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,9 +62,6 @@ class WallpaperFragment : AbstractAppFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Hide BottomSheet on startup
-        bottomSheetBehavior.hide()
-
         // Finish to setup views for Shared Elements
         view.wallpaperImage.transitionName = args.transitionName
         prepareBottomMenu()
@@ -75,7 +71,9 @@ class WallpaperFragment : AbstractAppFragment() {
             findNavController().popBackStack()
         }
 
-        view.downloadFab.setOnClickListener { bottomSheetBehavior.show() }
+        view.downloadFab.setOnClickListener { _ ->
+            WallpaperSetupBottomSheet().show(childFragmentManager, null)
+        }
 
         WallpaperService.loadWallpaper(
                 args.wallpaper,

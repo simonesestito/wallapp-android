@@ -12,5 +12,7 @@
     <dimen name="card_corner_radius">2dp</dimen>
     <dimen name="wallpaper_item_card_width">280dp</dimen>
     <dimen name="bottom_sheet_elevation">16dp</dimen>
-    <dimen name="bottom_sheet_peek_height">180dp</dimen>
+    <dimen name="bottom_sheet_corner_radius">8dp</dimen>
+    <dimen name="margin_separator_small">8dp</dimen>
+    <dimen name="margin_separator_normal">16dp</dimen>
 </resources>

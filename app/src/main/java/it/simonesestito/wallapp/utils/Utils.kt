@@ -22,10 +22,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import it.simonesestito.wallapp.GlideRequest
-import it.simonesestito.wallapp.annotations.FORMAT_16_9
-import it.simonesestito.wallapp.annotations.FORMAT_18_9
 import it.simonesestito.wallapp.annotations.WallpaperFormat
 import it.simonesestito.wallapp.annotations.dimensions
+import it.simonesestito.wallapp.annotations.downloadableFormats
 
 val Any.TAG: String
     get() = this.javaClass.simpleName
@@ -54,17 +53,15 @@ fun getSuggestedWallpaperFormat(displayMetrics: DisplayMetrics): String {
     // Calculate user aspect ratio
     val userRatio = displayMetrics.widthPixels / displayMetrics.heightPixels.toDouble()
 
-    val formats = arrayOf(FORMAT_16_9, FORMAT_18_9)
-
     // Find if user display is exactly one of the formats
-    formats.forEach { format ->
+    downloadableFormats.forEach { format ->
         if (format.dimensions.ratio == userRatio) {
             return format
         }
     }
 
     // If not exactly one of those formats, pick the best one
-    return formats
+    return downloadableFormats
             .sortedBy { format -> Math.abs(format.dimensions.ratio - userRatio) }
             .first()
 }
@@ -146,3 +143,17 @@ fun BottomSheetBehavior<out View>.show() {
 fun BottomSheetBehavior<out View>.hide() {
     this.state = BottomSheetBehavior.STATE_HIDDEN
 }
+
+inline fun BottomSheetBehavior<out View>.setListener(crossinline onVisible: () -> Unit = {},
+                                                     crossinline onHidden: () -> Unit = {}) =
+        this.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(v: View, state: Int) {
+                if (state == BottomSheetBehavior.STATE_HIDDEN) {
+                    onHidden()
+                } else {
+                    onVisible()
+                }
+            }
+
+            override fun onSlide(v: View, offset: Float) {}
+        })
