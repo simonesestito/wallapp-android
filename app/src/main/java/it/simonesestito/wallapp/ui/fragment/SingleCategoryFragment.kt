@@ -15,7 +15,7 @@ import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.utils.findNavController
-import it.simonesestito.wallapp.viewmodel.MainViewModel
+import it.simonesestito.wallapp.viewmodel.WallpaperViewModel
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
 
@@ -23,13 +23,13 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
     override val title
         get() = args.category.displayName
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    private val viewModel by lazy {
+        ViewModelProviders.of(this).get(WallpaperViewModel::class.java)
     }
-    private val args: SingleCategoryFragmentArgs by lazy {
+    private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments)
     }
-    private val adapter: WallpapersAdapter by lazy { WallpapersAdapter() }
+    private val adapter by lazy { WallpapersAdapter() }
 
     /**
      * Keep the current live data in memory
@@ -79,7 +79,7 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
         // Set category description
         categoryDescription.text = category.description
 
-        wallpapersRecyclerView.setAdapter(this.adapter)
+        wallpapersRecyclerView.adapter = this.adapter
 
         // If there was an old LiveData, unregister it
         oldLiveData?.removeObservers(this)

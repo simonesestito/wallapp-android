@@ -11,7 +11,7 @@ import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import it.simonesestito.wallapp.utils.findNavController
 import it.simonesestito.wallapp.utils.onScrollListener
-import it.simonesestito.wallapp.viewmodel.MainViewModel
+import it.simonesestito.wallapp.viewmodel.CategoryViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 
@@ -19,8 +19,8 @@ class CategoriesListFragment : AbstractAppFragment() {
     override val title
         get() = getString(R.string.app_name)
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    private val viewModel: CategoryViewModel by lazy {
+        ViewModelProviders.of(this).get(CategoryViewModel::class.java)
     }
     private val categoriesAdapter: CategoriesAdapter by lazy { CategoriesAdapter() }
 
