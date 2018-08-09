@@ -18,16 +18,14 @@
         android:layout_marginBottom="@dimen/margin_separator_normal"
         android:gravity="center_horizontal"
         android:text="@string/fab_wallpaper_action_download"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        android:textColor="@android:color/black" />
+        android:textAppearance="@style/AppTheme.Text.Title" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_separator_small"
         android:text="@string/wallpaper_setup_bottom_sheet_location"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@color/dark_gray" />
+        android:textAppearance="@style/AppTheme.Text.Subtitle" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/wallpaperLocationChipGroup"
@@ -62,15 +60,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/wallpaper_setup_bottom_sheet_format"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@color/dark_gray" />
+        android:textAppearance="@style/AppTheme.Text.Subtitle" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_separator_small"
         android:text="@string/wallpaper_setup_bottom_sheet_format_description"
-        android:textColor="@color/light_gray" />
+        android:textAppearance="@style/AppTheme.Text.Standard" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/wallpaperFormatChipGroup"
@@ -111,13 +108,12 @@
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="@string/wallpaper_setup_apply_button"
-        android:textColor="@color/outline_button_content_color"
-        app:icon="@drawable/ic_check_black_24dp"
-        app:iconTint="@color/outline_button_content_color" />
+        app:backgroundTint="@color/color_accent"
+        app:icon="@drawable/ic_check_black_24dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
