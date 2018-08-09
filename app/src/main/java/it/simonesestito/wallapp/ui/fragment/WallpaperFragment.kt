@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.os.bundleOf
 import androidx.core.view.forEach
 import androidx.palette.graphics.Palette
+import it.simonesestito.wallapp.ARG_WALLPAPER_SETUP_PARCELABLE
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.WallpaperService
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
@@ -37,8 +39,14 @@ class WallpaperFragment : SharedElementsDestination() {
             findNavController().popBackStack()
         }
 
-        view.downloadFab.setOnClickListener { _ ->
-            WallpaperSetupBottomSheet().show(childFragmentManager, null)
+        view.downloadFab.setOnClickListener {
+            WallpaperSetupBottomSheet()
+                    .apply {
+                        arguments = bundleOf(
+                                ARG_WALLPAPER_SETUP_PARCELABLE to args.wallpaper
+                        )
+                    }
+                    .show(childFragmentManager, null)
         }
 
         WallpaperService.loadWallpaper(

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/wallpaperBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="@dimen/bottom_sheet_elevation"
     android:minHeight="200dp"
     android:orientation="vertical"
-    android:padding="@dimen/activity_content_margin"
-    app:behavior_hideable="true"
-    app:behavior_skipCollapsed="true">
+    android:padding="@dimen/activity_content_margin">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
@@ -107,6 +103,7 @@
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/wallpaperApplyButton"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

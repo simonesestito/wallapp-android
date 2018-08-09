@@ -12,5 +12,7 @@
     <color name="placeholder_image_background">#bdbdbd</color>
     <color name="dark_gray">#616161</color>
     <color name="light_gray">#757575</color>
+    <color name="wallpaper_feedback_positive">#388e3c</color>
+    <color name="wallpaper_feedback_negative">#d50000</color>
 
 </resources>

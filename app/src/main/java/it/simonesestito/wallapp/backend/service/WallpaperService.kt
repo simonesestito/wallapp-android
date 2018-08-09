@@ -1,9 +1,14 @@
 package it.simonesestito.wallapp.backend.service
 
+import android.app.WallpaperManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.widget.ImageView
 import androidx.annotation.MainThread
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.request.target.SimpleTarget
@@ -12,13 +17,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import it.simonesestito.wallapp.*
-import it.simonesestito.wallapp.annotations.WallpaperFormat
+import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.utils.livedata.FirestoreLiveCollection
 import it.simonesestito.wallapp.utils.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 import java.io.File
+import java.io.IOException
 
 typealias PaletteListener = (Palette) -> Unit
 
@@ -127,9 +133,49 @@ object WallpaperService {
                 })
     }
 
-    fun downloadWallpaper(wallpaper: Wallpaper, @WallpaperFormat format: String, destination: File, onFinish: (Boolean, Exception?) -> Unit) =
+    fun downloadWallpaper(wallpaper: Wallpaper, @WallpaperFormat format: String, destination: File) =
             FirebaseStorage.getInstance()
                     .getReference(wallpaper.getStorageFilePath(format))
                     .getFile(destination)
-                    .addOnCompleteListener { onFinish(it.isSuccessful, it.exception) }
+
+    fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int) =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || location == WALLPAPER_LOCATION_BOTH) {
+                applyWallpaper(context, wallpaperFile)
+            } else {
+                applyWallpaper(context, wallpaperFile, location)
+            }
+
+    private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {
+        val systemWallpaperService =
+                ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
+
+        return try {
+            systemWallpaperService.setStream(wallpaperFile.inputStream())
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun applyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int): Boolean {
+        @WallpaperLocation val which: Int = when (location) {
+            WALLPAPER_LOCATION_HOME -> WallpaperManager.FLAG_SYSTEM
+            WALLPAPER_LOCATION_LOCK -> WallpaperManager.FLAG_LOCK
+            WALLPAPER_LOCATION_BOTH -> WallpaperManager.FLAG_LOCK or WallpaperManager.FLAG_LOCK
+            else -> throw IllegalArgumentException("Unknown location $location")
+        }
+
+        val systemWallpaperService =
+                ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
+
+        return try {
+            systemWallpaperService
+                    .setStream(wallpaperFile.inputStream(), null, true, which) != 0
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
 }
