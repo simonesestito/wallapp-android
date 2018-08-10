@@ -1,13 +1,17 @@
-package it.simonesestito.wallapp.viewmodel
+package it.simonesestito.wallapp.arch.viewmodel
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FileDownloadTask
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.backend.service.WallpaperService
+import it.simonesestito.wallapp.backend.repository.WallpaperRepository
+import it.simonesestito.wallapp.utils.*
 import java.io.File
 import android.service.wallpaper.WallpaperService as WallpaperManager
 
@@ -38,15 +42,40 @@ class WallpaperSetupViewModel : ViewModel() {
 
         mutableDownloadStatus.value = STATUS_DOWNLOADING
 
-        currentTempFile = createTempFile("wall-${wallpaper.id}-$format")
-        currentFirebaseTask = WallpaperService.downloadWallpaper(wallpaper, format, currentTempFile!!).apply {
+        currentTempFile = context.createCacheFile("wall-${wallpaper.id}-$format")
+        currentFirebaseTask = WallpaperRepository.downloadWallpaper(wallpaper, format, currentTempFile!!).apply {
             addOnCanceledListener { mutableDownloadStatus.value = STATUS_NOTHING }
             addOnFailureListener { mutableDownloadStatus.value = STATUS_ERROR }
             addOnSuccessListener { _ ->
                 mutableDownloadStatus.value = STATUS_FINALIZING
-                val success =
-                        WallpaperService.supportApplyWallpaper(context, currentTempFile!!, location)
+                val success = supportApplyWallpaper(context, currentTempFile!!, location)
                 mutableDownloadStatus.value = if (success) STATUS_SUCCESS else STATUS_ERROR
+            }
+        }
+    }
+
+    /**
+     * Apply a wallpaper in Preview Mode
+     * First, do a backup
+     * Then, apply the wallpaper to HOME location only
+     */
+    fun applyPreviewWallpaper(context: Context, wallpaper: Wallpaper) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            mutableDownloadStatus.value = STATUS_ERROR
+            return
+        }
+
+        mutableDownloadStatus.value = STATUS_INIT
+        context.runOnIoThread {
+            backupWallpaper(context)
+            runOnMainThread {
+                applyWallpaper(
+                        context,
+                        wallpaper,
+                        getSuggestedWallpaperFormat(context.resources.displayMetrics),
+                        WALLPAPER_LOCATION_HOME
+                )
             }
         }
     }

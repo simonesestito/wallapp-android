@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.utils.livedata
+package it.simonesestito.wallapp.arch.livedata
 
 import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentReference

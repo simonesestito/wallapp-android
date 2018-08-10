@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.backend.service.WallpaperService
+import it.simonesestito.wallapp.utils.loadWallpaper
 import kotlinx.android.synthetic.main.wallpaper_item.view.*
 
 /**
@@ -26,7 +26,7 @@ class WallpapersAdapter : AsyncAdapter<Wallpaper, WallpapersVH>() {
     override fun onBindViewHolder(holder: WallpapersVH, position: Int) {
         val wallpaper = data[position]
         holder.apply {
-            WallpaperService.loadWallpaper(
+            loadWallpaper(
                     wallpaper,
                     FORMAT_PREVIEW,
                     holder.wallpaperView

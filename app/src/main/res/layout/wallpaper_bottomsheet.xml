@@ -12,7 +12,7 @@
 
     <include
         android:id="@+id/wallpaperDownloading"
-        layout="@layout/wallpaper_bottomsheet_download"
+        layout="@layout/wallpaper_bottomsheet_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />

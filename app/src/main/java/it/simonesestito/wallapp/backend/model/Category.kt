@@ -2,10 +2,10 @@ package it.simonesestito.wallapp.backend.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import it.simonesestito.wallapp.Identifiable
 import it.simonesestito.wallapp.KEY_COUNT
 import it.simonesestito.wallapp.KEY_DESCRIPTION
 import it.simonesestito.wallapp.KEY_DISPLAY_NAME
-import it.simonesestito.wallapp.utils.Identifiable
 
 data class Category(
         override val id: String,

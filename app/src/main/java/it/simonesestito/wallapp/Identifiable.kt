@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.utils
+package it.simonesestito.wallapp
 
 /**
  * Interface used for objects with ID of any type

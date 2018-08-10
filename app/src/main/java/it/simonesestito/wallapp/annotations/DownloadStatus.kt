@@ -5,35 +5,41 @@ import androidx.annotation.IntDef
 
 @Retention(AnnotationRetention.SOURCE)
 @IntDef(
+        STATUS_NOTHING,
+        STATUS_INIT,
         STATUS_DOWNLOADING,
         STATUS_FINALIZING,
         STATUS_ERROR,
-        STATUS_SUCCESS,
-        STATUS_NOTHING
+        STATUS_SUCCESS
 )
 annotation class DownloadStatus
 
 /**
+ * Initialization process
+ */
+const val STATUS_INIT = 0
+
+/**
  * No download
  */
-const val STATUS_NOTHING = 0
+const val STATUS_NOTHING = 1
 
 /**
  * Download in progress
  */
-const val STATUS_DOWNLOADING = 1
+const val STATUS_DOWNLOADING = 2
 
 /**
  * Download finished but doing some finalization logic
  */
-const val STATUS_FINALIZING = 2
+const val STATUS_FINALIZING = 3
 
 /**
  * Download finished and finalized successfully
  */
-const val STATUS_SUCCESS = 3
+const val STATUS_SUCCESS = 4
 
 /**
  * An error has encountered in download or finalization process
  */
-const val STATUS_ERROR = 4
+const val STATUS_ERROR = 5

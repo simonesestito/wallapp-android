@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.backend.service
+package it.simonesestito.wallapp.backend.repository
 
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
@@ -7,13 +7,17 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_COVER
+import it.simonesestito.wallapp.arch.livedata.FirestoreLiveCollection
+import it.simonesestito.wallapp.arch.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.backend.model.Category
-import it.simonesestito.wallapp.utils.livedata.FirestoreLiveCollection
-import it.simonesestito.wallapp.utils.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 
-object CategoryService {
+object CategoryRepository {
+    /**
+     * List all the available categories from Firestore
+     * @return LiveData observing the categories list
+     */
     fun getCategories(): LiveData<List<Category>> {
         val ref = FirebaseFirestore.getInstance()
                 .collection(FIRESTORE_CATEGORIES)
@@ -28,6 +32,11 @@ object CategoryService {
         }
     }
 
+    /**
+     * Get the category document from Firestore
+     * @param id Category ID
+     * @return LiveData of the Firestore document
+     */
     fun getCategoryById(id: String): LiveData<Category> {
         val ref = FirebaseFirestore.getInstance()
                 .document("$FIRESTORE_CATEGORIES/$id")
@@ -40,6 +49,11 @@ object CategoryService {
         }
     }
 
+    /**
+     * Load cover image from Firebase Storage in a target [ImageView] asynchronously
+     * @param categoryId Category ID
+     * @param imageView Target ImageView
+     */
     fun loadCoverOn(categoryId: String, imageView: ImageView) {
         val imageRef = FirebaseStorage
                 .getInstance()
