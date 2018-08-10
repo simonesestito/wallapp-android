@@ -2,37 +2,63 @@ package it.simonesestito.wallapp.utils
 
 import android.app.Activity
 import android.app.ActivityManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
-import android.util.DisplayMetrics
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.Animation
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
-import it.simonesestito.wallapp.annotations.WallpaperFormat
-import it.simonesestito.wallapp.annotations.dimensions
-import it.simonesestito.wallapp.annotations.downloadableFormats
+import it.simonesestito.wallapp.WallApp
+import java.io.File
+import java.io.IOException
+import java.util.*
 
 val Any.TAG: String
     get() = this.javaClass.simpleName
 
+/**
+ * Detect if the given color is light
+ * @receiver color to test
+ * @return true if the color is light
+ */
+fun @receiver:ColorInt Int.isLightColor() =
+        ColorUtils.calculateLuminance(this) >= 0.5
+
+/**
+ * Map [LiveData] value
+ */
 fun <X, Y> LiveData<X>.map(converter: (X) -> Y): LiveData<Y> {
     return Transformations.map(this, converter)
 }
 
+/**
+ * Map all items in a list contained in a [LiveData]
+ */
 fun <L : List<I>, I, T> LiveData<L>.mapList(converter: (I) -> T): LiveData<List<T>> {
     return Transformations.map(this) { list ->
         list.map(converter)
     }
 }
 
+/**
+ * Add a listener to a [RecyclerView]
+ */
 inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) -> Unit) {
     this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -42,30 +68,21 @@ inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) ->
     })
 }
 
-@WallpaperFormat
-fun getSuggestedWallpaperFormat(displayMetrics: DisplayMetrics): String {
-    // Calculate user aspect ratio
-    val userRatio = displayMetrics.widthPixels / displayMetrics.heightPixels.toDouble()
-
-    // Find if user display is exactly one of the formats
-    downloadableFormats.forEach { format ->
-        if (format.dimensions.ratio == userRatio) {
-            return format
-        }
-    }
-
-    // If not exactly one of those formats, pick the best one
-    return downloadableFormats
-            .sortedBy { format -> Math.abs(format.dimensions.ratio - userRatio) }
-            .first()
-}
-
 fun Fragment.findNavController() = NavHostFragment.findNavController(this)
 
+/**
+ * Get an optimal size for [android.util.LruCache] classes
+ * Based on [ActivityManager.getMemoryClass] value
+ * @param divider
+ * @return Optimal size in Bytes
+ */
 fun Context.getOptimalCacheSize(divider: Int = 8) =
         ContextCompat.getSystemService(this, ActivityManager::class.java)!!
                 .memoryClass * 1024 * 1024 / divider
 
+/**
+ * Set light status bar altering [View.setSystemUiVisibility] flags
+ */
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.setLightStatusBar(light: Boolean) {
     val decorView = window?.decorView
@@ -82,6 +99,9 @@ fun Activity.setLightStatusBar(light: Boolean) {
     }
 }
 
+/**
+ * Set light navigation bar altering [View.setSystemUiVisibility] flags
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 fun Activity.setLightNavBar(light: Boolean) {
     val decorView = window?.decorView
@@ -98,6 +118,9 @@ fun Activity.setLightNavBar(light: Boolean) {
     }
 }
 
+/**
+ * Add a listener to a [Transition]
+ */
 inline fun Transition.addListener(crossinline onStart: () -> Unit = {},
                                   crossinline onEnd: () -> Unit = {}) =
         addListener(object : TransitionListenerAdapter() {
@@ -105,6 +128,9 @@ inline fun Transition.addListener(crossinline onStart: () -> Unit = {},
             override fun onTransitionEnd(transition: Transition) = onEnd()
         })
 
+/**
+ * Add a listener to an [Animation]
+ */
 inline fun Animation.addListener(crossinline onStart: () -> Unit = {},
                                  crossinline onEnd: () -> Unit = {},
                                  crossinline onRepeat: () -> Unit = {}): Animation {
@@ -115,3 +141,82 @@ inline fun Animation.addListener(crossinline onStart: () -> Unit = {},
     })
     return this
 }
+
+/**
+ * Try dismissing a [DialogFragment]
+ * Handle wrong state and bad visibility state
+ * @receiver Dialog to dismiss
+ * @return true in case it has been successfully dismissed
+ */
+fun DialogFragment.tryDismiss(): Boolean {
+    if (!isVisible) {
+        return false
+    }
+
+    return try {
+        dismiss()
+        true
+    } catch (_: IllegalStateException) {
+        false
+    }
+}
+
+/**
+ * Create a new file with random name in app cache
+ * @receiver Context needed to get app cache directory
+ * @param prefix File prefix
+ * @param suffix File extension, with the dot
+ * @throws IOException Error creating the file
+ * @return Created [File]
+ */
+@Throws(IOException::class)
+fun Context.createCacheFile(prefix: String, suffix: String = ".tmp"): File {
+    val uuid = UUID.randomUUID().toString()
+    val cacheDir = File(cacheDir, "$prefix-$uuid-$suffix")
+    cacheDir.createNewFile()
+    return cacheDir
+}
+
+/**
+ * Register a [BroadcastReceiver] to the [LocalBroadcastManager]
+ * @receiver Local broadcast manager where to register the receiver
+ * @param intentFilter
+ * @param receiver Lambda representation of the [BroadcastReceiver.onReceive]
+ */
+fun LocalBroadcastManager.registerReceiver(intentFilter: IntentFilter, receiver: (Intent) -> Boolean) =
+        registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.let {
+                    val hasToUnregister = receiver(intent)
+                    if (hasToUnregister) {
+                        unregisterReceiver(this)
+                    }
+                }
+            }
+        }, intentFilter)
+
+/**
+ * Check if a given list contains only the given element
+ * @receiver Given collection of the same type of the element
+ * @param element Given element
+ * @return true if it contains only the given element and list is not empty
+ */
+fun <T> Collection<T>.containsOnly(element: T): Boolean {
+    if (isEmpty()) {
+        return false
+    }
+    forEach {
+        if (it != element) {
+            return false
+        }
+    }
+    return true
+}
+
+fun Context.runOnIoThread(action: () -> Unit) {
+    val app = applicationContext as WallApp
+    app.ioThread.submit(action)
+}
+
+fun runOnMainThread(action: () -> Unit) =
+        Handler(Looper.getMainLooper()).post(action)

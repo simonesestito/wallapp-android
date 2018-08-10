@@ -10,33 +10,29 @@ import android.view.ViewGroup
 import androidx.core.os.postDelayed
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import it.simonesestito.wallapp.ARG_WALLPAPER_SETUP_PARCELABLE
+import it.simonesestito.wallapp.BOTTOMSHEET_AUTO_DISMISS_DELAY
+import it.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
+import it.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.*
+import it.simonesestito.wallapp.arch.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
-import it.simonesestito.wallapp.viewmodel.WallpaperSetupViewModel
+import it.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_download.*
+import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
-import java.lang.IllegalStateException
 
-private const val FADE_ANIMATION_DURATION = 120L
-private const val AUTO_DISMISS_WAIT_TIME = 2000L
-
-class WallpaperSetupBottomSheet : BottomSheetDialogFragment() {
+class WallpaperSetupBottomSheet : ThemedBottomSheet() {
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(WallpaperSetupViewModel::class.java)
     }
 
     private val wallpaperArg: Wallpaper by lazy {
-        arguments!!.getParcelable<Wallpaper>(ARG_WALLPAPER_SETUP_PARCELABLE)
+        arguments!!.getParcelable<Wallpaper>(EXTRA_WALLPAPER_SETUP_PARCELABLE)
     }
-
-    override fun getTheme() = R.style.AppTheme_BottomSheet_Dialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.wallpaper_bottomsheet, container, false)
@@ -90,7 +86,7 @@ class WallpaperSetupBottomSheet : BottomSheetDialogFragment() {
         // Fade out setup
         wallpaperSetup.animate()
                 .alpha(0f)
-                .setDuration(FADE_ANIMATION_DURATION)
+                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                 .withEndAction {
                     // Use INVISIBLE instead of GONE to preserve its space in layout
                     wallpaperSetup?.visibility = View.INVISIBLE
@@ -98,8 +94,8 @@ class WallpaperSetupBottomSheet : BottomSheetDialogFragment() {
 
         wallpaperDownloading.animate()
                 .alpha(1f)
-                .setDuration(FADE_ANIMATION_DURATION)
-                .setStartDelay(FADE_ANIMATION_DURATION)
+                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                 .withStartAction {
                     // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
                     wallpaperDownloading.alpha = 0f
@@ -129,7 +125,7 @@ class WallpaperSetupBottomSheet : BottomSheetDialogFragment() {
         wallpaperDownloading?.apply {
             animate()
                     .alpha(0f)
-                    .setDuration(FADE_ANIMATION_DURATION)
+                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                     .withEndAction {
                         wallpaperDownloading?.visibility = View.GONE
                     }.start()
@@ -138,8 +134,8 @@ class WallpaperSetupBottomSheet : BottomSheetDialogFragment() {
         wallpaperFeedback?.apply {
             animate()
                     .alpha(1f)
-                    .setDuration(FADE_ANIMATION_DURATION)
-                    .setStartDelay(FADE_ANIMATION_DURATION)
+                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                    .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                     .withStartAction {
                         wallpaperFeedback?.alpha = 0f
                         wallpaperFeedback?.visibility = View.VISIBLE
@@ -147,18 +143,8 @@ class WallpaperSetupBottomSheet : BottomSheetDialogFragment() {
         }
 
         // Auto dismiss after some time
-        Handler(Looper.myLooper()).postDelayed(AUTO_DISMISS_WAIT_TIME) {
-            if (this@WallpaperSetupBottomSheet.isVisible) {
-                tryDismiss()
-            }
-        }
-    }
-
-    private fun tryDismiss() {
-        try {
-            dismiss()
-        } catch (_: IllegalStateException) {
-            // Ignore.
+        Handler(Looper.myLooper()).postDelayed(BOTTOMSHEET_AUTO_DISMISS_DELAY) {
+            tryDismiss()
         }
     }
 

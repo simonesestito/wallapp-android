@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.utils
+package it.simonesestito.wallapp
 
 import androidx.recyclerview.widget.DiffUtil
 

@@ -8,10 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
+import it.simonesestito.wallapp.arch.viewmodel.CategoryViewModel
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import it.simonesestito.wallapp.utils.findNavController
 import it.simonesestito.wallapp.utils.onScrollListener
-import it.simonesestito.wallapp.viewmodel.CategoryViewModel
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
-import it.simonesestito.wallapp.backend.service.CategoryService
+import it.simonesestito.wallapp.backend.repository.CategoryRepository
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 
 /**
@@ -22,7 +22,7 @@ class CategoriesAdapter : AsyncAdapter<Category, CategoriesVH>() {
             nameView.text = category.displayName
             descriptionView.text = category.description
             setWallpapersCount(category.wallpapersCount)
-            CategoryService.loadCoverOn(category.id, coverView)
+            CategoryRepository.loadCoverOn(category.id, coverView)
             itemView.setOnClickListener {
                 onItemClickListener?.invoke(category)
             }

@@ -2,10 +2,10 @@ package it.simonesestito.wallapp.backend.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import it.simonesestito.wallapp.Identifiable
 import it.simonesestito.wallapp.STORAGE_CATEGORIES
 import it.simonesestito.wallapp.STORAGE_WALLPAPERS
 import it.simonesestito.wallapp.annotations.WallpaperFormat
-import it.simonesestito.wallapp.utils.Identifiable
 
 
 data class Wallpaper(override val id: String, val categoryId: String) : Identifiable<String>, Parcelable {

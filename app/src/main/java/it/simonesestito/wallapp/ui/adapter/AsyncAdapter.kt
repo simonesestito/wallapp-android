@@ -3,8 +3,8 @@ package it.simonesestito.wallapp.ui.adapter
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
-import it.simonesestito.wallapp.utils.DiffUtilCallback
-import it.simonesestito.wallapp.utils.Identifiable
+import it.simonesestito.wallapp.DiffUtilCallback
+import it.simonesestito.wallapp.Identifiable
 
 
 abstract class AsyncAdapter<T : Identifiable<*>, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {

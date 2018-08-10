@@ -1,25 +1,30 @@
 package it.simonesestito.wallapp.ui.fragment
 
+import android.Manifest
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.forEach
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.google.android.material.snackbar.Snackbar
-import it.simonesestito.wallapp.ARG_WALLPAPER_SETUP_PARCELABLE
-import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.backend.service.WallpaperService
+import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
-import it.simonesestito.wallapp.utils.addListener
-import it.simonesestito.wallapp.utils.findNavController
-import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
-import it.simonesestito.wallapp.utils.isLightColor
+import it.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import com.bumptech.glide.request.transition.Transition as GlideTransition
@@ -36,7 +41,7 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        WallpaperService.loadWallpaper(
+        loadWallpaper(
                 args.wallpaper,
                 getSuggestedWallpaperFormat(resources.displayMetrics),
                 imageView = wallpaperImage,
@@ -48,13 +53,7 @@ class WallpaperFragment : SharedElementsDestination() {
         }
 
         view.downloadFab.setOnClickListener {
-            WallpaperSetupBottomSheet()
-                    .apply {
-                        arguments = bundleOf(
-                                ARG_WALLPAPER_SETUP_PARCELABLE to args.wallpaper
-                        )
-                    }
-                    .show(childFragmentManager, null)
+            openSetupBottomSheet()
         }
 
         view.bottomAppBar.setOnMenuItemClickListener { menuItem ->
@@ -72,9 +71,65 @@ class WallpaperFragment : SharedElementsDestination() {
         downloadFab?.show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        activity?.intent?.let {
+            if (it.action == ACTION_PREVIEW_RESULT) {
+                restoreWallpaper(requireContext())
+
+                if (it.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, 0) ==
+                        RESULT_WALLPAPER_CONFIRMED) {
+                    openSetupBottomSheet()
+                }
+            }
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         hideAppbar()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_READ_STORAGE_PERMISSION -> {
+                if (grantResults.toList().containsOnly(PackageManager.PERMISSION_GRANTED)) {
+                    doPreview()
+                }
+            }
+        }
+    }
+
+    private fun openSetupBottomSheet() {
+        WallpaperSetupBottomSheet()
+                .apply {
+                    arguments = bundleOf(
+                            EXTRA_WALLPAPER_SETUP_PARCELABLE to args.wallpaper
+                    )
+                }
+                .show(childFragmentManager, null)
+    }
+
+    private fun openPreviewBottomSheet() {
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent ->
+                    val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
+                    restoreWallpaper(this.requireContext())
+                    if (result == RESULT_WALLPAPER_CONFIRMED) {
+                        // TODO Set confirmed wallpaper from preview mode
+                        Toast.makeText(requireContext(), R.string.todo_coming_soon_message, Toast.LENGTH_SHORT).show()
+                    }
+                    return@registerReceiver true
+                }
+
+        WallpaperPreviewBottomSheet()
+                .apply {
+                    arguments = bundleOf(
+                            EXTRA_WALLPAPER_SETUP_PARCELABLE to args.wallpaper
+                    )
+                }
+                .show(childFragmentManager, null)
     }
 
     private fun applyLayoutColor(palette: Palette) {
@@ -92,13 +147,34 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     private fun doShare() {
-        Snackbar.make(coordinatorRoot, R.string.available_soon, Snackbar.LENGTH_LONG).show()
-        // TODO
+        Snackbar.make(coordinatorRoot, R.string.todo_coming_soon_message, Snackbar.LENGTH_LONG).show()
+        // TODO Share wallpaper file
     }
 
     private fun doPreview() {
-        Snackbar.make(coordinatorRoot, R.string.available_soon, Snackbar.LENGTH_LONG).show()
-        // TODO
+        // Check Overlay permission
+        if (!requireContext().canDrawOverlays()) {
+            startActivityForResult(
+                    Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            "package:${BuildConfig.APPLICATION_ID}".toUri()
+                    ),
+                    REQUEST_PREVIEW_OVERLAY_PERMISSION
+            )
+            return
+        }
+
+        // Check EXTERNAL_STORAGE permission
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            return requestPermissionsRationale(
+                    R.string.permission_read_storage_request_message,
+                    REQUEST_READ_STORAGE_PERMISSION,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+
+        openPreviewBottomSheet()
     }
 
     //region SharedElements methods

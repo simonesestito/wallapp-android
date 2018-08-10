@@ -1,12 +1,10 @@
 package it.simonesestito.wallapp.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.utils.TAG
 
 class MainActivity : AppCompatActivity() {
     private val defaultAppbarElevation by lazy {
@@ -29,11 +27,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
-
-    override fun setTitle(title: CharSequence?) {
-        super.setTitle(title)
-        Log.e((this as Any).TAG, title.toString())
-    }
 
     fun showAppbarElevation() {
         supportActionBar?.elevation = scrollAppbarElevation
