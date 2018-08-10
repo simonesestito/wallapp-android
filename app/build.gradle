@@ -30,10 +30,10 @@ dependencies {
     // AndroidX
     implementation 'com.google.android.material:material:1.0.0-rc01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
     implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha04'
     implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha04'
-    implementation 'androidx.core:core-ktx:1.0.0-beta01'
+    implementation 'androidx.core:core-ktx:1.0.0-rc01'
     implementation 'androidx.palette:palette:1.0.0-beta01'
     implementation "com.github.lion4ik:arch-navigation-shared-elements:0.1"
 
@@ -49,7 +49,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.8.0-SNAPSHOT'
 
     // Android Testing
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-rc01'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
