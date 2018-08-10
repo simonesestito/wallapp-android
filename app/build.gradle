@@ -34,7 +34,7 @@ dependencies {
     implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha04'
     implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha04'
     implementation 'androidx.core:core-ktx:1.0.0-rc01'
-    implementation 'androidx.palette:palette:1.0.0-beta01'
+    implementation 'androidx.palette:palette:1.0.0-rc01'
     implementation "com.github.lion4ik:arch-navigation-shared-elements:0.1"
 
     // Firebase
