@@ -22,7 +22,6 @@
     <string name="wallpaper_setup_status_finalizing">Applying your wallpaper…</string>
     <string name="todo_coming_soon_message">Coming soon, stay tuned!</string>
     <string name="preview_mode_title">Preview Mode</string>
-    <string name="preview_mode_request">Apply permanently?</string>
     <string name="permission_request_dialog_title">Permission requested</string>
     <string name="permission_request_positive_button">Grant</string>
     <string name="permission_request_negative_button">Deny</string>
