@@ -18,10 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
@@ -252,3 +249,10 @@ fun View.setHeight(height: Int) {
     }
     this.requestLayout()
 }
+
+/**
+ * Utility function to get a [ViewModel] using a [ViewModelProvider.Factory] as required by Dagger
+ * Using this function you are obliged to pass a factory
+ */
+inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelProvider.Factory) =
+        ViewModelProviders.of(this, factory)[T::class.java]

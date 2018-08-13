@@ -21,12 +21,15 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.backend.repository.WallpaperRepository
+import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import it.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
+import javax.inject.Inject
 import com.bumptech.glide.request.transition.Transition as GlideTransition
 
 class WallpaperFragment : SharedElementsDestination() {
@@ -36,12 +39,14 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperFragmentArgs.fromBundle(arguments)
     }
 
+    @Inject lateinit var wallpaperRepository: WallpaperRepository
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.wallpaper_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadWallpaper(
+        wallpaperRepository.loadWallpaper(
                 args.wallpaper,
                 getSuggestedWallpaperFormat(resources.displayMetrics),
                 imageView = wallpaperImage,
@@ -64,6 +69,11 @@ class WallpaperFragment : SharedElementsDestination() {
             }
             return@setOnMenuItemClickListener true
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DaggerFragmentInjector.create().inject(this)
     }
 
     override fun onPause() {

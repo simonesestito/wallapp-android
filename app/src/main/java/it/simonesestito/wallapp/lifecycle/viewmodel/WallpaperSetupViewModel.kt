@@ -14,10 +14,12 @@ import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.repository.WallpaperRepository
 import it.simonesestito.wallapp.utils.*
 import java.io.File
+import javax.inject.Inject
 import android.service.wallpaper.WallpaperService as WallpaperManager
 
-
-class WallpaperSetupViewModel : ViewModel() {
+class WallpaperSetupViewModel @Inject constructor(
+        private val wallpaperRepository: WallpaperRepository
+) : ViewModel() {
     private var currentTempFile: File? = null
     private var currentFirebaseTask: FileDownloadTask? = null
     private val mutableDownloadStatus = MutableLiveData<@DownloadStatus Int>().apply {
@@ -44,7 +46,7 @@ class WallpaperSetupViewModel : ViewModel() {
         mutableDownloadStatus.value = STATUS_DOWNLOADING
 
         currentTempFile = context.createCacheFile("wall-${wallpaper.id}-$format")
-        currentFirebaseTask = WallpaperRepository.downloadWallpaper(wallpaper, format, currentTempFile!!).apply {
+        currentFirebaseTask = wallpaperRepository.downloadWallpaper(wallpaper, format, currentTempFile!!).apply {
             addOnCanceledListener { mutableDownloadStatus.value = STATUS_NOTHING }
             addOnFailureListener { mutableDownloadStatus.value = STATUS_ERROR }
             addOnSuccessListener { _ ->

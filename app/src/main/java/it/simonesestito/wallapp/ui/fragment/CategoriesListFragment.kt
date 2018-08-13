@@ -5,24 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
+import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import it.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import it.simonesestito.wallapp.utils.findNavController
+import it.simonesestito.wallapp.utils.getViewModel
 import it.simonesestito.wallapp.utils.onScrollListener
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
+import javax.inject.Inject
 
 class CategoriesListFragment : AbstractAppFragment() {
     override val title
         get() = getString(R.string.app_name)
 
+    @Inject lateinit var viewModelFactory: AppViewModelFactory
+    @Inject lateinit var categoriesAdapter: CategoriesAdapter
+
     private val viewModel: CategoryViewModel by lazy {
-        ViewModelProviders.of(this).get(CategoryViewModel::class.java)
+        getViewModel<CategoryViewModel>(viewModelFactory)
     }
-    private val categoriesAdapter: CategoriesAdapter by lazy { CategoriesAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DaggerFragmentInjector.create().inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? =

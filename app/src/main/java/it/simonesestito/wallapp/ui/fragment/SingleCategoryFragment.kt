@@ -7,29 +7,31 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.github.lion4ik.arch.sharedelements.HasSharedElements
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.utils.findNavController
+import it.simonesestito.wallapp.utils.getViewModel
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
+import javax.inject.Inject
 
 class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
     override val title
         get() = args.category.displayName
 
     private val viewModel by lazy {
-        ViewModelProviders.of(this).get(WallpaperViewModel::class.java)
+        getViewModel<WallpaperViewModel>(viewModelFactory)
     }
     private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments)
     }
-    private val adapter by lazy { WallpapersAdapter() }
 
     /**
      * Keep the current live data in memory
@@ -42,8 +44,13 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
      */
     private val sharedElements = mutableMapOf<String, View>()
 
+    @Inject lateinit var adapter: WallpapersAdapter
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DaggerFragmentInjector.create().inject(this)
+
         adapter.onItemClickListener = { wallpaper, transitionView ->
             // Setup SharedElements
             val name = ViewCompat.getTransitionName(transitionView) ?: ""
