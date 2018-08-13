@@ -1,57 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/preview_floating_window_width"
-    android:layout_height="wrap_content"
-    android:background="@drawable/preview_floating_window_background"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/preview_floating_window_background"
+    android:elevation="@dimen/scroll_appbar_elevation"
     android:padding="@dimen/margin_separator_normal">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/previewWindowTitle"
+        android:id="@+id/appCompatTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
         android:text="@string/preview_mode_title"
-        android:textAppearance="@style/AppTheme.Text.Title"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/previewWindowSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_separator_small"
-        android:text="@string/preview_mode_request"
-        android:textAppearance="@style/AppTheme.Text.Subtitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previewWindowTitle" />
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/previewModeButtonPositive"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_separator_small"
-        android:backgroundTint="@android:color/transparent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/margin_separator_small"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_check_black_24dp"
-        android:tint="@color/wallpaper_feedback_positive"
+        android:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/previewModeButtonNegative"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/previewWindowSubtitle" />
+        app:layout_constraintEnd_toStartOf="@id/previewModeButtonNegative" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/previewModeButtonNegative"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_separator_small"
-        android:backgroundTint="@android:color/transparent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_close_black_24dp"
-        android:tint="@color/wallpaper_feedback_negative"
+        android:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/previewModeButtonPositive"
-        app:layout_constraintTop_toBottomOf="@id/previewWindowSubtitle" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

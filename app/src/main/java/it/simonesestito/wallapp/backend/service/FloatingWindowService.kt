@@ -51,6 +51,13 @@ abstract class FloatingWindowService : Service() {
      */
     open fun onViewAdded(view: View, arguments: Bundle?) {}
 
+    /**
+     * Indicates if the window can be dragged and moved around the screen
+     * Default: true
+     */
+    open val isFloatingWindow: Boolean
+        get() = true
+
     //region Service lifecycle methods
     override fun onBind(p0: Intent?) = null
 
@@ -62,8 +69,9 @@ abstract class FloatingWindowService : Service() {
 
             val layoutParams = onCreateLayoutParams()
             windowManager.addView(view, layoutParams)
-            view.setOnTouchListener(DragTouchListener(layoutParams, windowManager, view))
-
+            if (isFloatingWindow) {
+                view.setOnTouchListener(DragTouchListener(layoutParams, windowManager, view))
+            }
             floatingView = view
             onViewAdded(view, extras)
         }

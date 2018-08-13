@@ -3,21 +3,43 @@ package it.simonesestito.wallapp.backend.service
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.utils.TAG
+import it.simonesestito.wallapp.utils.restoreWallpaper
 import kotlinx.android.synthetic.main.preview_floating_window.view.*
 
 
 class PreviewService : FloatingWindowService() {
     private lateinit var wallpaper: Wallpaper
 
+    override val isFloatingWindow: Boolean
+        get() = false // Don't allow dragging
+
     @SuppressLint("InflateParams")
     override fun onCreateView(arguments: Bundle?, layoutInflater: LayoutInflater): View {
         this.wallpaper = arguments!!.getParcelable(EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE)!!
-        return layoutInflater.inflate(R.layout.preview_floating_window, null, false)
+
+        return layoutInflater.inflate(R.layout.preview_floating_window, null, false).let {
+            it.setOnApplyWindowInsetsListener { view, insets ->
+                // Add status bar height
+                Log.d(this@PreviewService.TAG, (view.paddingTop + insets.stableInsetTop).toString())
+                view.setPadding(
+                        view.paddingLeft,
+                        view.paddingTop + insets.stableInsetTop,
+                        view.paddingRight,
+                        view.paddingEnd)
+                view.requestLayout()
+                return@setOnApplyWindowInsetsListener insets
+            }
+            return@let it
+        }
     }
 
     override fun onViewAdded(view: View, arguments: Bundle?) {
@@ -25,6 +47,18 @@ class PreviewService : FloatingWindowService() {
         view.previewModeButtonPositive.setOnClickListener { sendResult(true) }
         view.previewModeButtonNegative.setOnClickListener { sendResult(false) }
     }
+
+    override fun onCreateLayoutParams() =
+            super.onCreateLayoutParams().apply {
+                gravity = Gravity.TOP
+                y = 0
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                flags = flags or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN
+            }
 
     /**
      * Caller must have registered a [android.content.BroadcastReceiver] with [LocalBroadcastManager]
@@ -42,5 +76,10 @@ class PreviewService : FloatingWindowService() {
         LocalBroadcastManager.getInstance(this)
                 .sendBroadcast(intent)
         stopSelf()
+    }
+
+    override fun onDestroy() {
+        restoreWallpaper(this)
+        super.onDestroy()
     }
 }
