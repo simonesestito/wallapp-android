@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -25,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import it.simonesestito.wallapp.WallApp
+import it.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -220,3 +223,18 @@ fun Context.runOnIoThread(action: () -> Unit) {
 
 fun runOnMainThread(action: () -> Unit) =
         Handler(Looper.getMainLooper()).post(action)
+
+/**
+ * Execute an action when a LifecycleOwner is in a ready state (at least STARTED)
+ * Else wait until it's in STARTED state
+ * @receiver Target LifecycleOwner
+ * @param action Action to execute
+ */
+fun LifecycleOwner.executeOnReady(action: () -> Unit) {
+    val state = lifecycle.currentState
+    if (state.isAtLeast(Lifecycle.State.STARTED)) {
+        action()
+    } else {
+        lifecycle.addObserver(LifecycleExecutor(action))
+    }
+}
