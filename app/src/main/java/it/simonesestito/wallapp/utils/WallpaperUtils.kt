@@ -122,6 +122,7 @@ fun loadWallpaper(wallpaper: Wallpaper,
  * @param location Location where the wallpaper should be applied. On pre-Nougat has no effect
  * @return True in case of success, false otherwise
  */
+@WorkerThread
 fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int) =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || location == WALLPAPER_LOCATION_BOTH) {
             applyWallpaper(context, wallpaperFile)
@@ -139,8 +140,12 @@ fun backupWallpaper(context: Context) {
             .writeToFile(destFile, recycleOnEnd = true)
 }
 
+@WorkerThread
 fun restoreWallpaper(context: Context) {
     val backupFile = File(context.noBackupFilesDir, BACKUP_WALLPAPER_FILENAME)
+    if (!backupFile.exists()) {
+        return
+    }
     ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
             .setStream(backupFile.inputStream())
     backupFile.delete()
@@ -165,6 +170,7 @@ fun getSuggestedWallpaperFormat(displayMetrics: DisplayMetrics): String {
 }
 
 @Throws(IOException::class)
+@WorkerThread
 fun Bitmap.writeToFile(dest: File, recycleOnEnd: Boolean) {
     dest.outputStream().use {
         this.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -174,6 +180,7 @@ fun Bitmap.writeToFile(dest: File, recycleOnEnd: Boolean) {
     }
 }
 
+@WorkerThread
 private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {
     val systemWallpaperService =
             ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
@@ -188,6 +195,7 @@ private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {
 }
 
 @RequiresApi(Build.VERSION_CODES.N)
+@WorkerThread
 private fun applyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int): Boolean {
     @WallpaperLocation val which: Int = when (location) {
         WALLPAPER_LOCATION_HOME -> WallpaperManager.FLAG_SYSTEM

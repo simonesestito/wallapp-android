@@ -3,7 +3,6 @@ package it.simonesestito.wallapp.backend.service
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +10,9 @@ import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.utils.TAG
 import it.simonesestito.wallapp.utils.restoreWallpaper
+import it.simonesestito.wallapp.utils.runOnIoThread
+import it.simonesestito.wallapp.utils.runOnMainThread
 import kotlinx.android.synthetic.main.preview_floating_window.view.*
 
 
@@ -29,7 +29,6 @@ class PreviewService : FloatingWindowService() {
         return layoutInflater.inflate(R.layout.preview_floating_window, null, false).let {
             it.setOnApplyWindowInsetsListener { view, insets ->
                 // Add status bar height
-                Log.d(this@PreviewService.TAG, (view.paddingTop + insets.stableInsetTop).toString())
                 view.setPadding(
                         view.paddingLeft,
                         view.paddingTop + insets.stableInsetTop,
@@ -44,8 +43,8 @@ class PreviewService : FloatingWindowService() {
 
     override fun onViewAdded(view: View, arguments: Bundle?) {
         super.onViewAdded(view, arguments)
-        view.previewModeButtonPositive.setOnClickListener { sendResult(true) }
-        view.previewModeButtonNegative.setOnClickListener { sendResult(false) }
+        view.previewModeButtonPositive.setOnClickListener { sendResult(view, true) }
+        view.previewModeButtonNegative.setOnClickListener { sendResult(view, false) }
     }
 
     override fun onCreateLayoutParams() =
@@ -63,23 +62,42 @@ class PreviewService : FloatingWindowService() {
     /**
      * Caller must have registered a [android.content.BroadcastReceiver] with [LocalBroadcastManager]
      * Broadcasts are sent with action [ACTION_PREVIEW_RESULT]
+     * @param rootView The entire banner View
+     * @param wallpaperConfirmed Boolean which indicates if the wallpaper has been accepted or declined by the user
      */
-    private fun sendResult(wallpaperConfirmed: Boolean) {
-        val intent = Intent()
-                .setAction(ACTION_PREVIEW_RESULT)
-                .putExtra(EXTRA_WALLPAPER_PREVIEW_RESULT,
-                        if (wallpaperConfirmed)
-                            RESULT_WALLPAPER_CONFIRMED
-                        else
-                            RESULT_WALLPAPER_CANCELED)
+    private fun sendResult(rootView: View, wallpaperConfirmed: Boolean) {
+        rootView.previewModeButtonPositive.visibility = View.GONE
+        rootView.previewModeButtonNegative.visibility = View.GONE
+        rootView.previewModeBannerTitle.setText(R.string.preview_mode_title_close_preview)
 
-        LocalBroadcastManager.getInstance(this)
-                .sendBroadcast(intent)
-        stopSelf()
+        // Restore wallpaper on IO Thread, it's a blocking operation
+        runOnIoThread {
+            if (!wallpaperConfirmed) {
+                restoreWallpaper(this)
+            }
+
+            // Continue on Main thread
+            runOnMainThread {
+                val intent = Intent()
+                        .setAction(ACTION_PREVIEW_RESULT)
+                        .putExtra(EXTRA_WALLPAPER_PREVIEW_RESULT,
+                                if (wallpaperConfirmed)
+                                    RESULT_WALLPAPER_CONFIRMED
+                                else
+                                    RESULT_WALLPAPER_CANCELED)
+
+                LocalBroadcastManager.getInstance(this)
+                        .sendBroadcast(intent)
+                stopSelf()
+            }
+        }
     }
 
     override fun onDestroy() {
-        restoreWallpaper(this)
         super.onDestroy()
+        runOnIoThread {
+            // If it's already been restored, this method will just return
+            restoreWallpaper(this)
+        }
     }
 }

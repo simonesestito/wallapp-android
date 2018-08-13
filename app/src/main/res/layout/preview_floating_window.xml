@@ -5,37 +5,32 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/preview_floating_window_background"
     android:elevation="@dimen/scroll_appbar_elevation"
-    android:padding="@dimen/margin_separator_normal">
+    android:paddingTop="@dimen/margin_separator_normal">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/appCompatTextView"
+        android:id="@+id/previewModeBannerTitle"
+        style="@style/AppTheme.Preview.Title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
         android:text="@string/preview_mode_title"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/previewModeButtonPositive"
+        android:id="@+id/previewModeButtonNegative"
+        style="@style/AppTheme.Preview.Icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/margin_separator_small"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_check_black_24dp"
-        android:tint="@android:color/white"
+        android:src="@drawable/ic_undo_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/previewModeButtonNegative" />
+        app:layout_constraintEnd_toStartOf="@+id/previewModeButtonPositive" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/previewModeButtonNegative"
+        android:id="@+id/previewModeButtonPositive"
+        style="@style/AppTheme.Preview.Icon.Trailing"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_close_black_24dp"
-        android:tint="@android:color/white"
+        android:src="@drawable/ic_save_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
