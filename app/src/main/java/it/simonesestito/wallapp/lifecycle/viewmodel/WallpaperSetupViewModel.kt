@@ -18,7 +18,8 @@ import javax.inject.Inject
 import android.service.wallpaper.WallpaperService as WallpaperManager
 
 class WallpaperSetupViewModel @Inject constructor(
-        private val wallpaperRepository: WallpaperRepository
+        private val wallpaperRepository: WallpaperRepository,
+        private val threads: ThreadUtils
 ) : ViewModel() {
     private var currentTempFile: File? = null
     private var currentFirebaseTask: FileDownloadTask? = null
@@ -51,7 +52,7 @@ class WallpaperSetupViewModel @Inject constructor(
             addOnFailureListener { mutableDownloadStatus.value = STATUS_ERROR }
             addOnSuccessListener { _ ->
                 mutableDownloadStatus.value = STATUS_FINALIZING
-                context.runOnIoThread {
+                threads.runOnIoThread {
                     val success = supportApplyWallpaper(context, currentTempFile!!, location)
                     mutableDownloadStatus.postValue(if (success) STATUS_SUCCESS else STATUS_ERROR)
                     currentTempFile?.delete()
@@ -73,9 +74,9 @@ class WallpaperSetupViewModel @Inject constructor(
         }
 
         mutableDownloadStatus.value = STATUS_INIT
-        context.runOnIoThread {
+        threads.runOnIoThread {
             backupWallpaper(context)
-            runOnMainThread {
+            threads.runOnMainThread {
                 if (mutableDownloadStatus.value == STATUS_INIT) {
                     // Apply wallpaper only if task has not been cancelled
                     // and status is still the same

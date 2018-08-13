@@ -10,14 +10,15 @@ import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.utils.ThreadUtils
 import it.simonesestito.wallapp.utils.restoreWallpaper
-import it.simonesestito.wallapp.utils.runOnIoThread
-import it.simonesestito.wallapp.utils.runOnMainThread
 import kotlinx.android.synthetic.main.preview_floating_window.view.*
+import javax.inject.Inject
 
 
 class PreviewService : FloatingWindowService() {
     private lateinit var wallpaper: Wallpaper
+    @Inject lateinit var threads: ThreadUtils
 
     override val isFloatingWindow: Boolean
         get() = false // Don't allow dragging
@@ -71,13 +72,13 @@ class PreviewService : FloatingWindowService() {
         rootView.previewModeBannerTitle.setText(R.string.preview_mode_title_close_preview)
 
         // Restore wallpaper on IO Thread, it's a blocking operation
-        runOnIoThread {
+        threads.runOnIoThread {
             if (!wallpaperConfirmed) {
                 restoreWallpaper(this)
             }
 
             // Continue on Main thread
-            runOnMainThread {
+            threads.runOnMainThread {
                 val intent = Intent()
                         .setAction(ACTION_PREVIEW_RESULT)
                         .putExtra(EXTRA_WALLPAPER_PREVIEW_RESULT,
@@ -95,7 +96,7 @@ class PreviewService : FloatingWindowService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        runOnIoThread {
+        threads.runOnIoThread {
             // If it's already been restored, this method will just return
             restoreWallpaper(this)
         }

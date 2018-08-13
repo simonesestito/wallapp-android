@@ -214,14 +214,6 @@ fun <T> Collection<T>.containsOnly(element: T): Boolean {
     return true
 }
 
-fun Context.runOnIoThread(action: () -> Unit) {
-    val app = applicationContext as WallApp
-    app.ioThread.submit(action)
-}
-
-fun runOnMainThread(action: () -> Unit) =
-        Handler(Looper.getMainLooper()).post(action)
-
 /**
  * Execute an action when a LifecycleOwner is in a ready state (at least STARTED)
  * Else wait until it's in STARTED state
