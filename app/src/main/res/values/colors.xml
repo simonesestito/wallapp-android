@@ -15,6 +15,5 @@
     <color name="wallpaper_feedback_positive">#4caf50</color>
     <color name="wallpaper_feedback_negative">#f44336</color>
     <color name="preview_floating_window_background">@color/color_accent</color>
-    <color name="preview_floating_window_border">#757575</color>
 
 </resources>
