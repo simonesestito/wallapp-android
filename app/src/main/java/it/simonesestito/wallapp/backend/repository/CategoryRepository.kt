@@ -7,9 +7,9 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_COVER
-import it.simonesestito.wallapp.arch.livedata.FirestoreLiveCollection
-import it.simonesestito.wallapp.arch.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.backend.model.Category
+import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
+import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 

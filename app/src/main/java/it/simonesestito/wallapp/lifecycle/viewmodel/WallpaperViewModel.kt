@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.arch.viewmodel
+package it.simonesestito.wallapp.lifecycle.viewmodel
 
 import androidx.lifecycle.ViewModel
 import it.simonesestito.wallapp.backend.repository.WallpaperRepository

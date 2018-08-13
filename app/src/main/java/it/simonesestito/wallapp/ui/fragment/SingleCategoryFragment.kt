@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.github.lion4ik.arch.sharedelements.HasSharedElements
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.arch.viewmodel.WallpaperViewModel
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.utils.findNavController
 import kotlinx.android.synthetic.main.single_category_fragment.*

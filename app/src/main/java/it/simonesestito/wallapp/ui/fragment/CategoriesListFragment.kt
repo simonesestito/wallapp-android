@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.arch.viewmodel.CategoryViewModel
+import it.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import it.simonesestito.wallapp.utils.findNavController
 import it.simonesestito.wallapp.utils.onScrollListener

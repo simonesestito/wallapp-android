@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.arch.livedata
+package it.simonesestito.wallapp.lifecycle.livedata
 
 import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentSnapshot
