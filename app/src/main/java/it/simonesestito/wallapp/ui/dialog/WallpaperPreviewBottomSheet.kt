@@ -1,5 +1,6 @@
 package it.simonesestito.wallapp.ui.dialog
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -104,5 +105,15 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
                                 wallpaperArg
                         )
                 )
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        viewModel.stopDownloadTask()
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+        super.onCancel(dialog)
+        viewModel.stopDownloadTask()
     }
 }

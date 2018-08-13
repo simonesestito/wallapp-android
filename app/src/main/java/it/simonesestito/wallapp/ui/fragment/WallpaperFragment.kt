@@ -113,12 +113,11 @@ class WallpaperFragment : SharedElementsDestination() {
 
     private fun openPreviewBottomSheet() {
         LocalBroadcastManager.getInstance(requireContext())
-                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent ->
+                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, context ->
                     val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
-                    restoreWallpaper(this.requireContext())
                     if (result == RESULT_WALLPAPER_CONFIRMED) {
                         // TODO Set confirmed wallpaper from preview mode
-                        Toast.makeText(requireContext(), R.string.todo_coming_soon_message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.todo_coming_soon_message, Toast.LENGTH_SHORT).show()
                     }
                     return@registerReceiver true
                 }

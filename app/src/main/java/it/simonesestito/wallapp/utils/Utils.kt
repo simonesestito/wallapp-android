@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
@@ -186,11 +187,11 @@ fun Context.createCacheFile(prefix: String, suffix: String = ".tmp"): File {
  * @param intentFilter
  * @param receiver Lambda representation of the [BroadcastReceiver.onReceive]
  */
-fun LocalBroadcastManager.registerReceiver(intentFilter: IntentFilter, receiver: (Intent) -> Boolean) =
+fun LocalBroadcastManager.registerReceiver(intentFilter: IntentFilter, receiver: (Intent, Context) -> Boolean) =
         registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                intent?.let {
-                    val hasToUnregister = receiver(intent)
+                if (intent != null && context != null) {
+                    val hasToUnregister = receiver(intent, context)
                     if (hasToUnregister) {
                         unregisterReceiver(this)
                     }
@@ -237,4 +238,17 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
     } else {
         lifecycle.addObserver(LifecycleExecutor(action))
     }
+}
+
+/**
+ * Set height to a View programmatically
+ * @receiver Change the height of this view
+ * @param height New height to set
+ */
+fun View.setHeight(height: Int) {
+    Log.d("View", "Setting height $height")
+    this.layoutParams = this.layoutParams.apply {
+        this@apply.height = height
+    }
+    this.requestLayout()
 }

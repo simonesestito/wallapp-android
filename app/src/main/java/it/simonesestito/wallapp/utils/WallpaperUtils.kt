@@ -143,6 +143,7 @@ fun restoreWallpaper(context: Context) {
     val backupFile = File(context.noBackupFilesDir, BACKUP_WALLPAPER_FILENAME)
     ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
             .setStream(backupFile.inputStream())
+    backupFile.delete()
 }
 
 @WallpaperFormat
