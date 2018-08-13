@@ -9,9 +9,9 @@ import it.simonesestito.wallapp.FIRESTORE_WALLPAPERS
 import it.simonesestito.wallapp.KEY_CREATION_DATE
 import it.simonesestito.wallapp.KEY_PUBLISHED
 import it.simonesestito.wallapp.annotations.WallpaperFormat
-import it.simonesestito.wallapp.arch.livedata.FirestoreLiveCollection
-import it.simonesestito.wallapp.arch.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
+import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 import java.io.File

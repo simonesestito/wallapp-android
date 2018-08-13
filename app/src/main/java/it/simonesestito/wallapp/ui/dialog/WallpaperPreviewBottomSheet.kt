@@ -12,9 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.*
-import it.simonesestito.wallapp.arch.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.service.PreviewService
+import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.view.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*

@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.arch.viewmodel
+package it.simonesestito.wallapp.lifecycle.viewmodel
 
 import android.Manifest
 import android.content.Context
