@@ -8,11 +8,15 @@ import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.repository.CategoryRepository
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Adapter for categories list
  */
-class CategoriesAdapter : AsyncAdapter<Category, CategoriesVH>() {
+@Singleton
+class CategoriesAdapter @Inject constructor(private val categoryRepository: CategoryRepository)
+    : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
 
     override fun onBindViewHolder(holder: CategoriesVH, position: Int) {
@@ -22,7 +26,7 @@ class CategoriesAdapter : AsyncAdapter<Category, CategoriesVH>() {
             nameView.text = category.displayName
             descriptionView.text = category.description
             setWallpapersCount(category.wallpapersCount)
-            CategoryRepository.loadCoverOn(category.id, coverView)
+            categoryRepository.loadCoverOn(category.id, coverView)
             itemView.setOnClickListener {
                 onItemClickListener?.invoke(category)
             }

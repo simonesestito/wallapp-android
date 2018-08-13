@@ -12,14 +12,18 @@ import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object CategoryRepository {
+@Singleton
+class CategoryRepository @Inject constructor(private val firestore: FirebaseFirestore,
+                                             private val storage: FirebaseStorage) {
     /**
      * List all the available categories from Firestore
      * @return LiveData observing the categories list
      */
     fun getCategories(): LiveData<List<Category>> {
-        val ref = FirebaseFirestore.getInstance()
+        val ref = firestore
                 .collection(FIRESTORE_CATEGORIES)
                 .whereEqualTo(KEY_PUBLISHED, true)
                 .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
@@ -38,7 +42,7 @@ object CategoryRepository {
      * @return LiveData of the Firestore document
      */
     fun getCategoryById(id: String): LiveData<Category> {
-        val ref = FirebaseFirestore.getInstance()
+        val ref = firestore
                 .document("$FIRESTORE_CATEGORIES/$id")
 
         return FirestoreLiveDocument(ref).map { snap ->
@@ -55,9 +59,7 @@ object CategoryRepository {
      * @param imageView Target ImageView
      */
     fun loadCoverOn(categoryId: String, imageView: ImageView) {
-        val imageRef = FirebaseStorage
-                .getInstance()
-                .getReference("$STORAGE_CATEGORIES/$categoryId/$FORMAT_COVER")
+        val imageRef = storage.getReference("$STORAGE_CATEGORIES/$categoryId/$FORMAT_COVER")
 
         GlideApp
                 .with(imageView)

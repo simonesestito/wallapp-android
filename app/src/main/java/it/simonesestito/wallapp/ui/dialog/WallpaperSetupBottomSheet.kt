@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.postDelayed
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import it.simonesestito.wallapp.BOTTOMSHEET_AUTO_DISMISS_DELAY
 import it.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
 import it.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
@@ -18,16 +18,20 @@ import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
+import it.simonesestito.wallapp.utils.getViewModel
 import it.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
+import javax.inject.Inject
 
 class WallpaperSetupBottomSheet : ThemedBottomSheet() {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel by lazy {
-        ViewModelProviders.of(this).get(WallpaperSetupViewModel::class.java)
+        getViewModel<WallpaperSetupViewModel>(viewModelFactory)
     }
 
     private val wallpaperArg: Wallpaper by lazy {
