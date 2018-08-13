@@ -4,7 +4,7 @@
     <string name="category_wallpapers_count_prefix">%d wallpapers</string>
     <string name="fab_wallpaper_action_download">Download wallpaper</string>
     <string name="wallpaper_action_share">Share link</string>
-    <string name="fab_wallpaper_action_preview">Try it</string>
+    <string name="fab_wallpaper_action_preview">Preview</string>
     <string name="wallpaper_setup_bottom_sheet_location">Where to apply?</string>
     <string name="wallpaper_setup_location_home">Home screen</string>
     <string name="wallpaper_setup_location_lock">Lock screen</string>
@@ -27,4 +27,5 @@
     <string name="permission_request_negative_button">Deny</string>
     <string name="permission_read_storage_request_message">You should grant the permission to read storage to permit the app to backup your current wallpaper</string>
     <string name="wallpaper_preview_state_backup">Taking care about your current wallpaper…</string>
+    <string name="preview_mode_title_close_preview">Leaving Preview Mode…</string>
 </resources>

@@ -3,6 +3,7 @@ package it.simonesestito.wallapp.lifecycle.viewmodel
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,8 +49,11 @@ class WallpaperSetupViewModel : ViewModel() {
             addOnFailureListener { mutableDownloadStatus.value = STATUS_ERROR }
             addOnSuccessListener { _ ->
                 mutableDownloadStatus.value = STATUS_FINALIZING
-                val success = supportApplyWallpaper(context, currentTempFile!!, location)
-                mutableDownloadStatus.value = if (success) STATUS_SUCCESS else STATUS_ERROR
+                context.runOnIoThread {
+                    val success = supportApplyWallpaper(context, currentTempFile!!, location)
+                    mutableDownloadStatus.postValue(if (success) STATUS_SUCCESS else STATUS_ERROR)
+                    currentTempFile?.delete()
+                }
             }
         }
     }
@@ -70,12 +74,19 @@ class WallpaperSetupViewModel : ViewModel() {
         context.runOnIoThread {
             backupWallpaper(context)
             runOnMainThread {
-                applyWallpaper(
-                        context,
-                        wallpaper,
-                        getSuggestedWallpaperFormat(context.resources.displayMetrics),
-                        WALLPAPER_LOCATION_HOME
-                )
+                if (mutableDownloadStatus.value == STATUS_INIT) {
+                    // Apply wallpaper only if task has not been cancelled
+                    // and status is still the same
+                    applyWallpaper(
+                            context,
+                            wallpaper,
+                            getSuggestedWallpaperFormat(context.resources.displayMetrics),
+                            WALLPAPER_LOCATION_HOME
+                    )
+                } else {
+                    Log.e(this@WallpaperSetupViewModel.TAG, "Task cancellation detected. Doing nothing")
+                    mutableDownloadStatus.value = STATUS_NOTHING
+                }
             }
         }
     }
@@ -88,6 +99,8 @@ class WallpaperSetupViewModel : ViewModel() {
         if (!isTaskInProgress()) {
             currentTempFile?.delete()
         }
+
+        mutableDownloadStatus.value = STATUS_NOTHING
     }
 
     /**

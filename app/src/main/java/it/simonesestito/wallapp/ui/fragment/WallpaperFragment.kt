@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -22,6 +21,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import it.simonesestito.wallapp.utils.*
@@ -71,20 +71,6 @@ class WallpaperFragment : SharedElementsDestination() {
         downloadFab?.show()
     }
 
-    override fun onResume() {
-        super.onResume()
-        activity?.intent?.let {
-            if (it.action == ACTION_PREVIEW_RESULT) {
-                restoreWallpaper(requireContext())
-
-                if (it.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, 0) ==
-                        RESULT_WALLPAPER_CONFIRMED) {
-                    openSetupBottomSheet()
-                }
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         hideAppbar()
@@ -113,11 +99,17 @@ class WallpaperFragment : SharedElementsDestination() {
 
     private fun openPreviewBottomSheet() {
         LocalBroadcastManager.getInstance(requireContext())
-                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, context ->
+                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, receiverContext ->
+                    // Resume current Activity
+                    receiverContext.startActivity(Intent(receiverContext, MainActivity::class.java))
+
+                    // Handle received result
                     val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
                     if (result == RESULT_WALLPAPER_CONFIRMED) {
-                        // TODO Set confirmed wallpaper from preview mode
-                        Toast.makeText(context, R.string.todo_coming_soon_message, Toast.LENGTH_SHORT).show()
+                        // Execute this code only when onStart() has been called
+                        executeOnReady {
+                            openSetupBottomSheet()
+                        }
                     }
                     return@registerReceiver true
                 }
