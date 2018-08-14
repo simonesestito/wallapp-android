@@ -1,8 +1,7 @@
 package it.simonesestito.wallapp.dagger.annotation
 
-import javax.inject.Scope
+import javax.inject.Named
 
-
+@Named("main_thread")
 @Retention(AnnotationRetention.RUNTIME)
-@Scope
 annotation class MainHandler

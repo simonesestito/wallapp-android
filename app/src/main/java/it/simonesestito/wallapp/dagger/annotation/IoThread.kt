@@ -1,8 +1,8 @@
 package it.simonesestito.wallapp.dagger.annotation
 
-import javax.inject.Scope
+import javax.inject.Named
 
 
-@Scope
+@Named("io_thread")
 @Retention(AnnotationRetention.RUNTIME)
 annotation class IoThread

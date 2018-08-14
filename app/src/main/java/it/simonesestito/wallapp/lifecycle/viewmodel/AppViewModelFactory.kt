@@ -11,6 +11,6 @@ typealias ViewModelProviders = Map<Class<out ViewModel>, @JvmSuppressWildcards P
 @Singleton
 class AppViewModelFactory @Inject constructor(private val viewModels: ViewModelProviders) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            viewModels[modelClass]?.get() as T
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
+            viewModels[modelClass]!!.get() as T
 }
