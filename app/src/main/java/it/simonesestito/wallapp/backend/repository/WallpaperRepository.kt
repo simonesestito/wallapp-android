@@ -13,6 +13,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.WallpaperFormat
+import it.simonesestito.wallapp.backend.cache.PaletteCache
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
@@ -23,7 +24,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WallpaperRepository @Inject constructor(private val firestore: FirebaseFirestore,
+class WallpaperRepository @Inject constructor(private val paletteCache: PaletteCache,
+                                              private val firestore: FirebaseFirestore,
                                               private val storage: FirebaseStorage) {
     /**
      * Get all the wallpapers in a given category
@@ -101,8 +103,7 @@ class WallpaperRepository @Inject constructor(private val firestore: FirebaseFir
                         // Generate Palette looking into cache first
                         // If onPaletteReady is null the caller doesn't need Palette
                         // But we can put it in cache for future usages
-                        val app = imageView.context.applicationContext as WallApp
-                        val cachedPalette = app.paletteCache[wallpaper]
+                        val cachedPalette = paletteCache[wallpaper]
                         if (onPaletteReady == null && cachedPalette != null) {
                             // Caller doesn't need any Palette and it's already present in cache
                             // Do nothing
@@ -118,7 +119,7 @@ class WallpaperRepository @Inject constructor(private val firestore: FirebaseFir
                         // Calculate it
                         Palette.from(resource).generate { palette ->
                             palette ?: return@generate
-                            app.paletteCache[wallpaper] = palette
+                            paletteCache[wallpaper] = palette
                             onPaletteReady?.invoke(palette)
                         }
                     }
@@ -129,8 +130,7 @@ class WallpaperRepository @Inject constructor(private val firestore: FirebaseFir
 
                         // On loading started, if Palette is needed, check in cache
                         onPaletteReady?.let {
-                            val app = imageView.context.applicationContext as WallApp
-                            val cached = app.paletteCache[wallpaper]
+                            val cached = paletteCache[wallpaper]
                             if (cached != null) {
                                 onPaletteReady(cached)
                             }

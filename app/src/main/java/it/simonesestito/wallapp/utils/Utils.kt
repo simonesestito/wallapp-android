@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -24,7 +22,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
-import it.simonesestito.wallapp.WallApp
 import it.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
