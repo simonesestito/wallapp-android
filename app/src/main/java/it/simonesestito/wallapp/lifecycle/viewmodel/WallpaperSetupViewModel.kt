@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FileDownloadTask
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.backend.repository.WallpaperRepository
+import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
 import it.simonesestito.wallapp.utils.*
 import java.io.File
 import javax.inject.Inject

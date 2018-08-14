@@ -12,7 +12,11 @@ import it.simonesestito.wallapp.ui.fragment.WallpaperFragment
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ViewModelModule::class, FirebaseModule::class, CacheModule::class])
+@Component(modules = [
+    ViewModelModule::class,
+    FirebaseModule::class,
+    CacheModule::class
+])
 interface FragmentInjector {
     fun inject(categoriesListFragment: CategoriesListFragment)
     fun inject(wallpaperFragment: WallpaperFragment)

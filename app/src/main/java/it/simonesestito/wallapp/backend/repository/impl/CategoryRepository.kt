@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.backend.repository
+package it.simonesestito.wallapp.backend.repository.impl
 
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
@@ -8,21 +8,16 @@ import com.google.firebase.storage.FirebaseStorage
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_COVER
 import it.simonesestito.wallapp.backend.model.Category
+import it.simonesestito.wallapp.backend.repository.ICategoryRepository
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CategoryRepository @Inject constructor(private val firestore: FirebaseFirestore,
-                                             private val storage: FirebaseStorage) {
-    /**
-     * List all the available categories from Firestore
-     * @return LiveData observing the categories list
-     */
-    fun getCategories(): LiveData<List<Category>> {
+                                             private val storage: FirebaseStorage) : ICategoryRepository {
+    override fun getCategories(): LiveData<List<Category>> {
         val ref = firestore
                 .collection(FIRESTORE_CATEGORIES)
                 .whereEqualTo(KEY_PUBLISHED, true)
@@ -36,12 +31,7 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
         }
     }
 
-    /**
-     * Get the category document from Firestore
-     * @param id Category ID
-     * @return LiveData of the Firestore document
-     */
-    fun getCategoryById(id: String): LiveData<Category> {
+    override fun getCategoryById(id: String): LiveData<Category> {
         val ref = firestore
                 .document("$FIRESTORE_CATEGORIES/$id")
 
@@ -53,12 +43,7 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
         }
     }
 
-    /**
-     * Load cover image from Firebase Storage in a target [ImageView] asynchronously
-     * @param categoryId Category ID
-     * @param imageView Target ImageView
-     */
-    fun loadCoverOn(categoryId: String, imageView: ImageView) {
+    override fun loadCoverOn(categoryId: String, imageView: ImageView) {
         val imageRef = storage.getReference("$STORAGE_CATEGORIES/$categoryId/$FORMAT_COVER")
 
         GlideApp

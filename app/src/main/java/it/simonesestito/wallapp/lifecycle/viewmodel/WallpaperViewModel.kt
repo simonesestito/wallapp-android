@@ -1,7 +1,7 @@
 package it.simonesestito.wallapp.lifecycle.viewmodel
 
 import androidx.lifecycle.ViewModel
-import it.simonesestito.wallapp.backend.repository.WallpaperRepository
+import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
 import javax.inject.Inject
 
 
