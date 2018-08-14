@@ -1,12 +1,12 @@
 package it.simonesestito.wallapp.lifecycle.viewmodel
 
 import androidx.lifecycle.ViewModel
-import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
+import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
 import javax.inject.Inject
 
 
 class WallpaperViewModel @Inject constructor(
-        private val wallpaperRepository: WallpaperRepository
+        private val wallpaperRepository: IWallpaperRepository
 ) : ViewModel() {
     fun getWallpapersByCategoryId(categoryId: String) =
             wallpaperRepository.getWallpapersByCategoryId(categoryId)

@@ -15,24 +15,18 @@ import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.WallpaperFormat
 import it.simonesestito.wallapp.backend.cache.PaletteCache
 import it.simonesestito.wallapp.backend.model.Wallpaper
+import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import it.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import it.simonesestito.wallapp.utils.map
 import it.simonesestito.wallapp.utils.mapList
 import java.io.File
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class WallpaperRepository @Inject constructor(private val paletteCache: PaletteCache,
                                               private val firestore: FirebaseFirestore,
-                                              private val storage: FirebaseStorage) {
-    /**
-     * Get all the wallpapers in a given category
-     * @param categoryId
-     * @return Wallpapers list wrapped in a LiveData
-     */
-    fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>> {
+                                              private val storage: FirebaseStorage) : IWallpaperRepository {
+    override fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>> {
         val ref = firestore
                 .collection("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS")
                 .whereEqualTo(KEY_PUBLISHED, true)
@@ -43,13 +37,7 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
         }
     }
 
-    /**
-     * Get the wallpaper document from Firestore
-     * @param categoryId Wallpaper's category ID
-     * @param wallpaperId
-     * @return LiveData of the Firestore document
-     */
-    fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper> {
+    override fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper> {
         val ref = firestore
                 .document("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS/$wallpaperId")
 
@@ -58,37 +46,16 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
         }
     }
 
-    /**
-     * Download the wallpaper to a [File]
-     * @param wallpaper Target wallpaper
-     * @param format Wallpaper format to download
-     * @param destination Destination file where to download the wallpaper
-     * @return Firebase file download task
-     */
-    fun downloadWallpaper(wallpaper: Wallpaper, @WallpaperFormat format: String, destination: File) =
+    override fun downloadWallpaper(wallpaper: Wallpaper, @WallpaperFormat format: String, destination: File) =
             storage
                     .getReference(wallpaper.getStorageFilePath(format))
                     .getFile(destination)
 
-    /**
-     * Load wallpaper and display in an ImageView or load its palette
-     *
-     * It's a single method rather than 2 different methods (one for ImageView, one for Palette)
-     * to optimize the requests.
-     * [it.simonesestito.wallapp.ui.fragment.WallpaperFragment] for example requires to both load
-     * the wallpaper and the palette.
-     * With this unique method, it starts just a single Glide request (instead of 2)
-     *
-     * @param wallpaper Object description of the subject wallpaper
-     * @param format Wallpaper format requested
-     * @param imageView ImageView where to display the wallpaper
-     * @param onPaletteReady Callback called when a Palette is ready to be used, nullable
-     */
     @MainThread
-    fun loadWallpaper(wallpaper: Wallpaper,
-                      @WallpaperFormat format: String,
-                      imageView: ImageView,
-                      onPaletteReady: ((Palette) -> Unit)? = null) {
+    override fun loadWallpaper(wallpaper: Wallpaper,
+                               @WallpaperFormat format: String,
+                               imageView: ImageView,
+                               onPaletteReady: ((Palette) -> Unit)?) {
         val imageRef = storage.getReference(wallpaper.getStorageFilePath(format))
 
         GlideApp

@@ -11,14 +11,14 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FileDownloadTask
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
+import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
 import it.simonesestito.wallapp.utils.*
 import java.io.File
 import javax.inject.Inject
 import android.service.wallpaper.WallpaperService as WallpaperManager
 
 class WallpaperSetupViewModel @Inject constructor(
-        private val wallpaperRepository: WallpaperRepository,
+        private val wallpaperRepository: IWallpaperRepository,
         private val threads: ThreadUtils
 ) : ViewModel() {
     private var currentTempFile: File? = null
