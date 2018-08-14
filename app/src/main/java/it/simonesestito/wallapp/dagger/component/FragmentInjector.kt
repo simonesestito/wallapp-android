@@ -9,9 +9,7 @@ import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import it.simonesestito.wallapp.ui.fragment.CategoriesListFragment
 import it.simonesestito.wallapp.ui.fragment.SingleCategoryFragment
 import it.simonesestito.wallapp.ui.fragment.WallpaperFragment
-import javax.inject.Singleton
 
-@Singleton
 @Component(modules = [
     ViewModelModule::class,
     FirebaseModule::class,
