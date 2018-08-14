@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.backend.repository
+package it.simonesestito.wallapp.backend.repository.impl
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.backend.repository.WallpaperRepository
+import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
 import kotlinx.android.synthetic.main.wallpaper_item.view.*
 import javax.inject.Inject
 import javax.inject.Singleton

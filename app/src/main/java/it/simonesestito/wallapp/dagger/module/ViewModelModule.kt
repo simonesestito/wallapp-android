@@ -12,7 +12,7 @@ import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
 
 
-@Module(includes = [ThreadModule::class])
+@Module(includes = [ThreadModule::class, InterfacesModule::class])
 abstract class ViewModelModule {
     @Binds
     internal abstract fun bindViewModelFactory(factory: AppViewModelFactory): ViewModelProvider.Factory

@@ -21,7 +21,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
-import it.simonesestito.wallapp.backend.repository.WallpaperRepository
+import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
 import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet

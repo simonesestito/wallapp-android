@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
-import it.simonesestito.wallapp.backend.repository.CategoryRepository
+import it.simonesestito.wallapp.backend.repository.ICategoryRepository
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,7 +15,7 @@ import javax.inject.Singleton
  * Adapter for categories list
  */
 @Singleton
-class CategoriesAdapter @Inject constructor(private val categoryRepository: CategoryRepository)
+class CategoriesAdapter @Inject constructor(private val categoryRepository: ICategoryRepository)
     : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
 
