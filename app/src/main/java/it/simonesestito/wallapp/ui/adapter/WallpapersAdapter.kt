@@ -5,18 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import dagger.Reusable
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
 import kotlinx.android.synthetic.main.wallpaper_item.view.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Wallpapers Adapter (format PREVIEW)
  */
-@Singleton
+@Reusable
 class WallpapersAdapter @Inject constructor(private val wallpaperRepository: WallpaperRepository)
     : AsyncAdapter<Wallpaper, WallpapersVH>() {
 
