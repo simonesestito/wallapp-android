@@ -14,6 +14,11 @@ android {
         versionName "INTERNAL"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -53,9 +58,11 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.8.0-SNAPSHOT'
 
     // Android Testing
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-rc01'
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:4.0-alpha-3-SNAPSHOT'
+    testImplementation 'org.mockito:mockito-core:2.21.0'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test:rules:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 }
 
