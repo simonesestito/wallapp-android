@@ -1,6 +1,7 @@
 package it.simonesestito.wallapp.dagger.component
 
 import dagger.Component
+import dagger.Reusable
 import it.simonesestito.wallapp.dagger.module.CacheModule
 import it.simonesestito.wallapp.dagger.module.FirebaseModule
 import it.simonesestito.wallapp.dagger.module.ViewModelModule
