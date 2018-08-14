@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:drawableTop="@drawable/ic_block_black_24dp"
+        android:drawableTop="@drawable/ic_cloud_off_black_24dp"
         android:drawablePadding="@dimen/text_drawable_padding"
         android:text="@string/categories_empty_view_text"
         app:layout_constraintBottom_toBottomOf="parent"
