@@ -200,13 +200,13 @@ fun <T> Collection<T>.containsOnly(element: T): Boolean {
 
 /**
  * Execute an action when a LifecycleOwner is in a ready state (at least STARTED)
- * Else wait until it's in STARTED state
+ * Else wait until it's in [Lifecycle.State.RESUMED]
  * @receiver Target LifecycleOwner
  * @param action Action to execute
  */
 fun LifecycleOwner.executeOnReady(action: () -> Unit) {
     val state = lifecycle.currentState
-    if (state.isAtLeast(Lifecycle.State.STARTED)) {
+    if (state.isAtLeast(Lifecycle.State.RESUMED)) {
         action()
     } else {
         lifecycle.addObserver(LifecycleExecutor(action))
