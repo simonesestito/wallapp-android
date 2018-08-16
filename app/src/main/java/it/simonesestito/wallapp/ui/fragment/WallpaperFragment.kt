@@ -21,6 +21,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
 import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.ui.activity.MainActivity
@@ -48,7 +49,7 @@ class WallpaperFragment : SharedElementsDestination() {
         super.onViewCreated(view, savedInstanceState)
         wallpaperRepository.loadWallpaper(
                 args.wallpaper,
-                getSuggestedWallpaperFormat(resources.displayMetrics),
+                FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
                 imageView = wallpaperImage,
                 onPaletteReady = { applyLayoutColor(it) }
         )
