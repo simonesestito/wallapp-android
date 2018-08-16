@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.WorkerThread
@@ -26,7 +27,7 @@ import java.io.IOException
  */
 @WorkerThread
 fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int) =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || location == WALLPAPER_LOCATION_BOTH) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             applyWallpaper(context, wallpaperFile)
         } else {
             applyWallpaper(context, wallpaperFile, location)
@@ -99,15 +100,17 @@ private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {
 @RequiresApi(Build.VERSION_CODES.N)
 @WorkerThread
 private fun applyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int): Boolean {
-    @WallpaperLocation val which: Int = when (location) {
+    val which: Int = when (location) {
         WALLPAPER_LOCATION_HOME -> WallpaperManager.FLAG_SYSTEM
         WALLPAPER_LOCATION_LOCK -> WallpaperManager.FLAG_LOCK
-        WALLPAPER_LOCATION_BOTH -> WallpaperManager.FLAG_LOCK or WallpaperManager.FLAG_LOCK
+        WALLPAPER_LOCATION_BOTH -> WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK
         else -> throw IllegalArgumentException("Unknown location $location")
     }
 
     val systemWallpaperService =
             ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
+
+    Log.d("WallpaperUtils", "Flag which: $which")
 
     return try {
         systemWallpaperService
