@@ -2,22 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="?attr/actionBarSize">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:textAppearance="@style/AppTheme.Text.Standard"
         android:id="@+id/categoryDescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="36dp"
-        android:gravity="center" />
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/activity_content_margin"
+        android:layout_marginEnd="@dimen/activity_content_margin"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textAppearance="@style/AppTheme.Text.Standard" />
 
     <it.simonesestito.wallapp.ui.DiscreteRecyclerView
         android:id="@+id/wallpapersRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="36dp"
-        android:layout_marginBottom="48dp" />
+        android:layout_height="0dp"
+        android:layout_marginBottom="24dp"
+        android:layout_weight="6" />
 </LinearLayout>
 
