@@ -7,7 +7,7 @@ import androidx.lifecycle.OnLifecycleEvent
 
 
 class LifecycleExecutor(private inline val action: () -> Unit) : LifecycleObserver {
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun executeAction(owner: LifecycleOwner) {
         owner.lifecycle.removeObserver(this)
         action()
