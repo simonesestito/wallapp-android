@@ -51,57 +51,6 @@
             android:text="@string/wallpaper_setup_location_both" />
     </com.google.android.material.chip.ChipGroup>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/wallpaper_setup_bottom_sheet_format"
-        android:textAppearance="@style/AppTheme.Text.Subtitle" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_separator_small"
-        android:text="@string/wallpaper_setup_bottom_sheet_format_description"
-        android:textAppearance="@style/AppTheme.Text.Standard" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/wallpaperFormatChipGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_separator_normal"
-        app:singleLine="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/wallpaperFormatChip16_9"
-            style="@style/AppTheme.OutlineChip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wallpaper_format_16_9" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/wallpaperFormatChip18_9"
-            style="@style/AppTheme.OutlineChip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wallpaper_format_18_9" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/wallpaperFormatChipIphone"
-            style="@style/AppTheme.OutlineChip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wallpaper_format_iphone" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/wallpaperFormatChipIphoneX"
-            style="@style/AppTheme.OutlineChip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wallpaper_format_iphone_x" />
-
-    </com.google.android.material.chip.ChipGroup>
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/wallpaperApplyButton"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
