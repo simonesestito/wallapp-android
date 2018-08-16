@@ -1,18 +1,15 @@
 package it.simonesestito.wallapp.utils
 
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -67,16 +64,6 @@ inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) ->
 }
 
 fun Fragment.findNavController() = NavHostFragment.findNavController(this)
-
-/**
- * Get an optimal size for [android.util.LruCache] classes
- * Based on [ActivityManager.getMemoryClass] value
- * @param divider
- * @return Optimal size in Bytes
- */
-fun Context.getOptimalCacheSize(divider: Int = 8) =
-        ContextCompat.getSystemService(this, ActivityManager::class.java)!!
-                .memoryClass * 1024 * 1024 / divider
 
 /**
  * Set light status bar altering [View.setSystemUiVisibility] flags
@@ -224,19 +211,6 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
     } else {
         lifecycle.addObserver(LifecycleExecutor(action))
     }
-}
-
-/**
- * Set height to a View programmatically
- * @receiver Change the height of this view
- * @param height New height to set
- */
-fun View.setHeight(height: Int) {
-    Log.d("View", "Setting height $height")
-    this.layoutParams = this.layoutParams.apply {
-        this@apply.height = height
-    }
-    this.requestLayout()
 }
 
 /**
