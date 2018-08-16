@@ -16,7 +16,7 @@ import it.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
 import it.simonesestito.wallapp.utils.getViewModel

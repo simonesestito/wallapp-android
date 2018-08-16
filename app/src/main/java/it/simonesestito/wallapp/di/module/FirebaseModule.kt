@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.dagger.module
+package it.simonesestito.wallapp.di.module
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage

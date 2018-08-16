@@ -1,11 +1,11 @@
-package it.simonesestito.wallapp.dagger.module
+package it.simonesestito.wallapp.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import it.simonesestito.wallapp.dagger.annotation.ViewModelMapKey
+import it.simonesestito.wallapp.di.annotation.ViewModelMapKey
 import it.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import it.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel

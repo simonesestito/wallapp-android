@@ -10,7 +10,7 @@ import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.dagger.component.DaggerServiceInjector
+import it.simonesestito.wallapp.di.component.DaggerServiceInjector
 import it.simonesestito.wallapp.utils.ThreadUtils
 import it.simonesestito.wallapp.utils.restoreWallpaper
 import kotlinx.android.synthetic.main.preview_floating_window.view.*

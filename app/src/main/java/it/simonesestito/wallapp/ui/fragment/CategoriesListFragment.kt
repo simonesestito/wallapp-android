@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import it.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter

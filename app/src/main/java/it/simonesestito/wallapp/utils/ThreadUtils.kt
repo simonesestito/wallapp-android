@@ -2,8 +2,8 @@ package it.simonesestito.wallapp.utils
 
 import android.os.Handler
 import dagger.Reusable
-import it.simonesestito.wallapp.dagger.annotation.IoThread
-import it.simonesestito.wallapp.dagger.annotation.MainHandler
+import it.simonesestito.wallapp.di.annotation.IoThread
+import it.simonesestito.wallapp.di.annotation.MainHandler
 import java.util.concurrent.ExecutorService
 import javax.inject.Inject
 

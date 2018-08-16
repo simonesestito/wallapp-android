@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.dagger.module
+package it.simonesestito.wallapp.di.module
 
 import dagger.Module
 import dagger.Provides

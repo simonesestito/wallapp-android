@@ -1,4 +1,4 @@
-package it.simonesestito.wallapp.dagger.annotation
+package it.simonesestito.wallapp.di.annotation
 
 import javax.inject.Named
 
