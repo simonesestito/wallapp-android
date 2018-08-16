@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.forEach
@@ -135,17 +136,21 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     private fun applyLayoutColor(palette: Palette) {
-        val primary = palette.getDominantColor(Color.WHITE)
-        val isPrimaryLight = primary.isLightColor()
+        val appAccent = ResourcesCompat.getColor(resources, R.color.color_accent, null)
+
+        val primary = palette.getDominantColor(appAccent)
         statusBarColor = primary
-        downloadFab.backgroundTintList = ColorStateList.valueOf(primary)
 
-        val primaryUi = if (isPrimaryLight) Color.DKGRAY else Color.WHITE
-        backButton.setColorFilter(primaryUi)
-        downloadFab.imageTintList = ColorStateList.valueOf(primaryUi)
+        val vibrant = palette.getVibrantColor(appAccent)
+        val isVibrantLight = vibrant.isLightColor()
+        downloadFab.backgroundTintList = ColorStateList.valueOf(vibrant)
 
-        val primaryIcons = if (isPrimaryLight) Color.DKGRAY else primary
-        bottomAppBar.menu?.forEach { it.icon.setColorFilter(primaryIcons, PorterDuff.Mode.SRC_ATOP) }
+        val uiColor = if (isVibrantLight) Color.DKGRAY else Color.WHITE
+        backButton.setColorFilter(uiColor)
+        downloadFab.imageTintList = ColorStateList.valueOf(uiColor)
+
+        val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
+        bottomAppBar.menu?.forEach { it.icon.setColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP) }
     }
 
     private fun doShare() {
