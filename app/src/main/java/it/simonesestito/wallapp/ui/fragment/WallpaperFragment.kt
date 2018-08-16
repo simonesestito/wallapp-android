@@ -23,7 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
-import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet

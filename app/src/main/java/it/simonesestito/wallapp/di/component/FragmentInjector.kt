@@ -1,10 +1,9 @@
-package it.simonesestito.wallapp.dagger.component
+package it.simonesestito.wallapp.di.component
 
 import dagger.Component
-import dagger.Reusable
-import it.simonesestito.wallapp.dagger.module.CacheModule
-import it.simonesestito.wallapp.dagger.module.FirebaseModule
-import it.simonesestito.wallapp.dagger.module.ViewModelModule
+import it.simonesestito.wallapp.di.module.CacheModule
+import it.simonesestito.wallapp.di.module.FirebaseModule
+import it.simonesestito.wallapp.di.module.ViewModelModule
 import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import it.simonesestito.wallapp.ui.fragment.CategoriesListFragment

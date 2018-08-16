@@ -1,9 +1,8 @@
-package it.simonesestito.wallapp.dagger.component
+package it.simonesestito.wallapp.di.component
 
 import dagger.Component
-import dagger.Reusable
 import it.simonesestito.wallapp.backend.service.PreviewService
-import it.simonesestito.wallapp.dagger.module.ThreadModule
+import it.simonesestito.wallapp.di.module.ThreadModule
 
 
 @Component(modules = [ThreadModule::class])

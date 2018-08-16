@@ -15,7 +15,7 @@ import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.service.PreviewService
-import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.getViewModel
 import it.simonesestito.wallapp.utils.tryDismiss

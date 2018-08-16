@@ -13,7 +13,7 @@ import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.dagger.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.utils.findNavController
