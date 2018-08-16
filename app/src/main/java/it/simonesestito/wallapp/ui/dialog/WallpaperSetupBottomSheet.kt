@@ -49,17 +49,9 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Apply default selections
-        val defaultFormatId = when (getSuggestedWallpaperFormat(resources.displayMetrics)) {
-            FORMAT_16_9 -> R.id.wallpaperFormatChip16_9
-            FORMAT_18_9 -> R.id.wallpaperFormatChip18_9
-            FORMAT_IPHONE -> R.id.wallpaperFormatChipIphone
-            FORMAT_IPHONE_X -> R.id.wallpaperFormatChipIphoneX
-            else -> R.id.wallpaperFormatChip18_9 // Fallback
-        }
-        view.wallpaperFormatChipGroup.check(defaultFormatId)
+        // Apply default selection
         view.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
+
         view.wallpaperApplyButton.setOnClickListener { _ ->
             viewModel.applyWallpaper(
                     requireContext(),
