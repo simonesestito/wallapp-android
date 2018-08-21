@@ -58,7 +58,7 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
             sharedElements[name] = transitionView
 
             val directions = SingleCategoryFragmentDirections
-                    .toWallpaperDetails(wallpaper)
+                    .toWallpaperDetails(wallpaper.id, wallpaper.categoryId)
                     .setTransitionName(name)
             findNavController().navigate(directions)
         }

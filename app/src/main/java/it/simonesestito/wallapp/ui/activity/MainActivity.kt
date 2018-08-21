@@ -26,6 +26,13 @@ class MainActivity : AppCompatActivity() {
         stopService(Intent(this, PreviewService::class.java))
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.action == Intent.ACTION_VIEW) {
+            findNavController(R.id.navHostFragment).onHandleDeepLink(intent)
+        }
+    }
+
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         hideAppbarElevation()
