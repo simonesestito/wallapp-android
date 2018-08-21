@@ -20,7 +20,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.forEach
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
-import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
@@ -159,8 +158,11 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     private fun doShare() {
-        Snackbar.make(coordinatorRoot, R.string.todo_coming_soon_message, Snackbar.LENGTH_LONG).show()
-        // TODO Share wallpaper file
+        val url = "$BASE_WEBAPP_URL/${wallpaper.categoryId}/${wallpaper.id}"
+        val i = Intent(Intent.ACTION_SEND)
+        i.type = "text/plain"
+        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.wallpaper_share_text_message, url))
+        startActivity(Intent.createChooser(i, getString(R.string.wallpaper_share_chooser_title)))
     }
 
     private fun doPreview() {

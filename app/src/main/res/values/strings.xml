@@ -28,4 +28,6 @@
     <string name="permission_read_storage_request_message">You should grant the permission to read storage to permit the app to backup your current wallpaper</string>
     <string name="wallpaper_preview_state_backup">Taking care about your current wallpaper…</string>
     <string name="preview_mode_title_close_preview">Leaving Preview Mode…</string>
+    <string name="wallpaper_share_text_message">Look at this awesome wallpaper I found!\n%s</string>
+    <string name="wallpaper_share_chooser_title">Share wallpaper link</string>
 </resources>
