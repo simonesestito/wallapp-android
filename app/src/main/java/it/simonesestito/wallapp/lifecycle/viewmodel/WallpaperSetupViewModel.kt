@@ -46,6 +46,11 @@ class WallpaperSetupViewModel @Inject constructor(
 
         mutableDownloadStatus.value = STATUS_DOWNLOADING
 
+        if (!context.isConnectivityOnline()) {
+            mutableDownloadStatus.value = STATUS_ERROR
+            return
+        }
+
         currentTempFile = context.createCacheFile("wall-${wallpaper.id}-$format")
         currentFirebaseTask = wallpaperRepository.downloadWallpaper(wallpaper, format, currentTempFile!!).apply {
             addOnCanceledListener { mutableDownloadStatus.value = STATUS_NOTHING }

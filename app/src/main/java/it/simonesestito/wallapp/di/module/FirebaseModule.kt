@@ -4,16 +4,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
+import javax.inject.Singleton
 
 
 @Module
 class FirebaseModule {
     @Provides
-    @Reusable
+    @Singleton
     fun firestore() = FirebaseFirestore.getInstance()
 
     @Provides
-    @Reusable
+    @Singleton
     fun storage() = FirebaseStorage.getInstance()
 }
