@@ -31,12 +31,20 @@
         android:id="@+id/wallpaperFragment"
         android:name="it.simonesestito.wallapp.ui.fragment.WallpaperFragment">
         <argument
-            android:name="wallpaper"
-            app:argType="it.simonesestito.wallapp.backend.model.Wallpaper" />
+            android:name="wallpaperId"
+            app:argType="string" />
+        <argument
+            android:name="categoryId"
+            app:argType="string" />
         <argument
             android:name="transitionName"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="https://wallapp-b7805.firebaseapp.com/{categoryId}/{wallpaperId}"
+            tools:targetApi="m" />
     </fragment>
 </navigation>

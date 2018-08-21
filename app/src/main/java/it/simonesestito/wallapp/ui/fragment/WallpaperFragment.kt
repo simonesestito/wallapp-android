@@ -23,6 +23,7 @@ import androidx.palette.graphics.Palette
 import com.google.android.material.snackbar.Snackbar
 import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
+import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
 import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
 import it.simonesestito.wallapp.ui.activity.MainActivity
@@ -41,6 +42,10 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperFragmentArgs.fromBundle(arguments)
     }
 
+    private val wallpaper: Wallpaper by lazy {
+        Wallpaper(args.wallpaperId, args.categoryId)
+    }
+
     @Inject lateinit var wallpaperRepository: IWallpaperRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -49,7 +54,7 @@ class WallpaperFragment : SharedElementsDestination() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         wallpaperRepository.loadWallpaper(
-                args.wallpaper,
+                wallpaper,
                 FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
                 imageView = wallpaperImage,
                 onPaletteReady = { applyLayoutColor(it) }
@@ -103,7 +108,7 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperSetupBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to args.wallpaper
+                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
@@ -129,7 +134,7 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperPreviewBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to args.wallpaper
+                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
