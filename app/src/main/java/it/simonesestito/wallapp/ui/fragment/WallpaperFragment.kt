@@ -80,6 +80,8 @@ class WallpaperFragment : SharedElementsDestination() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DaggerFragmentInjector.create().inject(this)
+
+        // TODO: Handle wrong wallpaper from URL
     }
 
     override fun onPause() {
