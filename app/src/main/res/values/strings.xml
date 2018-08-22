@@ -14,18 +14,11 @@
     <string name="wallpaper_setup_location_home">Home screen</string>
     <string name="wallpaper_setup_location_lock">Lock screen</string>
     <string name="wallpaper_setup_location_both">Both</string>
-    <string name="wallpaper_setup_bottom_sheet_format">Choose a format</string>
-    <string name="wallpaper_setup_bottom_sheet_format_description">Our wallpapers are available in different optimized sizes</string>
     <string name="wallpaper_setup_apply_button">Apply</string>
-    <string name="wallpaper_format_16_9" translatable="false">16:9</string>
-    <string name="wallpaper_format_18_9" translatable="false">18:9</string>
-    <string name="wallpaper_format_iphone" translatable="false">Standard iPhone</string>
-    <string name="wallpaper_format_iphone_x" translatable="false">iPhone X</string>
     <string name="wallpaper_setup_status_downloading">Downloading chosen wallpaper…</string>
     <string name="wallpaper_setup_status_success">Wallpaper applied! Enjoy</string>
     <string name="wallpaper_setup_status_failed">An error has occurred, please retry</string>
     <string name="wallpaper_setup_status_finalizing">Applying your wallpaper…</string>
-    <string name="todo_coming_soon_message">Coming soon, stay tuned!</string>
     <string name="preview_mode_title">Preview Mode</string>
     <string name="permission_request_dialog_title">Permission requested</string>
     <string name="permission_request_positive_button">Grant</string>
