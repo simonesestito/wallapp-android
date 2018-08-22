@@ -1,3 +1,10 @@
+/*
+ * This file is part of WallApp for Android.
+ * Copyright © 2018 Simone Sestito. All rights reserved.
+ */
+
+@file:Suppress("DEPRECATION")
+
 package it.simonesestito.wallapp.backend.repository.impl
 
 import android.graphics.Bitmap

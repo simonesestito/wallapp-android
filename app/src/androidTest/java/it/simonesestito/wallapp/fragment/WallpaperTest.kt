@@ -1,3 +1,8 @@
+/*
+ * This file is part of WallApp for Android.
+ * Copyright © 2018 Simone Sestito. All rights reserved.
+ */
+
 package it.simonesestito.wallapp.fragment
 
 import androidx.core.os.bundleOf

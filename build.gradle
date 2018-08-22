@@ -1,3 +1,8 @@
+/*
+ * This file is part of WallApp for Android.
+ * Copyright © 2018 Simone Sestito. All rights reserved.
+ */
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
