@@ -72,11 +72,11 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
         super.onViewCreated(view, savedInstanceState)
         // Setup ScrollView params
         view.wallpapersRecyclerView.apply {
-            setSlideOnFling(false)
-            setSlideOnFlingThreshold(500)
+            setSlideOnFling(true)
+            setSlideOnFlingThreshold(4500)
             setItemTransformer(ScaleTransformer.Builder()
                     .setMaxScale(1.0f)
-                    .setMinScale(0.85f)
+                    .setMinScale(0.9f)
                     .build())
         }
         populateView(args.category)
