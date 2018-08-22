@@ -24,7 +24,7 @@ interface IWallpaperRepository {
      * @param wallpaperId
      * @return LiveData of the Firestore document
      */
-    fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper>
+    fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper?>
 
     /**
      * Download the wallpaper to a [File]

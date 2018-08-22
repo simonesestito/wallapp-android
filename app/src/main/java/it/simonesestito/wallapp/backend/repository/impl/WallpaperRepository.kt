@@ -37,12 +37,15 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
         }
     }
 
-    override fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper> {
+    override fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper?> {
         val ref = firestore
                 .document("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS/$wallpaperId")
 
         return FirestoreLiveDocument(ref).map {
-            Wallpaper(it.id, categoryId)
+            if (it.exists())
+                Wallpaper(it.id, categoryId)
+            else
+                null
         }
     }
 

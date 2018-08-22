@@ -16,6 +16,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
@@ -47,11 +48,22 @@ fun <X, Y> LiveData<X>.map(converter: (X) -> Y): LiveData<Y> {
 /**
  * Map all items in a list contained in a [LiveData]
  */
-fun <L : List<I>, I, T> LiveData<L>.mapList(converter: (I) -> T): LiveData<List<T>> {
+inline fun <L : List<I>, I, T> LiveData<L>.mapList(crossinline converter: (I) -> T): LiveData<List<T>> {
     return Transformations.map(this) { list ->
         list.map(converter)
     }
 }
+
+/**
+ * Observe a LiveData only once, then remove the observer
+ */
+inline fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, crossinline onValue: (T?) -> Unit) =
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(newValue: T?) {
+                removeObserver(this /* Observer<T> */)
+                onValue(newValue)
+            }
+        })
 
 /**
  * Add a listener to a [RecyclerView]

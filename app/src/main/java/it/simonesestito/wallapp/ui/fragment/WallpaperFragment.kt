@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
@@ -52,6 +53,20 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // This fragment could be launched from URL
+        // Handle non existing wallpapers or wrong URL here
+        wallpaperRepository.getWallpaper(wallpaper.categoryId, wallpaper.id)
+                .observeOnce(this) {
+                    if (it == null) {
+                        // Notify error, this wallpaper doesn't exist
+                        Toast.makeText(requireContext(),
+                                R.string.wallpaper_details_not_found_error,
+                                Toast.LENGTH_LONG)
+                                .show()
+                        findNavController().popBackStack()
+                    }
+                }
+
         wallpaperRepository.loadWallpaper(
                 wallpaper,
                 FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
@@ -80,8 +95,6 @@ class WallpaperFragment : SharedElementsDestination() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DaggerFragmentInjector.create().inject(this)
-
-        // TODO: Handle wrong wallpaper from URL
     }
 
     override fun onPause() {

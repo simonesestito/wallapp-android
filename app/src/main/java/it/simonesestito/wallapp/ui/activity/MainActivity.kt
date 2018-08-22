@@ -2,11 +2,13 @@ package it.simonesestito.wallapp.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.PreviewService
+import it.simonesestito.wallapp.utils.TAG
 
 class MainActivity : AppCompatActivity() {
     private val defaultAppbarElevation by lazy {
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_VIEW) {
+            Log.d(TAG, "Received VIEW Intent with url: ${intent.data}")
             findNavController(R.id.navHostFragment).onHandleDeepLink(intent)
         }
     }
