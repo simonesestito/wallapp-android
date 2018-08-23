@@ -16,8 +16,8 @@ android {
         applicationId "it.simonesestito.wallapp"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "INTERNAL"
+        versionCode 2
+        versionName "INTERNAL - 2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     testOptions {
