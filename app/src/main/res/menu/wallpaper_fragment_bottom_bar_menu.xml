@@ -6,14 +6,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/wallpaperShare"
-        android:icon="@drawable/ic_share_black_24dp"
-        android:title="@string/wallpaper_action_share"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/wallpaperPreview"
         android:icon="@drawable/ic_eye_preview_black_24dp"
         android:title="@string/fab_wallpaper_action_preview"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/wallpaperShare"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/wallpaper_action_share"
+        app:showAsAction="ifRoom" />
 </menu>
