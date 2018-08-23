@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
@@ -225,10 +226,12 @@ fun <T> Collection<T>.containsOnly(element: T): Boolean {
  */
 fun LifecycleOwner.executeOnReady(action: () -> Unit) {
     val state = lifecycle.currentState
-    if (state.isAtLeast(Lifecycle.State.RESUMED)) {
+    if (state.ordinal >= Lifecycle.State.RESUMED.ordinal) {
+        Log.d("executeOnReady", "LifecycleOwner is ready, performing action")
         action()
     } else {
         lifecycle.addObserver(LifecycleExecutor(action))
+        Log.d("executeOnReady", "LifecycleOwner is not ready yet, action scheduled")
     }
 }
 

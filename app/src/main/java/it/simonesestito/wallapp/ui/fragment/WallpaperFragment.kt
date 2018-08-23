@@ -18,7 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
@@ -58,20 +58,6 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // This fragment could be launched from URL
-        // Handle non existing wallpapers or wrong URL here
-        wallpaperRepository.getWallpaper(wallpaper.categoryId, wallpaper.id)
-                .observeOnce(this) {
-                    if (it == null) {
-                        // Notify error, this wallpaper doesn't exist
-                        Toast.makeText(requireContext(),
-                                R.string.wallpaper_details_not_found_error,
-                                Toast.LENGTH_LONG)
-                                .show()
-                        findNavController().popBackStack()
-                    }
-                }
-
         wallpaperRepository.loadWallpaper(
                 wallpaper,
                 FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
@@ -102,14 +88,26 @@ class WallpaperFragment : SharedElementsDestination() {
         DaggerFragmentInjector.create().inject(this)
     }
 
-    override fun onPause() {
-        super.onPause()
-        downloadFab?.show()
-    }
-
     override fun onStart() {
         super.onStart()
         hideAppbar()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (activity?.intent?.action == Intent.ACTION_VIEW) {
+            // Intent fully handled, remove it from Activity
+            activity?.intent = null
+
+            // This fragment could be launched from URL
+            // Handle non existing wallpapers or wrong URL here
+            checkWallpaperExistence()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        downloadFab?.show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -121,6 +119,32 @@ class WallpaperFragment : SharedElementsDestination() {
                 }
             }
         }
+    }
+
+    private fun checkWallpaperExistence() {
+        wallpaperRepository.getWallpaper(wallpaper.categoryId, wallpaper.id)
+                .observeOnce(this) {
+                    if (it == null) {
+                        // Error, this wallpaper doesn't exist
+                        handleNonExistingWallpaper()
+                    }
+                }
+    }
+
+    private fun handleNonExistingWallpaper() {
+        // Generate link from wallpaper details
+        val url = "$BASE_WEBAPP_URL/${wallpaper.categoryId}/${wallpaper.id}"
+        // Open in a Chrome Custom Tab
+        // Don't use VIEW Intent because it will create a loop (it'll be handled by this app)
+        val customTabIntent = CustomTabsIntent.Builder()
+                .enableUrlBarHiding()
+                .setShowTitle(true)
+                .setToolbarColor(ResourcesCompat.getColor(resources, R.color.color_accent, null))
+                .build()
+        // Force Chrome
+        // It would have used the app itself instead (generating a loop)
+        customTabIntent.intent.setPackage("com.android.chrome")
+        customTabIntent.launchUrl(requireContext(), url.toUri())
     }
 
     private fun openSetupBottomSheet() {
