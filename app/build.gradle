@@ -47,6 +47,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.0-rc01'
     implementation 'androidx.palette:palette:1.0.0-rc01'
     implementation "com.github.lion4ik:arch-navigation-shared-elements:0.1"
+    implementation "androidx.browser:browser:1.0.0-rc01"
 
     // Dagger 2
     implementation "com.google.dagger:dagger:$dagger_version"
