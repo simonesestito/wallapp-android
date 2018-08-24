@@ -7,6 +7,7 @@ package it.simonesestito.wallapp.backend.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.firebase.firestore.DocumentSnapshot
 import it.simonesestito.wallapp.Identifiable
 import it.simonesestito.wallapp.KEY_COUNT
 import it.simonesestito.wallapp.KEY_DESCRIPTION
@@ -24,11 +25,11 @@ data class Category(
             parcel.readString()!!,
             parcel.readLong())
 
-    constructor(id: String, map: Map<String, Any>) : this(
-            id = id,
-            displayName = map[KEY_DISPLAY_NAME].toString(),
-            description = map[KEY_DESCRIPTION].toString(),
-            wallpapersCount = map[KEY_COUNT] as Long)
+    constructor(snap: DocumentSnapshot) : this(
+            id = snap.id,
+            displayName = snap.getString(KEY_DISPLAY_NAME) ?: "",
+            description = snap.getString(KEY_DESCRIPTION) ?: "",
+            wallpapersCount = snap.getLong(KEY_COUNT) ?: 0)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)

@@ -18,7 +18,7 @@ import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.AppInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.utils.findNavController
@@ -54,7 +54,7 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFragmentInjector.create().inject(this)
+        AppInjector.getInstance().inject(this)
 
         adapter.onItemClickListener = { wallpaper, transitionView ->
             // Setup SharedElements

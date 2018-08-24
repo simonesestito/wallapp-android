@@ -20,7 +20,7 @@ import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.service.PreviewService
-import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.AppInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.getViewModel
 import it.simonesestito.wallapp.utils.tryDismiss
@@ -43,7 +43,7 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFragmentInjector.create().inject(this)
+        AppInjector.getInstance().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
