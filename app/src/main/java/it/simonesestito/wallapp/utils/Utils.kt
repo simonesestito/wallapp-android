@@ -168,7 +168,7 @@ fun DialogFragment.tryDismiss(): Boolean {
 
 /**
  * Create a new file with random name in app cache
- * @receiver Context needed to get app cache directory
+ * @receiver Context needed to getInstance app cache directory
  * @param prefix File prefix
  * @param suffix File extension, with the dot
  * @throws IOException Error creating the file
@@ -236,7 +236,7 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
 }
 
 /**
- * Utility function to get a [ViewModel] using a [ViewModelProvider.Factory] as required by Dagger
+ * Utility function to getInstance a [ViewModel] using a [ViewModelProvider.Factory] as required by Dagger
  * Using this function you are obliged to pass a factory
  */
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelProvider.Factory) =

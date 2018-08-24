@@ -21,7 +21,7 @@ import it.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.AppInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
 import it.simonesestito.wallapp.utils.getViewModel
@@ -46,7 +46,7 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFragmentInjector.create().inject(this)
+        AppInjector.getInstance().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

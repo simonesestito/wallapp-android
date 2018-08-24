@@ -29,10 +29,7 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
                 .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
 
         return FirestoreLiveCollection(ref).mapList { snap ->
-            Category(
-                    snap.id,
-                    snap.data ?: emptyMap()
-            )
+            Category(snap)
         }
     }
 
@@ -41,10 +38,7 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
                 .document("$FIRESTORE_CATEGORIES/$id")
 
         return FirestoreLiveDocument(ref).map { snap ->
-            Category(
-                    snap.id,
-                    snap.data ?: emptyMap()
-            )
+            Category(snap)
         }
     }
 

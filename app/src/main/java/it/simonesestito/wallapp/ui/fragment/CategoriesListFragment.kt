@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.AppInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import it.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
 import it.simonesestito.wallapp.ui.adapter.CategoriesAdapter
@@ -36,7 +36,7 @@ class CategoriesListFragment : AbstractAppFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFragmentInjector.create().inject(this)
+        AppInjector.getInstance().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

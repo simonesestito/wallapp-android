@@ -30,7 +30,7 @@ import it.simonesestito.wallapp.*
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.repository.IWallpaperRepository
-import it.simonesestito.wallapp.di.component.DaggerFragmentInjector
+import it.simonesestito.wallapp.di.component.AppInjector
 import it.simonesestito.wallapp.ui.activity.MainActivity
 import it.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import it.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
@@ -85,7 +85,7 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerFragmentInjector.create().inject(this)
+        AppInjector.getInstance().inject(this)
     }
 
     override fun onStart() {

@@ -7,16 +7,22 @@ package it.simonesestito.wallapp.backend.service
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.backend.cache.PaletteCache
 import it.simonesestito.wallapp.backend.model.Wallpaper
-import it.simonesestito.wallapp.di.component.DaggerServiceInjector
+import it.simonesestito.wallapp.di.component.AppInjector
+import it.simonesestito.wallapp.utils.TAG
 import it.simonesestito.wallapp.utils.ThreadUtils
+import it.simonesestito.wallapp.utils.isLightColor
 import it.simonesestito.wallapp.utils.restoreWallpaper
 import kotlinx.android.synthetic.main.preview_floating_window.view.*
 import javax.inject.Inject
@@ -25,6 +31,7 @@ import javax.inject.Inject
 class PreviewService : FloatingWindowService() {
     private lateinit var wallpaper: Wallpaper
     @Inject lateinit var threads: ThreadUtils
+    @Inject lateinit var paletteCache: PaletteCache
 
     override val isFloatingWindow: Boolean
         get() = false // Don't allow dragging
@@ -50,13 +57,25 @@ class PreviewService : FloatingWindowService() {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerServiceInjector.create().inject(this)
+        AppInjector.getInstance().inject(this)
     }
 
     override fun onViewAdded(view: View, arguments: Bundle?) {
         super.onViewAdded(view, arguments)
         view.previewModeButtonPositive.setOnClickListener { sendResult(view, true) }
         view.previewModeButtonNegative.setOnClickListener { sendResult(view, false) }
+        val default = Color.TRANSPARENT
+        Log.d(TAG, "Wallpaper $wallpaper")
+        val color = paletteCache[wallpaper]?.getDominantColor(default) ?: default
+        Log.d(TAG, "Cached color: $color")
+        if (color != default) {
+            // Apply color to UI
+            view.previewFloatingWindowRoot.setBackgroundColor(color)
+            val uiColor = if (color.isLightColor()) Color.BLACK else Color.WHITE
+            view.previewModeBannerTitle.setTextColor(uiColor)
+            view.previewModeButtonPositive.setColorFilter(uiColor, PorterDuff.Mode.SRC_ATOP)
+            view.previewModeButtonNegative.setColorFilter(uiColor, PorterDuff.Mode.SRC_ATOP)
+        }
     }
 
     override fun onCreateLayoutParams() =

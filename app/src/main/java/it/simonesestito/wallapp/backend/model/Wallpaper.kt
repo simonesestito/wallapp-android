@@ -13,7 +13,7 @@ import it.simonesestito.wallapp.STORAGE_WALLPAPERS
 import it.simonesestito.wallapp.annotations.WallpaperFormat
 
 
-data class Wallpaper(override val id: String, val categoryId: String) : Identifiable<String>, Parcelable {
+data class Wallpaper constructor(override val id: String, val categoryId: String) : Identifiable<String>, Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             parcel.readString()!!)
