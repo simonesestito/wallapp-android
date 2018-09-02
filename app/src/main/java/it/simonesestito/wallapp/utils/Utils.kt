@@ -6,6 +6,7 @@
 package it.simonesestito.wallapp.utils
 
 import android.app.Activity
+import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -252,6 +253,14 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelProvider.Factory) =
         ViewModelProviders.of(this, factory)[T::class.java]
 
+/**
+ * Check if the user is connected to the Internet
+ */
 fun Context.isConnectivityOnline() =
         ContextCompat.getSystemService(this, ConnectivityManager::class.java)
                 ?.activeNetworkInfo?.isConnected ?: false
+
+/**
+ * Check if the user has a live wallpaper set
+ */
+fun WallpaperManager.isSetLiveWallpaper() = this.wallpaperInfo != null
