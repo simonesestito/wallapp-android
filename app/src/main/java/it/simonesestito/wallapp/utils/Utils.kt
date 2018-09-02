@@ -28,10 +28,20 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
+import it.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import it.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
 import java.util.*
+
+typealias LocalizedString = Map<String, Any>
+
+val LocalizedString.localized: String
+    get() {
+        val currentLang = Locale.getDefault().language
+        val localized = this[currentLang] ?: this[FIRESTORE_LOCALIZED_DEFAULT] ?: ""
+        return localized.toString()
+    }
 
 val Any.TAG: String
     get() = this.javaClass.simpleName

@@ -23,13 +23,14 @@ import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
 import it.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import it.simonesestito.wallapp.utils.findNavController
 import it.simonesestito.wallapp.utils.getViewModel
+import it.simonesestito.wallapp.utils.localized
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
 import javax.inject.Inject
 
 class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
     override val title
-        get() = args.category.displayName
+        get() = args.category.displayName.localized
 
     private val viewModel by lazy {
         getViewModel<WallpaperViewModel>(viewModelFactory)
@@ -89,7 +90,7 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
 
     private fun populateView(category: Category) {
         // Set category description
-        categoryDescription.text = category.description
+        categoryDescription.text = category.description.localized
 
         wallpapersRecyclerView.adapter = this.adapter
 
