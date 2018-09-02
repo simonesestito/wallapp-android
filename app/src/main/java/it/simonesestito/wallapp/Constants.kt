@@ -17,6 +17,7 @@ const val KEY_CREATION_DATE = "creationDate"
 const val KEY_DISPLAY_NAME = "displayName"
 const val KEY_DESCRIPTION = "description"
 const val KEY_COUNT = "count"
+const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
 const val REQUEST_PREVIEW_OVERLAY_PERMISSION = 1
 const val REQUEST_READ_STORAGE_PERMISSION = 2

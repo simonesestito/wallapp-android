@@ -13,6 +13,7 @@ import dagger.Reusable
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.repository.ICategoryRepository
+import it.simonesestito.wallapp.utils.localized
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 import javax.inject.Inject
 
@@ -28,8 +29,8 @@ class CategoriesAdapter @Inject constructor(private val categoryRepository: ICat
         val category = data[position]
 
         holder.apply {
-            nameView.text = category.displayName
-            descriptionView.text = category.description
+            nameView.text = category.displayName.localized
+            descriptionView.text = category.description.localized
             setWallpapersCount(category.wallpapersCount)
             categoryRepository.loadCoverOn(category.id, coverView)
             itemView.setOnClickListener {
