@@ -161,7 +161,11 @@ class WallpaperFragment : SharedElementsDestination() {
         LocalBroadcastManager.getInstance(requireContext())
                 .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, receiverContext ->
                     // Resume current Activity
-                    receiverContext.startActivity(Intent(receiverContext, MainActivity::class.java))
+                    receiverContext.startActivity(
+                            Intent(receiverContext, MainActivity::class.java).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                    )
 
                     // Handle received result
                     val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
