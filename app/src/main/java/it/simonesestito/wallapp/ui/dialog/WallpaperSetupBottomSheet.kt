@@ -9,6 +9,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +55,8 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.copyrightNoticeText.movementMethod = LinkMovementMethod.getInstance()
+
         // Apply default selection
         view.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
 
