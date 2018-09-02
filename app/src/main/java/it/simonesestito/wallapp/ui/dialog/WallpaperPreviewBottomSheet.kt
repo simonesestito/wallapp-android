@@ -5,28 +5,33 @@
 
 package it.simonesestito.wallapp.ui.dialog
 
+import android.app.WallpaperManager
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.postDelayed
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
+import it.simonesestito.wallapp.EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE
+import it.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
+import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.*
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.service.PreviewService
 import it.simonesestito.wallapp.di.component.AppInjector
 import it.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import it.simonesestito.wallapp.utils.getViewModel
+import it.simonesestito.wallapp.utils.isSetLiveWallpaper
 import it.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.view.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*
 import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.*
+import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.view.*
 import javax.inject.Inject
 
 
@@ -51,6 +56,13 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val wallpaperManager = ContextCompat.getSystemService(requireContext(), WallpaperManager::class.java)!!
+        if (wallpaperManager.isSetLiveWallpaper()) {
+            // Preview Mode doesn't support live wallpapers
+            showFailedResult(R.string.wallpaper_preview_live_wallpaper_set_error)
+            return
+        }
+
         viewModel.getDownloadStatus().observe(this, Observer { status ->
             when (status) {
                 STATUS_INIT -> {
@@ -74,7 +86,7 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
         viewModel.applyPreviewWallpaper(requireContext(), wallpaperArg)
     }
 
-    private fun showFailedResult() {
+    private fun showFailedResult(@StringRes failedText: Int = R.string.wallpaper_setup_status_failed) {
         wallpaperDownloading?.apply {
             animate()
                     .alpha(0f)
@@ -85,7 +97,7 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
         }
 
         wallpaperFeedbackImage?.setImageResource(R.drawable.ic_sentiment_very_dissatisfied_red_24dp)
-        wallpaperFeedbackText?.setText(R.string.wallpaper_setup_status_failed)
+        wallpaperFeedbackText?.setText(failedText)
 
         wallpaperFeedback?.apply {
             animate()
@@ -95,11 +107,6 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
                     }.alpha(1f)
                     .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                     .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .withEndAction {
-                        Handler(Looper.myLooper()).postDelayed(BOTTOMSHEET_AUTO_DISMISS_DELAY) {
-                            tryDismiss()
-                        }
-                    }
                     .start()
         }
     }
