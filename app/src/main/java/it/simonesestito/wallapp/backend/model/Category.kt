@@ -8,7 +8,10 @@ package it.simonesestito.wallapp.backend.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.firestore.DocumentSnapshot
-import it.simonesestito.wallapp.*
+import it.simonesestito.wallapp.Identifiable
+import it.simonesestito.wallapp.KEY_COUNT
+import it.simonesestito.wallapp.KEY_DESCRIPTION
+import it.simonesestito.wallapp.KEY_DISPLAY_NAME
 import it.simonesestito.wallapp.utils.LocalizedString
 
 data class Category(
@@ -30,18 +33,8 @@ data class Category(
     @Suppress("UNCHECKED_CAST")
     constructor(snap: DocumentSnapshot) : this(
             id = snap.id,
-            displayName = try {
-                snap.get(KEY_DISPLAY_NAME) as LocalizedString
-            } catch (e: ClassCastException) {
-                //FIXME: temporary until all categories are translated
-                mapOf(FIRESTORE_LOCALIZED_DEFAULT to snap.getString(KEY_DISPLAY_NAME)) as LocalizedString
-            },
-            description = try {
-                snap.get(KEY_DESCRIPTION) as LocalizedString
-            } catch (e: ClassCastException) {
-                //FIXME: temporary until all categories are translated
-                mapOf(FIRESTORE_LOCALIZED_DEFAULT to snap.getString(KEY_DESCRIPTION)) as LocalizedString
-            },
+            displayName = snap.get(KEY_DISPLAY_NAME) as LocalizedString,
+            description = snap.get(KEY_DESCRIPTION) as LocalizedString,
             wallpapersCount = snap.getLong(KEY_COUNT) ?: 0)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
