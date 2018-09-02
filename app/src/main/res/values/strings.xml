@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ~ This file is part of WallApp for Android.
   ~ Copyright © 2018 Simone Sestito. All rights reserved.
   -->
 
 <resources>
-    <string name="app_name">WallApp</string>
+    <string name="app_name" translatable="false">WallApp</string>
     <string name="categories_empty_view_text">Internet connection required</string>
     <string name="category_wallpapers_count_prefix">%d wallpapers</string>
     <string name="fab_wallpaper_action_download">Download wallpaper</string>
