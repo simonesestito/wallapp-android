@@ -9,6 +9,7 @@ import android.Manifest
 import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
@@ -42,10 +43,13 @@ fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocat
 @WorkerThread
 fun backupWallpaper(context: Context) {
     val destFile = File(context.noBackupFilesDir, BACKUP_WALLPAPER_FILENAME)
-    ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
-            .drawable
-            .toBitmap()
-            .writeToFile(destFile, recycleOnEnd = true)
+    val userWallpaper = ContextCompat.getSystemService(context, WallpaperManager::class.java)?.drawable!!
+
+    if (userWallpaper is BitmapDrawable) {
+        userWallpaper.bitmap.writeToFile(destFile, recycleOnEnd = false)
+    } else {
+        userWallpaper.toBitmap().writeToFile(destFile, recycleOnEnd = true)
+    }
 }
 
 @WorkerThread
@@ -77,7 +81,7 @@ fun getSuggestedWallpaperFormat(displayMetrics: DisplayMetrics): String {
             .first()
 }
 
-@Throws(IOException::class)
+@Throws(IOException::class, IllegalStateException::class)
 @WorkerThread
 fun Bitmap.writeToFile(dest: File, recycleOnEnd: Boolean) {
     dest.outputStream().use {
