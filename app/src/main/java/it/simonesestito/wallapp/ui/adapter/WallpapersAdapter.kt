@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import dagger.Reusable
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
@@ -21,7 +20,6 @@ import javax.inject.Inject
 /**
  * Wallpapers Adapter (format PREVIEW)
  */
-@Reusable
 class WallpapersAdapter @Inject constructor(private val wallpaperRepository: WallpaperRepository)
     : AsyncAdapter<Wallpaper, WallpapersVH>() {
 

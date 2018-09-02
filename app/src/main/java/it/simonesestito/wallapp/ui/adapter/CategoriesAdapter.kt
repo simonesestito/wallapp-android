@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import dagger.Reusable
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
 import it.simonesestito.wallapp.backend.repository.ICategoryRepository
@@ -20,7 +19,6 @@ import javax.inject.Inject
 /**
  * Adapter for categories list
  */
-@Reusable
 class CategoriesAdapter @Inject constructor(private val categoryRepository: ICategoryRepository)
     : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
