@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "637150678980-v1vr0tnrl5r6qcgkmmt8vu6duo3o4jbb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.simonesestito.wallapp",
+            "certificate_hash": "065cd358baffdd0116a76be5df020b5f467f0272"
+          }
+        },
+        {
           "client_id": "637150678980-uivvlc0hfcm5tg6cb1p5cl4v8up1qa7o.apps.googleusercontent.com",
           "client_type": 3
         }
