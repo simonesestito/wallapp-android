@@ -55,6 +55,22 @@
             android:text="@string/wallpaper_setup_location_both" />
     </com.google.android.material.chip.ChipGroup>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/wallpaperFormatsInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_separator_small"
+        android:text="@string/wallpaper_setup_formats_info"
+        android:textAppearance="@style/AppTheme.Text.Standard" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/copyrightNoticeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_separator_normal"
+        android:text="@string/wallpaper_setup_copyright_notice"
+        android:textAppearance="@style/AppTheme.Text.Standard" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/wallpaperApplyButton"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
