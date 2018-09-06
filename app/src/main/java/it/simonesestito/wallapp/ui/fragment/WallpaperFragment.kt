@@ -18,7 +18,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
@@ -134,17 +133,7 @@ class WallpaperFragment : SharedElementsDestination() {
     private fun handleNonExistingWallpaper() {
         // Generate link from wallpaper details
         val url = "$BASE_WEBAPP_URL/${wallpaper.categoryId}/${wallpaper.id}"
-        // Open in a Chrome Custom Tab
-        // Don't use VIEW Intent because it will create a loop (it'll be handled by this app)
-        val customTabIntent = CustomTabsIntent.Builder()
-                .enableUrlBarHiding()
-                .setShowTitle(true)
-                .setToolbarColor(ResourcesCompat.getColor(resources, R.color.color_accent, null))
-                .build()
-        // Force Chrome
-        // It would have used the app itself instead (generating a loop)
-        customTabIntent.intent.setPackage("com.android.chrome")
-        customTabIntent.launchUrl(requireContext(), url.toUri())
+        requireContext().openUrl(url, forceChrome = true)
     }
 
     private fun openSetupBottomSheet() {

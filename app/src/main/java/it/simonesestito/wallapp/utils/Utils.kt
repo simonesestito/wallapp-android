@@ -18,8 +18,11 @@ import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -29,7 +32,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
+import it.simonesestito.wallapp.CHROME_PACKAGE_NAME
 import it.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
+import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
@@ -264,3 +269,37 @@ fun Context.isConnectivityOnline() =
  * Check if the user has a live wallpaper set
  */
 fun WallpaperManager.isSetLiveWallpaper() = this.wallpaperInfo != null
+
+/**
+ * Open a given URL
+ * @param forceChrome True to set the Intent package as Chrome package name
+ */
+fun Context.openUrl(url: String, forceChrome: Boolean = false, useCustomTab: Boolean = true) {
+    if (useCustomTab) {
+        val customTabIntent = CustomTabsIntent.Builder()
+                .enableUrlBarHiding()
+                .setShowTitle(true)
+                .setToolbarColor(ResourcesCompat.getColor(resources, R.color.color_accent, null))
+                .build()
+
+        if (forceChrome) {
+            customTabIntent.intent.setPackage(CHROME_PACKAGE_NAME)
+        }
+
+        customTabIntent.launchUrl(this, url.toUri())
+    } else {
+        startActivity(Intent().apply {
+            action = Intent.ACTION_VIEW
+            data = url.toUri()
+
+            if (forceChrome) {
+                `package` = CHROME_PACKAGE_NAME
+            }
+
+            if (this !is Activity) {
+                // Add this flag to launch an Activity from non-activity context
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        })
+    }
+}
