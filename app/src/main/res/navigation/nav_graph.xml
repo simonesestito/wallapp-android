@@ -9,6 +9,14 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/categoriesFragment">
 
+    <action
+        android:id="@+id/openAbout"
+        app:destination="@id/aboutFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fast_fade_out"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="it.simonesestito.wallapp.ui.fragment.CategoriesListFragment"
@@ -51,4 +59,8 @@
             app:uri="https://wallapp-b7805.firebaseapp.com/{categoryId}/{wallpaperId}"
             tools:targetApi="m" />
     </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="it.simonesestito.wallapp.ui.fragment.AboutFragment"
+        tools:layout="@layout/about_fragment" />
 </navigation>

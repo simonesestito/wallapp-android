@@ -30,4 +30,15 @@
     <string name="generic_loading_message">Caricamento in corso…</string>
     <string name="wallpaper_setup_formats_info">I nostri sfondi sono ottimizzati per la dimensione del tuo schermo</string>
     <string name="wallpaper_preview_live_wallpaper_set_error">La modalità anteprima non può funzionare quando si sta usando uno sfondo animato.\nPer favore, imposta lo sfondo direttamente.</string>
+    <string name="app_motto">Nessuna pubblicità. Nessun trucco. Solo sfondi.</string>
+    <string name="app_description">Descrizione da fare</string>
+    <string name="about_fragment_title">Riguardo a noi</string>
+    <string name="about_fragment_authors_title">Chi c\'è dietro</string>
+    <string name="about_button_portfolio">Portfolio</string>
+    <string name="about_button_email">Email</string>
+    <string name="about_author_role_1">Sviluppatore app Android e Web\nCo-designer Android</string>
+    <string name="about_author_role_2">iOS developer\nDesigner iOS e Android</string>
+    <string name="about_fragment_feedback_title">Invia un feedback</string>
+    <string name="about_feedback_play_store">Vota su Google Play</string>
+    <string name="activity_not_found_error">Nessuna app installata può eseguire questa azione</string>
 </resources>

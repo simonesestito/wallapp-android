@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of WallApp for Android.
+  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  -->
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingTop="?attr/actionBarSize">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_separator_normal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/aboutAppLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:src="@mipmap/ic_launcher_web" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/aboutAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_separator_small"
+            android:text="@string/app_name"
+            android:textAppearance="@style/AppTheme.Text.Title"
+            android:textColor="@color/color_accent"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/aboutAppMotto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:text="@string/app_motto"
+            android:textAppearance="@style/AppTheme.Text.Standard"
+            android:textColor="@android:color/black" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/aboutDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:text="@string/app_description" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:text="@string/about_fragment_authors_title"
+            android:textAppearance="@style/AppTheme.Text.Title" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/aboutAuthorCards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_separator_small">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/authorCardName1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_separator_small"
+                        android:text="@string/about_author_name_1"
+                        android:textAppearance="@style/AppTheme.Text.Title"
+                        android:textColor="@color/color_accent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/authorCardRole1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_separator_small"
+                        android:text="@string/about_author_role_1"
+                        android:textAppearance="@style/AppTheme.Text.Standard"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/authorCardName1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/authorPortfolioButton1"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_button_portfolio"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/authorCardRole1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/authorMailButton1"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/about_button_email"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton1" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_separator_small">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/authorCardName2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_author_name_2"
+                        android:textAppearance="@style/AppTheme.Text.Title"
+                        android:textColor="@color/color_accent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/authorCardRole2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_author_role_2"
+                        android:textAppearance="@style/AppTheme.Text.Standard"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/authorCardName2" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/authorPortfolioButton2"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_button_portfolio"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/authorCardRole2" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/authorMailButton2"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/about_button_email"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton2" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/aboutFeedbackTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:text="@string/about_fragment_feedback_title"
+            android:textAppearance="@style/AppTheme.Text.Title" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/aboutFeedbackArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/aboutFeedbackPlayButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_star_black_24dp"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:text="@string/about_feedback_play_store" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.core.widget.NestedScrollView>
