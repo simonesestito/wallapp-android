@@ -3,27 +3,48 @@
   ~ Copyright © 2018 Simone Sestito. All rights reserved.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/categoryDescription"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/activity_content_margin"
-        android:layout_marginEnd="@dimen/activity_content_margin"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textAppearance="@style/AppTheme.Text.Standard" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <it.simonesestito.wallapp.ui.DiscreteRecyclerView
-        android:id="@+id/wallpapersRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
-        android:layout_weight="6" />
-</LinearLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/categoryDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/activity_content_margin"
+            android:layout_marginEnd="@dimen/activity_content_margin"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textAppearance="@style/AppTheme.Text.Standard" />
+
+        <it.simonesestito.wallapp.ui.DiscreteRecyclerView
+            android:id="@+id/wallpapersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="24dp"
+            android:layout_weight="6" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/categoryLoadingSpinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 
