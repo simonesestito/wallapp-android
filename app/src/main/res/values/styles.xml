@@ -27,6 +27,10 @@
 
     <style name="AppTheme" parent="Base.V21.AppTheme" />
 
+    <style name="AppTheme.Intro" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!-- BottomSheet theme -->
     <style name="Base.V21.AppTheme.BottomSheet.Dialog" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
@@ -106,9 +110,5 @@
     <!-- Apply this style to the trailing icon -->
     <style name="AppTheme.Preview.Icon.Trailing" parent="AppTheme.Preview.Icon">
         <item name="android:layout_marginEnd">@dimen/margin_separator_normal</item>
-    </style>
-
-    <style name="AppTheme.Intro" parent="AppTheme">
-        <item name="windowNoTitle">true</item>
     </style>
 </resources>
