@@ -44,6 +44,10 @@
         </activity>
 
         <service android:name="it.simonesestito.wallapp.backend.service.PreviewService" />
+
+        <activity
+            android:name=".ui.activity.IntroActivity"
+            android:theme="@style/AppTheme.Intro" />
     </application>
 
 </manifest>

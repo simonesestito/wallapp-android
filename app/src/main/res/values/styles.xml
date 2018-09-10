@@ -107,4 +107,8 @@
     <style name="AppTheme.Preview.Icon.Trailing" parent="AppTheme.Preview.Icon">
         <item name="android:layout_marginEnd">@dimen/margin_separator_normal</item>
     </style>
+
+    <style name="AppTheme.Intro" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

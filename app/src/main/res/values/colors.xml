@@ -21,5 +21,11 @@
     <color name="wallpaper_feedback_negative">#f44336</color>
     <color name="preview_floating_window_background">@color/color_accent</color>
     <color name="text_secondary_color_wallpapers_counter">#DF5E52</color>
+    <color name="text_intro_color">#424242</color>
+    <color name="intro_indicator_active_page">#616161</color>
+    <color name="intro_indicator_unselected_page">#757575</color>
+    <color name="intro_drawable_color">#757575</color>
+    <color name="intro_next_arrow_color">@color/text_intro_color</color>
+    <color name="intro_done_button_color">@color/color_accent</color>
 
 </resources>

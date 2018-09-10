@@ -15,9 +15,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import it.simonesestito.wallapp.NavGraphDirections
+import it.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.PreviewService
 import it.simonesestito.wallapp.utils.TAG
+import it.simonesestito.wallapp.utils.sharedPreferences
 
 class MainActivity : AppCompatActivity() {
     private val defaultAppbarElevation by lazy {
@@ -29,6 +31,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
+            // Show first launch activity
+            // It's responsibility of IntroActivity to set FIRST_LAUNCH to false
+            startActivity(Intent(this, IntroActivity::class.java))
+        }
+
         setContentView(R.layout.main_activity)
         findNavController(R.id.navHostFragment).addOnNavigatedListener { _, _ ->
             onDestinationChanged()

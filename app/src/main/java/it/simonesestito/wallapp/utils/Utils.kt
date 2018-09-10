@@ -7,10 +7,7 @@ package it.simonesestito.wallapp.utils
 
 import android.app.Activity
 import android.app.WallpaperManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.Log
@@ -35,6 +32,7 @@ import androidx.transition.TransitionListenerAdapter
 import it.simonesestito.wallapp.CHROME_PACKAGE_NAME
 import it.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import it.simonesestito.wallapp.R
+import it.simonesestito.wallapp.SHARED_PREFERENCES_FILENAME
 import it.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
@@ -302,4 +300,14 @@ fun Context.openUrl(url: String, forceChrome: Boolean = false, useCustomTab: Boo
             }
         })
     }
+}
+
+/**
+ * Lazy load SharedPreferences
+ * Don't load preferences twice
+ * Warning: always use .apply()
+ */
+val Context.sharedPreferences: SharedPreferences by thisLazy {
+    Log.e("SharedPreferences", "Initializing SharedPreferences")
+    getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE)
 }
