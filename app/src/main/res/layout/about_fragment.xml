@@ -48,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:gravity="center_horizontal"
             android:text="@string/app_description" />
 
         <androidx.appcompat.widget.AppCompatTextView

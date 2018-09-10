@@ -34,7 +34,7 @@
     <string name="wallpaper_setup_formats_info">Our wallpapers are already optimized exactly for your screen size</string>
     <string name="wallpaper_preview_live_wallpaper_set_error">Preview Mode doesn\'t work when you have use live wallpaper.\nPlease, set the wallpaper directly.</string>
     <string name="app_motto">No ads. No tricks. Just wallpapers.</string>
-    <string name="app_description">TODO app description</string>
+    <string name="app_description">A cloud based wallpaper app without ads, tricks and subscriptions. Just Wallpapers. Every wallpaper is unique, made personally with a camera or with a graphic software, edited and cropped to fit your smartphone screen perfectly.\n\nAlso available on iPhone.\n\nYou aren\'t supposed to directly share the wallpaper file, use the Share function instead.\n\nFeel free to share your experience and suggestion with the team via email.</string>
     <string name="about_fragment_title">About</string>
     <string name="about_fragment_authors_title">People behind the scenes</string>
     <string name="about_button_portfolio">Portfolio</string>
