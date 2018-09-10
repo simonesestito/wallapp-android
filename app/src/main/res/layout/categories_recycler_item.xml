@@ -23,6 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Block with card content padding -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +52,9 @@
                 android:id="@+id/categoryItemWallpapersCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAllCaps="true"
                 android:textAppearance="@style/AppTheme.Text.Standard"
+                android:textColor="@color/text_secondary_color_wallpapers_counter"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/categoryItemDescription" />
 
