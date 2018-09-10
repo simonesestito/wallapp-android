@@ -54,9 +54,12 @@
             app:argType="string"
             app:nullable="true" />
         <deepLink
-            android:id="@+id/deepLink"
             android:autoVerify="true"
             app:uri="https://wallapp-b7805.firebaseapp.com/{categoryId}/{wallpaperId}"
+            tools:targetApi="m" />
+        <deepLink
+            android:autoVerify="true"
+            app:uri="https://wallapp.app/{categoryId}/{wallpaperId}"
             tools:targetApi="m" />
     </fragment>
     <fragment
