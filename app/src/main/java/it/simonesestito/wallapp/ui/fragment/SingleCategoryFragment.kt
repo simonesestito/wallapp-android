@@ -71,11 +71,13 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
+                              savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.single_category_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.categoryLoadingSpinner.show()
+
         // Setup ScrollView params
         view.wallpapersRecyclerView.apply {
             setSlideOnFling(true)
@@ -85,6 +87,7 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
                     .setMinScale(0.9f)
                     .build())
         }
+
         populateView(args.category)
     }
 
@@ -103,8 +106,11 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
 
         // Finally, observe for updates
         oldLiveData?.observe(this, Observer { walls ->
-            // On wallpapers update, run DiffUtil to refresh the list
+            // On wallpapers update, refresh the list
             this.adapter.updateDataSet(walls)
+
+            // Update content loading spinner
+            categoryLoadingSpinner?.hide() // Loaded
         })
     }
 
