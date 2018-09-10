@@ -46,4 +46,12 @@
     <string name="about_fragment_feedback_title">Send a feedback</string>
     <string name="about_feedback_play_store">Rate on Google Play</string>
     <string name="activity_not_found_error">No installed app can handle this action</string>
+    <string name="intro_slide_unique_wallpapers_title">Unique wallpapers</string>
+    <string name="intro_slide_unique_wallpapers_description">Always new wallpapers made by us, created from scratch and optimised for your display.</string>
+    <string name="intro_slide_welcome_title">Welcome to WallApp!</string>
+    <string name="intro_slide_welcome_description">A cloud based wallpaper app without ads, tricks and subscriptions. Just Wallpapers.</string>
+    <string name="intro_slide_no_ads_title">No ADS</string>
+    <string name="intro_slide_no_ads_description">Ads while enjoying your wallpapers? Just NO</string>
+    <string name="intro_slide_no_subs_title">It\'s yours. Forever.</string>
+    <string name="intro_slide_no_subs_description">No more purchases or subscriptions. A clean app only to provide you amazing wallpapers.</string>
 </resources>

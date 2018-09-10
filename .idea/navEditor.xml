@@ -50,17 +50,7 @@
                   </entry>
                   <entry key="wallpaperFragment">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="deepLink">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                 </map>

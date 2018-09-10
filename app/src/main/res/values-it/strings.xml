@@ -41,4 +41,12 @@
     <string name="about_fragment_feedback_title">Invia un feedback</string>
     <string name="about_feedback_play_store">Vota su Google Play</string>
     <string name="activity_not_found_error">Nessuna app installata può eseguire questa azione</string>
+    <string name="intro_slide_unique_wallpapers_title">Sfondi unici</string>
+    <string name="intro_slide_unique_wallpapers_description">Sempre nuovi sfondi creati da noi, da zero e ottimizzati per il tuo schermo.</string>
+    <string name="intro_slide_welcome_title">Benvenuto in WallApp!</string>
+    <string name="intro_slide_no_ads_title">Nessuna pubblicità</string>
+    <string name="intro_slide_no_ads_description">Pubblicità mentre sfogli gli sfondi che più ti piacciono? Anche NO.</string>
+    <string name="intro_slide_no_subs_title">È tuo, per sempre.</string>
+    <string name="intro_slide_no_subs_description">Nessun acquisto in-app o abbonamenti nascosti. Solo un\'app pulita per offrirti sfondi spettacolari.</string>
+    <string name="intro_slide_welcome_description">L\'ultima app di sfondi basata su cloud, senza pubblicità o abbonamenti. Solo sfondi.</string>
 </resources>

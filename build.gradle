@@ -34,6 +34,7 @@ allprojects {
             url 'http://oss.sonatype.org/content/repositories/snapshots'
         }
         maven { url "https://dl.bintray.com/lion4ik/maven" }
+        maven { url 'https://jitpack.io' }
     }
 }
 

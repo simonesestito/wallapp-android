@@ -21,6 +21,9 @@ const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
 const val CHROME_PACKAGE_NAME = "com.android.chrome"
 
+const val SHARED_PREFERENCES_FILENAME = "wallapp_prefs"
+const val PREFS_IS_FIRST_LAUNCH_KEY = "first_launch"
+
 const val REQUEST_PREVIEW_OVERLAY_PERMISSION = 1
 const val REQUEST_READ_STORAGE_PERMISSION = 2
 
