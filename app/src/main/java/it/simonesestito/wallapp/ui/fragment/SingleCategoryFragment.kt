@@ -13,7 +13,6 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.github.lion4ik.arch.sharedelements.HasSharedElements
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.model.Category
@@ -28,7 +27,7 @@ import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
 import javax.inject.Inject
 
-class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
+class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     override val title
         get() = args.category.displayName.localized
 
@@ -81,12 +80,13 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
         // Setup ScrollView params
         view.wallpapersRecyclerView.apply {
             setSlideOnFling(true)
-            setSlideOnFlingThreshold(4500)
+            setSlideOnFlingThreshold(5000)
             setItemTransformer(ScaleTransformer.Builder()
                     .setMaxScale(1.0f)
                     .setMinScale(0.9f)
                     .build())
         }
+        //view.wallpapersRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         populateView(args.category)
     }
@@ -114,6 +114,5 @@ class SingleCategoryFragment : AbstractAppFragment(), HasSharedElements {
         })
     }
 
-    override fun hasReorderingAllowed() = true
     override fun getSharedElements() = sharedElements
 }
