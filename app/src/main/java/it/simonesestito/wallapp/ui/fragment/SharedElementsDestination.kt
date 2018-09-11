@@ -10,6 +10,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
+import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.utils.addListener
 
 /**
@@ -30,6 +31,14 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
                             onStart = { onPreSharedElementsTransition() },
                             onEnd = { onPostSharedElementsTransition() }
                     )
+
+    open fun createSharedElementsReturnTransition(): Transition =
+            TransitionInflater.from(context)
+                    .inflateTransition(R.transition.shared_elements)
+                    .apply {
+                        interpolator = DecelerateInterpolator(2.0f)
+                        duration = 400
+                    }
 
     /**
      * Called after the creation of the view but before transition start
@@ -59,7 +68,10 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition()
+        enterTransition = null
+        returnTransition = null
         sharedElementEnterTransition = createSharedElementsEnterTransition()
+        sharedElementReturnTransition = createSharedElementsReturnTransition()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
