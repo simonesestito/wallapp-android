@@ -24,7 +24,6 @@
     <color name="text_intro_color">#424242</color>
     <color name="intro_indicator_active_page">#616161</color>
     <color name="intro_indicator_unselected_page">#757575</color>
-    <color name="intro_drawable_color">#757575</color>
     <color name="intro_next_arrow_color">@color/text_intro_color</color>
     <color name="intro_done_button_color">@color/color_accent</color>
 

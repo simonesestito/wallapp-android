@@ -14,7 +14,7 @@ import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import it.simonesestito.wallapp.backend.model.Wallpaper
 import it.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
-import kotlinx.android.synthetic.main.wallpaper_item.view.*
+import kotlinx.android.synthetic.main.single_category_wallpaper_item.view.*
 import javax.inject.Inject
 
 /**
@@ -27,7 +27,7 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WallpapersVH {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.wallpaper_item, parent, false)
+                .inflate(R.layout.single_category_wallpaper_item, parent, false)
         return WallpapersVH(view)
     }
 
@@ -37,7 +37,7 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
             wallpaperRepository.loadWallpaper(
                     wallpaper,
                     FORMAT_PREVIEW,
-                    holder.wallpaperView
+                    wallpaperView
             )
             ViewCompat.setTransitionName(itemView, wallpaper.id)
             itemView.setOnClickListener {

@@ -3,7 +3,7 @@
  * Copyright © 2018 Simone Sestito. All rights reserved.
  */
 
-package it.simonesestito.wallapp.ui
+package it.simonesestito.wallapp.ui.view
 
 import android.content.Context
 import android.os.Bundle

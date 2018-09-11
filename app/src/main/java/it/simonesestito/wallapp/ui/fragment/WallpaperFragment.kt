@@ -65,7 +65,7 @@ class WallpaperFragment : SharedElementsDestination() {
         )
 
         view.backButton.setOnClickListener {
-            findNavController().popBackStack()
+            activity?.onBackPressed()
         }
 
         view.downloadFab.setOnClickListener {
@@ -232,7 +232,6 @@ class WallpaperFragment : SharedElementsDestination() {
     override fun onPreSharedElementsTransition() {
         super.onPreSharedElementsTransition()
         bottomAppBar?.visibility = View.INVISIBLE
-        downloadFab?.hide()
     }
 
     override fun onPostSharedElementsTransition() {
