@@ -10,7 +10,6 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
-import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.utils.addListener
 
 /**
@@ -34,7 +33,7 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
 
     open fun createSharedElementsReturnTransition(): Transition =
             TransitionInflater.from(context)
-                    .inflateTransition(R.transition.shared_elements)
+                    .inflateTransition(android.R.transition.move)
                     .apply {
                         interpolator = DecelerateInterpolator(2.0f)
                         duration = 400
