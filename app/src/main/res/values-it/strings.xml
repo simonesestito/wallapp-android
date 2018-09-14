@@ -47,4 +47,6 @@
     <string name="intro_slide_no_subs_title">È tuo, per sempre.</string>
     <string name="intro_slide_no_subs_description">Nessun acquisto in-app o abbonamenti nascosti. Solo un\'app pulita per offrirti sfondi spettacolari.</string>
     <string name="intro_slide_welcome_description">L\'ultima app di sfondi basata su cloud, senza pubblicità o abbonamenti. Solo sfondi.</string>
+    <string name="about_feedback_social">Seguici sui social</string>
+    <string name="about_feedback_bug_report">Segnala un bug</string>
 </resources>
