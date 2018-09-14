@@ -13,7 +13,7 @@
     <color name="action_bar_color">@color/activity_background_color</color>
 
     <color name="activity_background_color">@color/color_primary</color>
-    <color name="placeholder_image_background">#e0e0e0</color>
+    <color name="placeholder_image_background">@color/activity_background_color</color>
     <color name="placeholder_image_foreground">#9e9e9e</color>
     <color name="dark_gray">#616161</color>
     <color name="light_gray">#757575</color>
