@@ -177,19 +177,29 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     private fun applyLayoutColor(palette: Palette) {
-        val appAccent = ResourcesCompat.getColor(resources, R.color.color_accent, null)
+        val defaultColor = ResourcesCompat.getColor(resources, R.color.color_accent, null)
+        val primary = palette.getDominantColor(defaultColor)
+        val isPrimaryLight = primary.isLightColor()
+        val vibrant = palette.getVibrantColor(defaultColor)
+        val isVibrantLight = vibrant.isLightColor()
 
-        val primary = palette.getDominantColor(appAccent)
+        // Status bar as primary color
         statusBarColor = primary
 
-        val vibrant = palette.getVibrantColor(appAccent)
-        val isVibrantLight = vibrant.isLightColor()
+        // Download FAB background as vibrant
         downloadFab.backgroundTintList = ColorStateList.valueOf(vibrant)
 
-        val uiColor = if (isVibrantLight) Color.DKGRAY else Color.WHITE
-        backButton.setColorFilter(uiColor)
-        downloadFab.imageTintList = ColorStateList.valueOf(uiColor)
+        // Back button dark or white according to PRIMARY lightness
+        backButton.setColorFilter(
+                if (isPrimaryLight) Color.DKGRAY else Color.WHITE
+        )
 
+        // Download icon dark/white according to VIBRANT (currently fab background)
+        downloadFab.imageTintList = ColorStateList.valueOf(
+                if (isVibrantLight) Color.DKGRAY else Color.WHITE
+        )
+
+        // Set bottombar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
         bottomAppBar.menu?.forEach { it.icon.setColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP) }
     }
