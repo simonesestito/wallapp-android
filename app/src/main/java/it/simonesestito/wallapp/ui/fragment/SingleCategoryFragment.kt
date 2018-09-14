@@ -80,7 +80,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         // Setup ScrollView params
         view.wallpapersRecyclerView.apply {
             setSlideOnFling(true)
-            setSlideOnFlingThreshold(6500)
+            setSlideOnFlingThreshold(4500)
             setItemTransformer(ScaleTransformer.Builder()
                     .setMaxScale(1.0f)
                     .setMinScale(0.9f)
