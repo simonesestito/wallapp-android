@@ -5,9 +5,9 @@
 
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/aboutScrollContentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/aboutScrollContentRoot"
     android:clipToPadding="false"
     android:paddingTop="?attr/actionBarSize">
 
@@ -74,7 +74,6 @@
                     android:id="@+id/authorCardName1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_separator_small"
                     android:text="@string/about_author_name_1"
                     android:textAppearance="@style/AppTheme.Text.Title"
                     android:textColor="@color/color_accent"
@@ -85,30 +84,30 @@
                     android:id="@+id/authorCardRole1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_separator_small"
                     android:text="@string/about_author_role_1"
                     android:textAppearance="@style/AppTheme.Text.Standard"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorCardName1" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/authorPortfolioButton1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_button_portfolio"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/authorCardRole1" />
-
-                <com.google.android.material.button.MaterialButton
                     android:id="@+id/authorMailButton1"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/about_button_email"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/authorPortfolioButton1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/about_button_portfolio"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/authorCardRole1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -141,24 +140,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorCardName2" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/authorPortfolioButton2"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_button_portfolio"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/authorCardRole2" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/authorMailButton2"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/about_button_email"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton2" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/authorPortfolioButton2"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/about_button_portfolio"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/authorCardRole2" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -167,8 +169,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginBottom="@dimen/margin_separator_normal"
             android:layout_marginTop="@dimen/margin_separator_normal"
+            android:layout_marginBottom="@dimen/margin_separator_normal"
             android:text="@string/about_fragment_feedback_title"
             android:textAppearance="@style/AppTheme.Text.Title" />
 
