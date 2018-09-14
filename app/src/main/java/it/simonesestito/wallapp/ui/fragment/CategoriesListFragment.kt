@@ -63,10 +63,7 @@ class CategoriesListFragment : AbstractAppFragment() {
             // Else show it
             // Show the elevation only if the RecyclerView is scrolled
             val firstIndex = layoutManager.findFirstCompletelyVisibleItemPosition()
-            if (firstIndex == 0)
-                hideAppbarElevation()
-            else
-                showAppbarElevation()
+            adjustElevation(firstIndex)
         }
         categoriesAdapter.onItemClickListener = {
             val direction = CategoriesListFragmentDirections.toCategory(it)

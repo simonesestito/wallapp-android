@@ -18,10 +18,11 @@ import it.simonesestito.wallapp.NavGraphDirections
 import it.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
 import it.simonesestito.wallapp.R
 import it.simonesestito.wallapp.backend.service.PreviewService
+import it.simonesestito.wallapp.ui.ElevatingAppbar
 import it.simonesestito.wallapp.utils.TAG
 import it.simonesestito.wallapp.utils.sharedPreferences
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ElevatingAppbar {
     private val defaultAppbarElevation by lazy {
         resources.getDimension(R.dimen.default_appbar_elevation)
     }
@@ -95,11 +96,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 
-    fun showAppbarElevation() {
+    override fun showAppbarElevation() {
         supportActionBar?.elevation = scrollAppbarElevation
     }
 
-    fun hideAppbarElevation() {
+    override fun hideAppbarElevation() {
         supportActionBar?.elevation = defaultAppbarElevation
     }
 }

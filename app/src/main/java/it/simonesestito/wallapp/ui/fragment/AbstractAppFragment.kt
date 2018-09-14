@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import it.simonesestito.wallapp.R
-import it.simonesestito.wallapp.ui.activity.MainActivity
+import it.simonesestito.wallapp.ui.ElevatingAppbar
 import it.simonesestito.wallapp.utils.isLightColor
 import it.simonesestito.wallapp.utils.setLightNavBar
 import it.simonesestito.wallapp.utils.setLightStatusBar
@@ -23,7 +23,7 @@ abstract class AbstractAppFragment : Fragment() {
     private var haveHiddenAppbar = false
     abstract val title: CharSequence
 
-    var statusBarColor: Int
+    protected var statusBarColor: Int
         get() = activity?.window?.statusBarColor ?: Color.WHITE
         set(color) {
             activity?.window?.statusBarColor = color
@@ -32,7 +32,7 @@ abstract class AbstractAppFragment : Fragment() {
             }
         }
 
-    var navigationBarColor: Int
+    protected var navigationBarColor: Int
         get() = activity?.window?.navigationBarColor ?: Color.WHITE
         set(color) {
             activity?.window?.navigationBarColor = color
@@ -54,21 +54,29 @@ abstract class AbstractAppFragment : Fragment() {
         showAppbar()
     }
 
-    fun hideAppbarElevation() {
+    protected fun adjustElevation(y: Int) {
+        if (y > 0) {
+            showAppbarElevation()
+        } else {
+            hideAppbarElevation()
+        }
+    }
+
+    protected fun hideAppbarElevation() {
         val mainActivity = activity
-        if (mainActivity is MainActivity) {
+        if (mainActivity is ElevatingAppbar) {
             mainActivity.hideAppbarElevation()
         }
     }
 
-    fun showAppbarElevation() {
+    protected fun showAppbarElevation() {
         val mainActivity = activity
-        if (mainActivity is MainActivity) {
+        if (mainActivity is ElevatingAppbar) {
             mainActivity.showAppbarElevation()
         }
     }
 
-    fun hideAppbar() {
+    protected fun hideAppbar() {
         haveHiddenAppbar = true
         (activity as AppCompatActivity?)?.supportActionBar?.hide()
     }
@@ -87,7 +95,7 @@ abstract class AbstractAppFragment : Fragment() {
     /**
      * Show the appbar only if it has been hidden by this fragment, not another instance
      */
-    fun showAppbar() {
+    protected fun showAppbar() {
         if (haveHiddenAppbar) {
             (activity as AppCompatActivity?)?.supportActionBar?.show()
             haveHiddenAppbar = false
