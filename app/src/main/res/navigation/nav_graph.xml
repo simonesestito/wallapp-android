@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="it.simonesestito.wallapp.ui.fragment.CategoriesListFragment"
+        android:name="com.simonesestito.wallapp.ui.fragment.CategoriesListFragment"
         tools:layout="@layout/categories_fragment">
         <action
             android:id="@+id/toCategory"
@@ -31,17 +31,17 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="it.simonesestito.wallapp.ui.fragment.SingleCategoryFragment">
+        android:name="com.simonesestito.wallapp.ui.fragment.SingleCategoryFragment">
         <action
             android:id="@+id/toWallpaperDetails"
             app:destination="@id/wallpaperFragment" />
         <argument
             android:name="category"
-            app:argType="it.simonesestito.wallapp.backend.model.Category" />
+            app:argType="com.simonesestito.wallapp.backend.model.Category" />
     </fragment>
     <fragment
         android:id="@+id/wallpaperFragment"
-        android:name="it.simonesestito.wallapp.ui.fragment.WallpaperFragment">
+        android:name="com.simonesestito.wallapp.ui.fragment.WallpaperFragment">
         <argument
             android:name="wallpaperId"
             app:argType="string" />
@@ -64,6 +64,6 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="it.simonesestito.wallapp.ui.fragment.AboutFragment"
+        android:name="com.simonesestito.wallapp.ui.fragment.AboutFragment"
         tools:layout="@layout/about_fragment" />
 </navigation>
