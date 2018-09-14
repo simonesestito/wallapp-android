@@ -28,7 +28,7 @@
             android:gravity="center"
             android:textAppearance="@style/AppTheme.Text.Standard" />
 
-        <it.simonesestito.wallapp.ui.view.DiscreteRecyclerView
+        <com.simonesestito.wallapp.ui.view.DiscreteRecyclerView
             android:id="@+id/wallpapersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"

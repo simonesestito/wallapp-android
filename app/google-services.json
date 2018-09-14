@@ -8,26 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:637150678980:android:27dfde5b6c79247c",
+        "mobilesdk_app_id": "1:637150678980:android:3ae41b66a3f3ce56",
         "android_client_info": {
-          "package_name": "it.simonesestito.wallapp"
+          "package_name": "com.simonesestito.wallapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "637150678980-34d9q01qdtdf0omh6v33jtk54fjkcpv3.apps.googleusercontent.com",
+          "client_id": "637150678980-a466h705otugk5o4l7vu9eemjr1nfqhk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "it.simonesestito.wallapp",
+            "package_name": "com.simonesestito.wallapp",
             "certificate_hash": "9a7129dfcb4c5e99d8d54a71d7fe56f7ffbf9873"
-          }
-        },
-        {
-          "client_id": "637150678980-v1vr0tnrl5r6qcgkmmt8vu6duo3o4jbb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "it.simonesestito.wallapp",
-            "certificate_hash": "065cd358baffdd0116a76be5df020b5f467f0272"
           }
         },
         {
