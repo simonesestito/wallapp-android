@@ -7,6 +7,4 @@
     android:id="@+id/wallpaperImagePreview"
     android:layout_width="@dimen/wallpaper_item_card_width"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_separator_normal"
-    android:elevation="@dimen/card_elevation"
-    android:scaleType="centerCrop" />
+    android:elevation="@dimen/card_elevation" />
