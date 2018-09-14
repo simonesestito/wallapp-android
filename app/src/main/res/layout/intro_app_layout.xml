@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#222222">
+    android:background="@color/activity_background_color">
 
     <com.github.paolorotolo.appintro.AppIntroViewPager
         android:id="@+id/view_pager"
@@ -15,81 +15,68 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true" />
 
-    <LinearLayout
-        android:id="@+id/bottom"
+    <FrameLayout
+        android:id="@+id/bottomContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/appIntroBottomBarHeight"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:gravity="bottom"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/bottom_separator"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#55000000" />
+        tools:ignore="ContentDescription">
 
         <FrameLayout
-            android:id="@+id/bottomContainer"
-            android:layout_width="match_parent"
+            android:id="@+id/indicator_container"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            tools:ignore="ContentDescription">
+            android:layout_gravity="center"
+            android:layoutDirection="ltr" />
 
-            <FrameLayout
-                android:id="@+id/indicator_container"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layoutDirection="ltr" />
+        <ImageButton
+            android:id="@+id/next"
+            style="@style/AppIntroButtonStyleCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:minWidth="100dp"
+            android:tint="@color/intro_next_arrow_color"
+            app:srcCompat="@drawable/ic_navigate_next_black_24dp" />
 
-            <ImageButton
-                android:id="@+id/next"
-                style="@style/AppIntroButtonStyleCompat"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:minWidth="100dp"
-                android:tint="@color/intro_next_arrow_color"
-                app:srcCompat="@drawable/ic_navigate_next_black_24dp" />
+        <ImageButton
+            android:id="@+id/done"
+            style="@style/AppIntroButtonStyleCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:tint="@color/intro_done_button_color"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_check_black_24dp" />
 
-            <ImageButton
-                android:id="@+id/done"
-                style="@style/AppIntroButtonStyleCompat"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:tint="@color/intro_done_button_color"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_check_black_24dp" />
+        <ImageButton
+            android:id="@+id/back"
+            style="@style/AppIntroButtonStyleCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginStart="8dp"
+            android:minWidth="100dp"
+            android:tint="@color/intro_next_arrow_color"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_navigate_before_black_24dp" />
 
-            <ImageButton
-                android:id="@+id/back"
-                style="@style/AppIntroButtonStyleCompat"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_marginStart="8dp"
-                android:minWidth="100dp"
-                android:tint="@color/intro_next_arrow_color"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_navigate_before_black_24dp" />
+        <!-- Disabled from IntroActivity -->
+        <Button
+            android:id="@+id/skip"
+            style="@style/AppIntroButtonStyleCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginStart="8dp"
+            android:labelFor="@string/app_intro_skip_button"
+            android:minWidth="100dp"
+            android:text="@string/app_intro_skip_button"
+            android:textColor="@android:color/white" />
 
-            <!-- Disabled from IntroActivity -->
-            <Button
-                android:id="@+id/skip"
-                style="@style/AppIntroButtonStyleCompat"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_marginStart="8dp"
-                android:labelFor="@string/app_intro_skip_button"
-                android:minWidth="100dp"
-                android:text="@string/app_intro_skip_button"
-                android:textColor="@android:color/white" />
-
-        </FrameLayout>
-    </LinearLayout>
+    </FrameLayout>
 </RelativeLayout>
