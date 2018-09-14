@@ -52,4 +52,6 @@
     <string name="intro_slide_no_ads_description">Ads while enjoying your wallpapers? Just NO</string>
     <string name="intro_slide_no_subs_title">It\'s yours. Forever.</string>
     <string name="intro_slide_no_subs_description">No more purchases or subscriptions. A clean app only to provide you amazing wallpapers.</string>
+    <string name="about_feedback_social">Follow us on social</string>
+    <string name="about_feedback_bug_report">Report a bug</string>
 </resources>
