@@ -86,7 +86,6 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
                     .setMinScale(0.9f)
                     .build())
         }
-        //view.wallpapersRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         populateView(args.category)
     }
