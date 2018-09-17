@@ -17,7 +17,7 @@ import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
+import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.getViewModel
@@ -32,7 +32,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         get() = args.category.displayName.localized
 
     private val viewModel by lazy {
-        getViewModel<WallpaperViewModel>(viewModelFactory)
+        getViewModel<WallpapersViewModel>(viewModelFactory)
     }
     private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments)
@@ -76,6 +76,9 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.categoryLoadingSpinner.show()
+
+        // Update seen wallpapers count
+        viewModel.updateSeenWallpapers(args.category)
 
         // Setup ScrollView params
         view.wallpapersRecyclerView.apply {

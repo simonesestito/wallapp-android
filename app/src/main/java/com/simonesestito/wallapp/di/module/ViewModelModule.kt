@@ -9,9 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.simonesestito.wallapp.di.annotation.ViewModelMapKey
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
-import com.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
-import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperViewModel
+import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -24,13 +23,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelMapKey(CategoryViewModel::class)
-    internal abstract fun categoryViewModel(viewModel: CategoryViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelMapKey(WallpaperViewModel::class)
-    internal abstract fun wallpaperViewModel(viewModel: WallpaperViewModel): ViewModel
+    @ViewModelMapKey(WallpapersViewModel::class)
+    internal abstract fun categoryViewModel(viewModel: WallpapersViewModel): ViewModel
 
     @Binds
     @IntoMap

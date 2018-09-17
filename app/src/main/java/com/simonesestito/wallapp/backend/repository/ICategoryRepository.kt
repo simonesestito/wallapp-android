@@ -30,4 +30,14 @@ interface ICategoryRepository {
      * @param imageView Target ImageView
      */
     fun loadCoverOn(categoryId: String, imageView: ImageView)
+
+    /**
+     * Mark a category as read for the currently logged in user
+     */
+    fun markCategoryAsViewed(category: Category)
+
+    /**
+     * Get how many wallpapers the user has never seen in a given category
+     */
+    fun getUnviewedCategoryWallpapers(category: Category): LiveData<Long>
 }

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
-import com.simonesestito.wallapp.lifecycle.viewmodel.CategoryViewModel
+import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.getViewModel
@@ -30,13 +30,14 @@ class CategoriesListFragment : AbstractAppFragment() {
     @Inject lateinit var viewModelFactory: AppViewModelFactory
     @Inject lateinit var categoriesAdapter: CategoriesAdapter
 
-    private val viewModel: CategoryViewModel by lazy {
-        getViewModel<CategoryViewModel>(viewModelFactory)
+    private val viewModel: WallpapersViewModel by lazy {
+        getViewModel<WallpapersViewModel>(viewModelFactory)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
+        categoriesAdapter.lifecycleOwner = this
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

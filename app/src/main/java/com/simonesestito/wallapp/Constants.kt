@@ -19,6 +19,7 @@ const val KEY_CREATION_DATE = "creationDate"
 const val KEY_DISPLAY_NAME = "displayName"
 const val KEY_DESCRIPTION = "description"
 const val KEY_COUNT = "count"
+const val FIRESTORE_USED_VIEWED_WALLS_COUNT = "viewed_walls_count"
 const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
 const val CHROME_PACKAGE_NAME = "com.android.chrome"
