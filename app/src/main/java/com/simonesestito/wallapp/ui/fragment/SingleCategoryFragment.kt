@@ -83,7 +83,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
             setSlideOnFlingThreshold(4500)
             setItemTransformer(ScaleTransformer.Builder()
                     .setMaxScale(1.0f)
-                    .setMinScale(0.9f)
+                    .setMinScale(0.93f)
                     .build())
         }
 
