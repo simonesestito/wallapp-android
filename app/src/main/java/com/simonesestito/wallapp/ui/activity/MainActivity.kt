@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.simonesestito.wallapp.NavGraphDirections
@@ -22,7 +21,7 @@ import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.sharedPreferences
 
-class MainActivity : AppCompatActivity(), ElevatingAppbar {
+class MainActivity : PolicyCheckerActivity(), ElevatingAppbar {
     private val defaultAppbarElevation by lazy {
         resources.getDimension(R.dimen.default_appbar_elevation)
     }

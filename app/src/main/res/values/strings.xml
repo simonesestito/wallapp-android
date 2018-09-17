@@ -54,4 +54,6 @@
     <string name="intro_slide_no_subs_description">No more purchases or subscriptions. A clean app only to provide you amazing wallpapers.</string>
     <string name="about_feedback_social">Follow us on social</string>
     <string name="about_feedback_bug_report">Report a bug</string>
+    <string name="policy_checker_failed_message">This app is not licensed by Google Play. Please buy this app</string>
+    <string name="policy_checker_failed_title">Pirated app!</string>
 </resources>
