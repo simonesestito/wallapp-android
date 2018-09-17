@@ -2,9 +2,10 @@
   ~ This file is part of WallApp for Android.
   ~ Copyright © 2018 Simone Sestito. All rights reserved.
   -->
-
 <androidx.appcompat.widget.AppCompatImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wallpaperImagePreview"
     android:layout_width="@dimen/wallpaper_item_card_width"
     android:layout_height="match_parent"
-    android:elevation="@dimen/card_elevation" />
+    android:layout_margin="@dimen/margin_separator_small"
+    android:elevation="@dimen/card_elevation"
+    android:scaleType="centerCrop" />
