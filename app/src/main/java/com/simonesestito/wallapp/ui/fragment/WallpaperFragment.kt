@@ -98,6 +98,9 @@ class WallpaperFragment : SharedElementsDestination() {
             // Intent fully handled, remove it from Activity
             activity?.intent = null
 
+            // Show FAB manually since it won't be shown with animation
+            downloadFab?.show()
+
             // This fragment could be launched from URL
             // Handle non existing wallpapers or wrong URL here
             checkWallpaperExistence()

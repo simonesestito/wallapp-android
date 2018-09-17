@@ -38,6 +38,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
     implementation 'com.github.apl-devs:appintro:v4.2.3'
+    implementation project(":library")
 
     // AndroidX
     implementation 'com.google.android.material:material:1.0.0-rc02'
