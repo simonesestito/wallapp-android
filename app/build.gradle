@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-firestore:17.1.0'
     implementation 'com.google.firebase:firebase-storage:16.0.2'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
 
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'

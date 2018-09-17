@@ -5,10 +5,14 @@
 
 package com.simonesestito.wallapp.backend.repository.impl
 
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.annotations.FORMAT_COVER
@@ -16,12 +20,14 @@ import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.repository.ICategoryRepository
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
+import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.map
 import com.simonesestito.wallapp.utils.mapList
 import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(private val firestore: FirebaseFirestore,
-                                             private val storage: FirebaseStorage) : ICategoryRepository {
+                                             private val storage: FirebaseStorage,
+                                             private val auth: FirebaseAuth) : ICategoryRepository {
     override fun getCategories(): LiveData<List<Category>> {
         val ref = firestore
                 .collection(FIRESTORE_CATEGORIES)
@@ -50,5 +56,42 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
                 .load(imageRef)
                 .placeholder(R.drawable.ic_image_placeholder)
                 .into(imageView)
+    }
+
+    override fun markCategoryAsViewed(category: Category) {
+        val currentUser = auth.currentUser
+        currentUser ?: return
+
+        firestore.document("users/${currentUser.uid}/categories/${category.id}")
+                .set(mapOf(
+                        FIRESTORE_USED_VIEWED_WALLS_COUNT to category.wallpapersCount
+                ), SetOptions.merge())
+                .addOnCompleteListener {
+                    Log.d(TAG, "User wallpapers count updated, success: ${it.isSuccessful}")
+                    if (!it.isSuccessful) {
+                        it.exception?.printStackTrace()
+                    }
+                }
+    }
+
+    override fun getUnviewedCategoryWallpapers(category: Category): LiveData<Long> {
+        val currentUser = auth.currentUser
+        currentUser ?: return MutableLiveData<Long>().also {
+            it.postValue(0L)
+        }
+
+        val ref = firestore
+                .document("users/${currentUser.uid}/categories/${category.id}")
+
+        return FirestoreLiveDocument(ref).map { snap ->
+            val viewed = snap.getLong(FIRESTORE_USED_VIEWED_WALLS_COUNT) ?: 0L
+            val unseen = category.wallpapersCount - viewed
+            return@map if (viewed > 0 && unseen > 0) {
+                // Unseen value is valid
+                unseen
+            } else {
+                0L // Fallback value
+            }
+        }
     }
 }

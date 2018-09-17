@@ -5,6 +5,7 @@
 
 package com.simonesestito.wallapp.di.module
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
@@ -21,4 +22,8 @@ class FirebaseModule {
     @Provides
     @Singleton
     fun storage() = FirebaseStorage.getInstance()
+
+    @Provides
+    @Singleton
+    fun auth() = FirebaseAuth.getInstance()
 }

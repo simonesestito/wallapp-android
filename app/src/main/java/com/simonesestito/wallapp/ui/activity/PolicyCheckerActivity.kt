@@ -65,7 +65,7 @@ abstract class PolicyCheckerActivity : AppCompatActivity() {
 
         override fun dontAllow(reason: Int) {
             Log.wtf("PolicyChecker", "License error 'dontAllow', pirated app.")
-            showLicenseFailedDialog()
+            // FIXME showLicenseFailedDialog()
         }
 
         override fun applicationError(errorCode: Int) {
