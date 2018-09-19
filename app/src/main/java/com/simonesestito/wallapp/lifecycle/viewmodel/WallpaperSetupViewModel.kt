@@ -34,6 +34,11 @@ class WallpaperSetupViewModel @Inject constructor(
     }
 
     /**
+     * Updated from the Fragment view
+     */
+    @WallpaperLocation var currentWallpaperLocation: Int = WALLPAPER_LOCATION_BOTH
+
+    /**
      * Expose a standard [LiveData], not a [MutableLiveData]
      */
     fun getDownloadStatus(): LiveData<Int> = mutableDownloadStatus
