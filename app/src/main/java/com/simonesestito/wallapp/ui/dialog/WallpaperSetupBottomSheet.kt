@@ -56,13 +56,22 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
         super.onViewCreated(view, savedInstanceState)
         // Apply default selection
         view.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
+        view.wallpaperLocationChipGroup.setOnCheckedChangeListener { _, _ ->
+            try {
+                viewModel.currentWallpaperLocation = getSelectedLocation()
+            } catch (_: IllegalArgumentException) {
+                // Thrown by getSelectedLocation in case of wrong selection
+            }
+        }
 
         view.wallpaperApplyButton.setOnClickListener { _ ->
             viewModel.applyWallpaper(
                     requireContext(),
                     wallpaperArg,
                     getSuggestedWallpaperFormat(resources.displayMetrics),
-                    getSelectedLocation()
+                    // Use saved location in ViewModel instead of getting it now
+                    // It can lead to crash in case of bad selection
+                    viewModel.currentWallpaperLocation
             )
         }
     }
@@ -80,13 +89,18 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
         })
     }
 
+    /**
+     * Get the current selected wallpaper location by the checkedChipId from ChipGroup
+     * @throws IllegalArgumentException If the selected chip has an unknown ID, it also occurs when no chip is actually selected
+     */
     @WallpaperLocation
+    @Throws(IllegalArgumentException::class)
     private fun getSelectedLocation() =
             when (wallpaperLocationChipGroup.checkedChipId) {
                 R.id.wallpaperLocationChipHome -> WALLPAPER_LOCATION_HOME
                 R.id.wallpaperLocationChipLock -> WALLPAPER_LOCATION_LOCK
                 R.id.wallpaperLocationChipBoth -> WALLPAPER_LOCATION_BOTH
-                else -> throw RuntimeException("Undefined wallpaper location chip selection ID")
+                else -> throw IllegalArgumentException("Unknown chip selection")
             }
 
     private fun onDownloadStarted() {
