@@ -22,10 +22,10 @@ data class Category(
 ) : Identifiable<String>, Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
-            mapOf<String, Any>().apply {
+            mutableMapOf<String, Any>().apply {
                 parcel.readMap(this, this.javaClass.classLoader)
             },
-            mapOf<String, Any>().apply {
+            mutableMapOf<String, Any>().apply {
                 parcel.readMap(this, this.javaClass.classLoader)
             },
             parcel.readLong())
