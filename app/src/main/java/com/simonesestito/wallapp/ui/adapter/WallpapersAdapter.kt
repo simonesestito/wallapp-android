@@ -8,12 +8,11 @@ package com.simonesestito.wallapp.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import com.simonesestito.wallapp.backend.model.Wallpaper
-import com.simonesestito.wallapp.backend.repository.impl.WallpaperRepository
+import com.simonesestito.wallapp.backend.repository.WallpaperRepository
+import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
 import kotlinx.android.synthetic.main.single_category_wallpaper_item.view.*
 import javax.inject.Inject
 
@@ -37,9 +36,10 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
             wallpaperRepository.loadWallpaper(
                     wallpaper,
                     FORMAT_PREVIEW,
-                    wallpaperView
+                    wallpaperView,
+                    null
             )
-            ViewCompat.setTransitionName(itemView, wallpaper.id)
+            itemView.transitionName = wallpaper.id
             itemView.setOnClickListener {
                 onItemClickListener?.invoke(wallpaper, it)
             }

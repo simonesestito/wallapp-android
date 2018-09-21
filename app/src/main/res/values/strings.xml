@@ -60,4 +60,5 @@
     <string name="policy_checker_dialog_button">Close app</string>
     <string name="policy_checker_offline_title">License verification failed</string>
     <string name="policy_checker_offline_message">App purchase can\'t be verified. Please check your Internet connection</string>
+    <string name="singleCategoryLayoutRowSwitch">Switch layout</string>
 </resources>

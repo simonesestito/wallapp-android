@@ -22,7 +22,7 @@ abstract class AsyncAdapter<T : Identifiable<*>, VH : RecyclerView.ViewHolder> :
         asyncDiffer.submitList(newData)
     }
 
-    protected val data: List<T>
+    val data: List<T>
         get() = asyncDiffer.currentList
 
     override fun getItemCount() = data.size

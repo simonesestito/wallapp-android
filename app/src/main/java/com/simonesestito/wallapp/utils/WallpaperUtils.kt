@@ -19,7 +19,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.simonesestito.wallapp.BACKUP_WALLPAPER_FILENAME
-import com.simonesestito.wallapp.annotations.*
+import com.simonesestito.wallapp.enums.*
 import java.io.File
 import java.io.IOException
 

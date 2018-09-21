@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Category
-import com.simonesestito.wallapp.backend.repository.ICategoryRepository
+import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.localized
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * Adapter for categories list
  */
-class CategoriesAdapter @Inject constructor(private val categoryRepository: ICategoryRepository)
+class CategoriesAdapter @Inject constructor(private val categoryRepository: CategoryRepository)
     : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
     var lifecycleOwner: LifecycleOwner? = null

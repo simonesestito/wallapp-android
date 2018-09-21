@@ -3,7 +3,7 @@
  * Copyright © 2018 Simone Sestito. All rights reserved.
  */
 
-package com.simonesestito.wallapp.annotations
+package com.simonesestito.wallapp.enums
 
 import androidx.annotation.StringDef
 

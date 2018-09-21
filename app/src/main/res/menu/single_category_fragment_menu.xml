@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of WallApp for Android.
+  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/singleCategoryLayoutSwitch"
+        android:icon="@drawable/ic_filter_list_black_24dp"
+        android:title="@string/singleCategoryLayoutRowSwitch"
+        app:showAsAction="always" />
+</menu>

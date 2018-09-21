@@ -6,15 +6,22 @@
 package com.simonesestito.wallapp.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Handler
+import android.os.Looper
+import android.view.*
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import androidx.core.os.postDelayed
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
@@ -22,10 +29,11 @@ import com.simonesestito.wallapp.ui.adapter.WallpapersAdapter
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.localized
-import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
 import javax.inject.Inject
+
+private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
 class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     override val title
@@ -52,6 +60,8 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     @Inject lateinit var adapter: WallpapersAdapter
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private var currentLayoutSpanCount: Int = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
@@ -67,6 +77,8 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
                     .setTransitionName(name)
             findNavController().navigate(directions)
         }
+
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -77,39 +89,48 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         super.onViewCreated(view, savedInstanceState)
         view.categoryLoadingSpinner.show()
 
+        // Update current span count if it's present in savedInstanceState Bundle
+        savedInstanceState?.getInt(KEY_LAYOUT_ROW_COUNT, currentLayoutSpanCount)?.let {
+            currentLayoutSpanCount = it
+        }
+
         // Update seen wallpapers count
         viewModel.updateSeenWallpapers(args.category)
 
-        // Setup ScrollView params
-        view.wallpapersRecyclerView.apply {
-            setSlideOnFling(true)
-            setSlideOnFlingThreshold(4500)
-            setItemTransformer(ScaleTransformer.Builder()
-                    .setMaxScale(1.0f)
-                    .setMinScale(0.93f)
-                    .build())
-        }
-
-        populateView(args.category)
-    }
-
-    private fun populateView(category: Category) {
         // Set category description
-        categoryDescription.text = category.description.localized
+        categoryDescription.text = args.category.description.localized
 
         wallpapersRecyclerView.adapter = this.adapter
+        wallpapersRecyclerView.layoutManager = GridLayoutManager(requireContext(), currentLayoutSpanCount, LinearLayoutManager.HORIZONTAL, false)
 
         // If there was an old LiveData, unregister it
         oldLiveData?.removeObservers(this)
 
         // Get wallpapers list from Firebase using LiveData,
         // updating the oldLiveData so we'll be able to dismiss it later
-        oldLiveData = viewModel.getWallpapersByCategoryId(category.id)
+        oldLiveData = viewModel.getWallpapersByCategoryId(args.category.id)
+
+        // Set SpanHelper
+        LinearSnapHelper().attachToRecyclerView(wallpapersRecyclerView)
 
         // Finally, observe for updates
         oldLiveData?.observe(this, Observer { walls ->
+            val oldData = this.adapter.data
+
             // On wallpapers update, refresh the list
             this.adapter.updateDataSet(walls)
+
+            Handler(Looper.getMainLooper()).postDelayed(500) {
+                if (isDetached) return@postDelayed
+
+                // FIXME - Try adding a callback on async list differ
+                // After a delay, if the list is not empty, scroll to 0
+                if (adapter.data.isNotEmpty() &&
+                        oldData.size < adapter.data.size &&
+                        oldData != adapter.data) {
+                    wallpapersRecyclerView?.smoothScrollToPosition(0)
+                }
+            }
 
             // Update content loading spinner
             categoryLoadingSpinner?.hide() // Loaded
@@ -121,6 +142,50 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
                 singleCategoryEmptyView.visibility = View.GONE
             }
         })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(KEY_LAYOUT_ROW_COUNT, currentLayoutSpanCount)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.single_category_fragment_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.singleCategoryLayoutSwitch -> {
+                (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)?.let {
+                    changeLayoutRowCount(if (it.spanCount == 1) 2 else 1)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun changeLayoutRowCount(spanCount: Int) {
+        currentLayoutSpanCount = spanCount
+        val fadeOut = AlphaAnimation(1f, 0f)
+        val shortDuration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+        fadeOut.interpolator = DecelerateInterpolator()
+        fadeOut.duration = shortDuration
+        fadeOut.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+
+            override fun onAnimationRepeat(animation: Animation) {}
+
+            override fun onAnimationEnd(animation: Animation) {
+                (wallpapersRecyclerView.layoutManager as GridLayoutManager).spanCount = spanCount
+                (wallpapersRecyclerView.layoutManager as GridLayoutManager).requestLayout()
+                val fadeIn = AlphaAnimation(0f, 1f)
+                fadeIn.interpolator = AccelerateInterpolator()
+                fadeIn.duration = shortDuration
+                wallpapersRecyclerView.startAnimation(fadeIn)
+            }
+        })
+        wallpapersRecyclerView.startAnimation(fadeOut)
     }
 
     override fun getSharedElements() = sharedElements

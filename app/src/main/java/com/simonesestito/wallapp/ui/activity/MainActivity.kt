@@ -22,6 +22,7 @@ import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.sharedPreferences
 
+
 class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
     private val defaultAppbarElevation by lazy {
         resources.getDimension(R.dimen.default_appbar_elevation)
@@ -48,8 +49,11 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
         }
 
         setContentView(R.layout.main_activity)
-        findNavController(R.id.navHostFragment).addOnNavigatedListener { _, _ ->
-            onDestinationChanged()
+        findNavController(R.id.navHostFragment).let {
+            setupActionBarWithNavController(this, it)
+            it.addOnNavigatedListener { _, _ ->
+                onDestinationChanged()
+            }
         }
     }
 
