@@ -56,4 +56,7 @@
     <string name="about_feedback_bug_report">Report a bug</string>
     <string name="policy_checker_failed_message">This app is not licensed by Google Play. Please buy this app</string>
     <string name="policy_checker_failed_title">Pirated app!</string>
+    <string name="policy_checker_dialog_button">Close app</string>
+    <string name="policy_checker_offline_title">License verification failed</string>
+    <string name="policy_checker_offline_message">App purchase can\'t be verified. Please check your Internet connection</string>
 </resources>

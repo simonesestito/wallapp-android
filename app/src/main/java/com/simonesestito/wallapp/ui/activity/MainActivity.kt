@@ -22,7 +22,7 @@ import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.sharedPreferences
 
-class MainActivity : PolicyCheckerActivity(), ElevatingAppbar {
+class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
     private val defaultAppbarElevation by lazy {
         resources.getDimension(R.dimen.default_appbar_elevation)
     }
