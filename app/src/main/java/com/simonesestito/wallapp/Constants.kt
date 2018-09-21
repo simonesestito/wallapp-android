@@ -47,7 +47,7 @@ const val BOTTOMSHEET_AUTO_DISMISS_DELAY = 1200L
 
 const val MAX_CACHED_PALETTE_SIZE = 15
 
-const val IO_EXECUTOR_MAX_THREADS = 2
+const val IO_EXECUTOR_MAX_THREADS = 1
 
 const val AUTHOR_1_PORTFOLIO_WEBSITE = "https://sestito.tk"
 const val AUTHOR_1_MAIL = "simone.dev.help@gmail.com"

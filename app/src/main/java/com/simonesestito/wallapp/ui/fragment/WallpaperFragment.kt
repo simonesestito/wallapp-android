@@ -26,10 +26,10 @@ import androidx.core.view.forEach
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.*
-import com.simonesestito.wallapp.annotations.FORMAT_PREVIEW
 import com.simonesestito.wallapp.backend.model.Wallpaper
-import com.simonesestito.wallapp.backend.repository.IWallpaperRepository
+import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import com.simonesestito.wallapp.di.component.AppInjector
+import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
 import com.simonesestito.wallapp.ui.activity.MainActivity
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
@@ -50,7 +50,7 @@ class WallpaperFragment : SharedElementsDestination() {
         Wallpaper(args.wallpaperId, args.categoryId)
     }
 
-    @Inject lateinit var wallpaperRepository: IWallpaperRepository
+    @Inject lateinit var wallpaperRepository: WallpaperRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.wallpaper_fragment, container, false)

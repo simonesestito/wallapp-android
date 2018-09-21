@@ -6,7 +6,10 @@
 package com.simonesestito.wallapp.di.component
 
 import com.simonesestito.wallapp.backend.service.PreviewService
-import com.simonesestito.wallapp.di.module.*
+import com.simonesestito.wallapp.di.module.CacheModule
+import com.simonesestito.wallapp.di.module.FirebaseModule
+import com.simonesestito.wallapp.di.module.ThreadModule
+import com.simonesestito.wallapp.di.module.ViewModelModule
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import com.simonesestito.wallapp.ui.fragment.CategoriesListFragment
@@ -20,7 +23,6 @@ import javax.inject.Singleton
     ViewModelModule::class,
     FirebaseModule::class,
     CacheModule::class,
-    InterfacesModule::class,
     ThreadModule::class
 ])
 interface AppInjector {

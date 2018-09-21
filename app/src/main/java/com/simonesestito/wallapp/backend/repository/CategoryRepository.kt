@@ -3,21 +3,21 @@
  * Copyright © 2018 Simone Sestito. All rights reserved.
  */
 
-package com.simonesestito.wallapp.backend.repository.impl
+package com.simonesestito.wallapp.backend.repository
 
 import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.simonesestito.wallapp.*
-import com.simonesestito.wallapp.annotations.FORMAT_COVER
 import com.simonesestito.wallapp.backend.model.Category
-import com.simonesestito.wallapp.backend.repository.ICategoryRepository
+import com.simonesestito.wallapp.enums.FORMAT_COVER
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import com.simonesestito.wallapp.utils.TAG
@@ -27,8 +27,8 @@ import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(private val firestore: FirebaseFirestore,
                                              private val storage: FirebaseStorage,
-                                             private val auth: FirebaseAuth) : ICategoryRepository {
-    override fun getCategories(): LiveData<List<Category>> {
+                                             private val auth: FirebaseAuth) {
+    fun getCategories(): LiveData<List<Category>> {
         val ref = firestore
                 .collection(FIRESTORE_CATEGORIES)
                 .whereEqualTo(KEY_PUBLISHED, true)
@@ -39,7 +39,7 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
         }
     }
 
-    override fun getCategoryById(id: String): LiveData<Category> {
+    fun getCategoryById(id: String): LiveData<Category> {
         val ref = firestore
                 .document("$FIRESTORE_CATEGORIES/$id")
 
@@ -48,17 +48,18 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
         }
     }
 
-    override fun loadCoverOn(categoryId: String, imageView: ImageView) {
+    fun loadCoverOn(categoryId: String, imageView: ImageView) {
         val imageRef = storage.getReference("$STORAGE_CATEGORIES/$categoryId/$FORMAT_COVER")
+        val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
 
         GlideApp
                 .with(imageView)
                 .load(imageRef)
-                .placeholder(R.drawable.ic_image_placeholder)
+                .transition(DrawableTransitionOptions().crossFade(shortAnim))
                 .into(imageView)
     }
 
-    override fun markCategoryAsViewed(category: Category) {
+    fun markCategoryAsViewed(category: Category) {
         val currentUser = auth.currentUser
         currentUser ?: return
 
@@ -74,7 +75,7 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
                 }
     }
 
-    override fun getUnviewedCategoryWallpapers(category: Category): LiveData<Long> {
+    fun getUnviewedCategoryWallpapers(category: Category): LiveData<Long> {
         val currentUser = auth.currentUser
         currentUser ?: return MutableLiveData<Long>().also {
             it.postValue(0L)

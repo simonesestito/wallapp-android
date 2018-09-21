@@ -2,10 +2,30 @@
   ~ This file is part of WallApp for Android.
   ~ Copyright © 2018 Simone Sestito. All rights reserved.
   -->
-<androidx.appcompat.widget.AppCompatImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/wallpaperImagePreview"
-    android:layout_width="@dimen/wallpaper_item_card_width"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/wallpaperItemContainer"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_separator_small"
-    android:elevation="@dimen/card_elevation"
-    android:scaleType="centerCrop" />
+    android:layout_margin="@dimen/margin_separator_small">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/wallpaperItemCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="@dimen/card_elevation"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="9:16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/wallpaperImagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

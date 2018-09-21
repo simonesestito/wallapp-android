@@ -10,7 +10,7 @@ import android.os.Parcelable
 import com.simonesestito.wallapp.Identifiable
 import com.simonesestito.wallapp.STORAGE_CATEGORIES
 import com.simonesestito.wallapp.STORAGE_WALLPAPERS
-import com.simonesestito.wallapp.annotations.WallpaperFormat
+import com.simonesestito.wallapp.enums.WallpaperFormat
 
 
 data class Wallpaper constructor(override val id: String, val categoryId: String) : Identifiable<String>, Parcelable {

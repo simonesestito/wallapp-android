@@ -20,10 +20,10 @@ import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.annotations.*
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.backend.service.PreviewService
 import com.simonesestito.wallapp.di.component.AppInjector
+import com.simonesestito.wallapp.enums.*
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.isSetLiveWallpaper
