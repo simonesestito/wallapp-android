@@ -65,7 +65,9 @@ class AboutFragment : AbstractAppFragment() {
     }
 
     private fun sendEmail(address: String) {
-        val intent = Intent(Intent.ACTION_SENDTO, "mailto:$address".toUri())
+        val intent = Intent(Intent.ACTION_SENDTO, "mailto:$address".toUri()).apply {
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        }
         try {
             activity?.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
