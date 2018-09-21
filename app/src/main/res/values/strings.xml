@@ -7,6 +7,7 @@
 <resources>
     <string name="app_name" translatable="false">WallApp</string>
     <string name="categories_empty_view_text">Internet connection required</string>
+    <string name="single_category_empty_view_text">You are offline</string>
     <string name="category_wallpapers_count_prefix">%d wallpapers</string>
     <string name="fab_wallpaper_action_download">Download wallpaper</string>
     <string name="wallpaper_action_share">Share link</string>
