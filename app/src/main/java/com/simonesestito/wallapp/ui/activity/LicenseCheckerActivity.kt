@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.vending.licensing.*
 import com.simonesestito.wallapp.BuildConfig
+import com.simonesestito.wallapp.GOOGLE_PLAY_PACKAGE_NAME
 import com.simonesestito.wallapp.LICENSING_PUBLIC_RSA_KEY
 import com.simonesestito.wallapp.R
 
@@ -36,7 +37,17 @@ abstract class LicenseCheckerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        licenseChecker.checkAccess {
+        if (!BuildConfig.DEBUG) {
+            onLicenseCheck()
+        }
+    }
+
+    /**
+     * Check license
+     * Not called if [BuildConfig.DEBUG] is true
+     */
+    protected open fun onLicenseCheck() {
+        licenseChecker.checkAccess(checkOrigin = true) {
             when (it) {
                 Policy.NOT_LICENSED -> showLicenseFailedDialog()
                 Policy.RETRY -> showOfflineErrorDialog()
@@ -87,7 +98,18 @@ abstract class LicenseCheckerActivity : AppCompatActivity() {
     )
     //endregion
 
-    private inline fun LicenseChecker.checkAccess(crossinline callback: (Int) -> Unit) {
+    /**
+     * @param checkOrigin Return [Policy.NOT_LICENSED] if the app has not been installed from Google Play
+     */
+    private inline fun LicenseChecker.checkAccess(checkOrigin: Boolean, crossinline callback: (Int) -> Unit) {
+        if (checkOrigin) {
+            val installer = packageManager.getInstallerPackageName(BuildConfig.APPLICATION_ID)
+            if (installer != GOOGLE_PLAY_PACKAGE_NAME) {
+                callback(Policy.NOT_LICENSED)
+                return // No need for LVL check
+            }
+        }
+
         this.checkAccess(object : LicenseCheckerCallback {
             override fun allow(reason: Int) = callback(reason)
             override fun dontAllow(reason: Int) = callback(reason)
