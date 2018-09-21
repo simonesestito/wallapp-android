@@ -7,6 +7,7 @@ package com.simonesestito.wallapp
 
 
 const val LICENSING_PUBLIC_RSA_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhjZOmmhh5yvyyrxI8+h/R4Arrjb366rf/3iZS9iv85IttKwQPfHlFGbTU/diWFf+8Pl5nNG3i5uFsgwy2flnLg5eaGxqHVckd2GJzIiTyepFKjxhXNOVY2wcwWH5vGMkYDJo86TZ8gjA5S38k8ybU1LyDhLVFNBldmsmB6ZXfs5Q3/k2wia1hux8mzqXJRR61VamlIMMJBavdUhW10DT5AjlVwT5CplDrcd78hp0+eTzkVrKcqz+TNdqyePjpohXec3d6VAsAmyaHAOdhhb5GCItIIatxuWqIpyzMhDI9HS6ttcfweb1lbtw7GaMkT1IIOqnB1yTeGkboApyqigR6wIDAQAB"
+const val GOOGLE_PLAY_PACKAGE_NAME = "com.android.vending"
 
 const val FIRESTORE_CATEGORIES = "categories"
 const val FIRESTORE_WALLPAPERS = "wallpapers"
