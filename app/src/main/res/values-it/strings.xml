@@ -49,4 +49,9 @@
     <string name="intro_slide_welcome_description">L\'ultima app di sfondi basata su cloud, senza pubblicità o abbonamenti. Solo sfondi.</string>
     <string name="about_feedback_social">Seguici sui social</string>
     <string name="about_feedback_bug_report">Segnala un bug</string>
+    <string name="policy_checker_failed_message">Questa app non è stata acquistata / scaricata da Google Play</string>
+    <string name="policy_checker_failed_title">App piratata!</string>
+    <string name="policy_checker_dialog_button">Chiudi app</string>
+    <string name="policy_checker_offline_title">Verifica della licenza fallita</string>
+    <string name="policy_checker_offline_message">Non è stato possibile verificare l\'autenticità di questa app. Per favore, controlla la tua connessione ad Internet</string>
 </resources>
