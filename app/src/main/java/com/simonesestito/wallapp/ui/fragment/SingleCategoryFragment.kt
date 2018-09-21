@@ -113,6 +113,13 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
 
             // Update content loading spinner
             categoryLoadingSpinner?.hide() // Loaded
+
+            // If new list is empty, show empty view
+            if (walls.isEmpty()) {
+                singleCategoryEmptyView.visibility = View.VISIBLE
+            } else {
+                singleCategoryEmptyView.visibility = View.GONE
+            }
         })
     }
 
