@@ -8,6 +8,7 @@ package com.simonesestito.wallapp.ui.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -177,8 +178,20 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
             override fun onAnimationRepeat(animation: Animation) {}
 
             override fun onAnimationEnd(animation: Animation) {
-                (wallpapersRecyclerView.layoutManager as GridLayoutManager).spanCount = spanCount
-                (wallpapersRecyclerView.layoutManager as GridLayoutManager).requestLayout()
+                (wallpapersRecyclerView.layoutManager as GridLayoutManager).also {
+                    it.spanCount = spanCount
+                    it.requestLayout()
+                }
+
+                wallpapersRecyclerView.apply {
+                    Log.d("SingleCategory", "Padding: $paddingStart")
+                    val padding = if (spanCount > 1) 0 else resources.getDimension(R.dimen.wallpaper_list_horizontal_padding).toInt()
+                    setPadding(
+                            padding, paddingTop, padding, paddingBottom
+                    )
+                    requestLayout()
+                }
+
                 val fadeIn = AlphaAnimation(0f, 1f)
                 fadeIn.interpolator = AccelerateInterpolator()
                 fadeIn.duration = shortDuration
