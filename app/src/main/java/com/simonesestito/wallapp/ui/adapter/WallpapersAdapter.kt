@@ -39,9 +39,12 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
                     wallpaperView,
                     null
             )
-            itemView.transitionName = wallpaper.id
-            itemView.setOnClickListener {
-                onItemClickListener?.invoke(wallpaper, it)
+            itemView.wallpaperImagePreview.apply {
+                transitionName = wallpaper.id
+                setOnClickListener {
+                    onItemClickListener?.invoke(wallpaper, it)
+
+                }
             }
         }
     }

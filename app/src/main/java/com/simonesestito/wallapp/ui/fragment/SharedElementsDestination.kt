@@ -20,7 +20,7 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
      * Called when the fragment needs to create the Shared Elements transition
      * @return Shared Elements transition to apply
      */
-    open fun createSharedElementsEnterTransition(): Transition =
+    protected open fun createSharedElementsEnterTransition(): Transition =
             TransitionInflater.from(context)
                     .inflateTransition(android.R.transition.move)
                     .apply {
@@ -31,7 +31,10 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
                             onEnd = { onPostSharedElementsTransition() }
                     )
 
-    open fun createSharedElementsReturnTransition(): Transition =
+    /**
+     * @return The transition or null if you don't want a return transition
+     */
+    protected open fun createSharedElementsReturnTransition(): Transition? =
             TransitionInflater.from(context)
                     .inflateTransition(android.R.transition.move)
                     .apply {
@@ -45,13 +48,13 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
      * and everything needed before transition start
      * @param createdView View created in onCreateView
      */
-    abstract fun onPrepareSharedElements(createdView: View)
+    protected abstract fun onPrepareSharedElements(createdView: View)
 
     /**
      * Called when the transition has just started
      * From onStart listener attached on the transition
      */
-    open fun onPostSharedElementsTransition() {
+    protected open fun onPostSharedElementsTransition() {
         // Empty
     }
 
@@ -59,7 +62,7 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
      * Called after the transition finished
      * From onEnd listener attached on the transition
      */
-    open fun onPreSharedElementsTransition() {
+    protected open fun onPreSharedElementsTransition() {
         // Empty
     }
 
