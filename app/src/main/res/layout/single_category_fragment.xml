@@ -33,7 +33,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="24dp"
-            android:layout_weight="6" />
+            android:layout_weight="6"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/wallpaper_list_horizontal_padding"
+            android:paddingEnd="@dimen/wallpaper_list_horizontal_padding" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.core.widget.ContentLoadingProgressBar
