@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/singleCategoryLayoutSwitch"
-        android:icon="@drawable/ic_filter_list_black_24dp"
+        android:icon="@drawable/ic_grid_large_black_24dp"
         android:title="@string/singleCategoryLayoutRowSwitch"
         app:showAsAction="always" />
 </menu>

@@ -154,6 +154,10 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.single_category_fragment_menu, menu)
+        menu?.findItem(R.id.singleCategoryLayoutSwitch)?.setIcon(
+                if (currentLayoutSpanCount == 1) R.drawable.ic_grid_large_black_24dp
+                else R.drawable.ic_format_list_bulleted_black_24dp
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -162,6 +166,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
                 (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)?.let {
                     changeLayoutRowCount(if (it.spanCount == 1) 2 else 1)
                 }
+                activity?.invalidateOptionsMenu()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -211,7 +216,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
             requestLayout()
         }
 
-        if (spanCount > 0) {
+        if (spanCount > 1) {
             detachSnapFromRecyclerView()
         } else {
             snapHelper.attachToRecyclerView(wallpapersRecyclerView)
