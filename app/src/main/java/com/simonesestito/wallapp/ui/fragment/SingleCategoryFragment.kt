@@ -8,7 +8,6 @@ package com.simonesestito.wallapp.ui.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -22,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
@@ -46,6 +46,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments)
     }
+    private val snapHelper = LinearSnapHelper()
 
     /**
      * Keep the current live data in memory
@@ -58,8 +59,10 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
      */
     private val sharedElements = mutableMapOf<String, View>()
 
-    @Inject lateinit var adapter: WallpapersAdapter
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var adapter: WallpapersAdapter
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var currentLayoutSpanCount: Int = 1
 
@@ -103,6 +106,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
 
         wallpapersRecyclerView.adapter = this.adapter
         wallpapersRecyclerView.layoutManager = GridLayoutManager(requireContext(), currentLayoutSpanCount, LinearLayoutManager.HORIZONTAL, false)
+        adjustRecyclerViewState()
 
         // If there was an old LiveData, unregister it
         oldLiveData?.removeObservers(this)
@@ -110,9 +114,6 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         // Get wallpapers list from Firebase using LiveData,
         // updating the oldLiveData so we'll be able to dismiss it later
         oldLiveData = viewModel.getWallpapersByCategoryId(args.category.id)
-
-        // Set SpanHelper
-        LinearSnapHelper().attachToRecyclerView(wallpapersRecyclerView)
 
         // Finally, observe for updates
         oldLiveData?.observe(this, Observer { walls ->
@@ -124,7 +125,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
             Handler(Looper.getMainLooper()).postDelayed(500) {
                 if (isDetached) return@postDelayed
 
-                // FIXME - Try adding a callback on async list differ
+                // Try adding a callback on async list differ
                 // After a delay, if the list is not empty, scroll to 0
                 if (adapter.data.isNotEmpty() &&
                         oldData.size < adapter.data.size &&
@@ -183,14 +184,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
                     it.requestLayout()
                 }
 
-                wallpapersRecyclerView.apply {
-                    Log.d("SingleCategory", "Padding: $paddingStart")
-                    val padding = if (spanCount > 1) 0 else resources.getDimension(R.dimen.wallpaper_list_horizontal_padding).toInt()
-                    setPadding(
-                            padding, paddingTop, padding, paddingBottom
-                    )
-                    requestLayout()
-                }
+                adjustRecyclerViewState()
 
                 val fadeIn = AlphaAnimation(0f, 1f)
                 fadeIn.interpolator = AccelerateInterpolator()
@@ -201,5 +195,45 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         wallpapersRecyclerView.startAnimation(fadeOut)
     }
 
+    /**
+     * Set correct padding and SnapHelper if necessary
+     * Useful when restoring state
+     */
+    private fun adjustRecyclerViewState() {
+        val spanCount = (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)
+                ?.spanCount ?: return
+
+        wallpapersRecyclerView?.apply {
+            val padding = if (spanCount > 1) 0 else resources.getDimension(R.dimen.wallpaper_list_horizontal_padding).toInt()
+            setPadding(
+                    padding, paddingTop, padding, paddingBottom
+            )
+            requestLayout()
+        }
+
+        if (spanCount > 0) {
+            detachSnapFromRecyclerView()
+        } else {
+            snapHelper.attachToRecyclerView(wallpapersRecyclerView)
+        }
+    }
+
     override fun getSharedElements() = sharedElements
+
+    private fun detachSnapFromRecyclerView() {
+        wallpapersRecyclerView.onFlingListener = null
+        wallpapersRecyclerView.clearOnScrollListeners()
+    }
+
+    private inline fun RecyclerView.setOnFlingListener(crossinline listener: (Int) -> Boolean) {
+        this.onFlingListener = object : RecyclerView.OnFlingListener() {
+            override fun onFling(velocityX: Int, velocityY: Int) =
+                    if (this@setOnFlingListener.layoutManager?.canScrollHorizontally() == true) {
+                        listener(velocityX)
+                    } else {
+                        listener(velocityY)
+                    }
+
+        }
+    }
 }
