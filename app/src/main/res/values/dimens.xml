@@ -20,4 +20,5 @@
     <dimen name="bottom_appbar_cradle_radius">6dp</dimen>
     <dimen name="wallpaper_feedback_image_size">48dp</dimen>
     <dimen name="wallpaper_list_horizontal_padding">70dp</dimen>
+    <dimen name="categories_list_item_height">200dp</dimen>
 </resources>

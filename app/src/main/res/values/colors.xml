@@ -26,7 +26,9 @@
     <color name="intro_indicator_unselected_page">#757575</color>
     <color name="intro_next_arrow_color">@color/text_intro_color</color>
     <color name="intro_done_button_color">@color/color_accent</color>
-    <color name="unseen_category_counter_background">@color/color_accent</color>
-    <color name="unseen_category_counter_text">#FFF</color>
+    <color name="unseen_category_counter_background">#FFF</color>
+    <color name="unseen_category_counter_text">#000</color>
+    <color name="categories_item_text_color">#FFF</color>
+    <color name="categories_item_black_traslucent">#77000000</color>
 
 </resources>
