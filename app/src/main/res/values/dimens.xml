@@ -12,7 +12,6 @@
     <dimen name="outline_chip_stroke_width">1dp</dimen>
     <dimen name="default_appbar_elevation">0dp</dimen>
     <dimen name="scroll_appbar_elevation">4dp</dimen>
-    <dimen name="wallpaper_item_card_width">280dp</dimen>
     <dimen name="bottom_sheet_elevation">16dp</dimen>
     <dimen name="bottom_sheet_corner_radius">8dp</dimen>
     <dimen name="margin_separator_small">8dp</dimen>
