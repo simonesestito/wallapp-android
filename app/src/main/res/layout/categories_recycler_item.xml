@@ -7,71 +7,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/AppTheme.CardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/categories_list_item_height">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/categoryItemCoverImage"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
-        <!-- Block with card content padding -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/card_content_padding">
-
-            <TextView
-                android:id="@+id/categoryItemName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textAppearance="@style/AppTheme.Text.Title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/categoryItemDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:paddingBottom="8dp"
-                android:textAppearance="@style/AppTheme.Text.Standard"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/categoryItemName" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/categoryItemWallpapersCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textAppearance="@style/AppTheme.Text.Standard"
-                android:textColor="@color/text_secondary_color_wallpapers_counter"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/categoryItemDescription" />
+            android:layout_height="match_parent"
+            android:background="@color/categories_item_black_traslucent">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/unseenCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_separator_normal"
+                android:layout_margin="@dimen/margin_separator_normal"
                 android:background="@drawable/circle"
                 android:gravity="center"
                 android:textColor="@color/unseen_category_counter_text"
                 android:textStyle="bold"
                 android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@id/categoryItemWallpapersCount"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/categoryItemWallpapersCount" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/categoryItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/AppTheme.Text.Title"
+                android:textColor="@color/categories_item_text_color"
+                android:textSize="28sp"
+                app:layout_constraintBottom_toTopOf="@id/categoryItemWallpapersCount"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/categoryItemWallpapersCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/AppTheme.Text.Subtitle"
+                android:textColor="@color/categories_item_text_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/categoryItemName" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
 </androidx.cardview.widget.CardView>

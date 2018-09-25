@@ -46,7 +46,6 @@ class CategoriesAdapter @Inject constructor(private val categoryRepository: Cate
 
         holder.apply {
             nameView.text = category.displayName.localized
-            descriptionView.text = category.description.localized
             setWallpapersCount(category.wallpapersCount)
             categoryRepository.loadCoverOn(category.id, coverView)
             itemView.setOnClickListener {
@@ -83,7 +82,6 @@ class CategoriesAdapter @Inject constructor(private val categoryRepository: Cate
 
 class CategoriesVH(item: View) : RecyclerView.ViewHolder(item) {
     val nameView = itemView.categoryItemName!!
-    val descriptionView = itemView.categoryItemDescription!!
     val coverView = itemView.categoryItemCoverImage!!
 
     fun setWallpapersCount(count: Long) {
