@@ -243,17 +243,21 @@ public class ServerManagedPolicy implements Policy {
     }
 
     private Map<String, String> decodeExtras(String extras) {
-        Map<String, String> query_pairs = new LinkedHashMap<>();
+        Map<String, String> queryPairs = new LinkedHashMap<>();
         String[] pairs = extras.split("&");
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
+            if (pair.length() == 0 || idx < 0) {
+                continue;
+            }
+
             try {
-                query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+                queryPairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
-        return query_pairs;
+        return queryPairs;
     }
 
 }
