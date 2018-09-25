@@ -28,5 +28,6 @@
     <color name="unseen_category_counter_text">#000</color>
     <color name="categories_item_text_color">#FFF</color>
     <color name="categories_item_black_traslucent">#77000000</color>
+    <color name="menu_icon_tint">@color/dark_gray</color>
 
 </resources>
