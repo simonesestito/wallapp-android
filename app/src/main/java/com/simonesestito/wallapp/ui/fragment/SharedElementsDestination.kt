@@ -25,7 +25,7 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
                     .inflateTransition(android.R.transition.move)
                     .apply {
                         interpolator = DecelerateInterpolator(2.0f)
-                        duration = 400
+                        duration = requireContext().resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
                     }.addListener(
                             onStart = { onPreSharedElementsTransition() },
                             onEnd = { onPostSharedElementsTransition() }
@@ -39,7 +39,7 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
                     .inflateTransition(android.R.transition.move)
                     .apply {
                         interpolator = DecelerateInterpolator(2.0f)
-                        duration = 400
+                        duration = requireContext().resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
                     }
 
     /**
