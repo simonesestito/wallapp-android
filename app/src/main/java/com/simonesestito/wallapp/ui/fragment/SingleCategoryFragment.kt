@@ -208,14 +208,6 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         val spanCount = (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)
                 ?.spanCount ?: return
 
-        wallpapersRecyclerView?.apply {
-            val padding = if (spanCount > 1) 0 else resources.getDimension(R.dimen.wallpaper_list_horizontal_padding).toInt()
-            setPadding(
-                    padding, paddingTop, padding, paddingBottom
-            )
-            requestLayout()
-        }
-
         if (spanCount > 1) {
             detachSnapFromRecyclerView()
         } else {
