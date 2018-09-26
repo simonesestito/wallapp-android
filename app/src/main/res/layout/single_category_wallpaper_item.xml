@@ -7,14 +7,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/wallpaperItemContainer"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_separator_small">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/wallpaperItemCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:elevation="@dimen/card_elevation"
+        app:cardUseCompatPadding="true"
         app:cardCornerRadius="@dimen/card_corner_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="9:16"
