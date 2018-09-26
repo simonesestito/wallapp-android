@@ -219,5 +219,6 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     private fun detachSnapFromRecyclerView() {
         wallpapersRecyclerView.onFlingListener = null
         wallpapersRecyclerView.clearOnScrollListeners()
+        snapHelper.attachToRecyclerView(null)
     }
 }
