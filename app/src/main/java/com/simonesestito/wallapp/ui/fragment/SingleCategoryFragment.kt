@@ -155,7 +155,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         inflater?.inflate(R.menu.single_category_fragment_menu, menu)
         menu?.findItem(R.id.singleCategoryLayoutSwitch)?.setIcon(
                 if (currentLayoutSpanCount == 1) R.drawable.ic_grid_large_black_24dp
-                else R.drawable.ic_format_list_bulleted_black_24dp
+                else R.drawable.ic_category_layout_single_row_scroll
         )
     }
 
