@@ -61,6 +61,7 @@ class WallpaperFragment : SharedElementsDestination() {
                 wallpaper,
                 FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
                 imageView = wallpaperImage,
+                useExactFormatSize = true,
                 onPaletteReady = { applyLayoutColor(it) }
         )
 

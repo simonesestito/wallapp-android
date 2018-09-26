@@ -37,7 +37,7 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
                     wallpaper,
                     FORMAT_PREVIEW,
                     wallpaperView,
-                    null
+                    useExactFormatSize = true
             )
             itemView.wallpaperImagePreview.apply {
                 transitionName = wallpaper.id

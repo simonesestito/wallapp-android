@@ -24,6 +24,7 @@ import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.enums.WallpaperFormat
+import com.simonesestito.wallapp.enums.dimensions
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import com.simonesestito.wallapp.utils.map
@@ -62,11 +63,15 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
                     .getReference(wallpaper.getStorageFilePath(format))
                     .getFile(destination)
 
+    /**
+     * @param useExactFormatSize Don't trasform image and its size. Set true only in case of problems (e.g.: return Shared Elements transition)
+     */
     @MainThread
     fun loadWallpaper(wallpaper: Wallpaper,
                       @WallpaperFormat format: String,
                       imageView: ImageView,
-                      onPaletteReady: ((Palette) -> Unit)?) {
+                      useExactFormatSize: Boolean = false,
+                      onPaletteReady: ((Palette) -> Unit)? = null) {
         val imageRef = storage.getReference(wallpaper.getStorageFilePath(format))
         val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
 
@@ -74,6 +79,12 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
                 .with(imageView)
                 .asBitmap()
                 .transition(BitmapTransitionOptions().crossFade(shortAnim))
+                .apply {
+                    if (useExactFormatSize) {
+                        override(format.dimensions.width, format.dimensions.height)
+                                .dontTransform()
+                    }
+                }
                 .load(imageRef)
                 .listener(object : RequestListener<Bitmap> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean) = false
