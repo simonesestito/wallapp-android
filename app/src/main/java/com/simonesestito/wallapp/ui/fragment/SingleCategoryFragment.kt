@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
@@ -206,7 +205,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
      */
     private fun adjustRecyclerViewState() {
         val spanCount = (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)
-                ?.spanCount ?: return
+                ?.spanCount ?: currentLayoutSpanCount
 
         if (spanCount > 1) {
             detachSnapFromRecyclerView()
@@ -220,17 +219,5 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     private fun detachSnapFromRecyclerView() {
         wallpapersRecyclerView.onFlingListener = null
         wallpapersRecyclerView.clearOnScrollListeners()
-    }
-
-    private inline fun RecyclerView.setOnFlingListener(crossinline listener: (Int) -> Boolean) {
-        this.onFlingListener = object : RecyclerView.OnFlingListener() {
-            override fun onFling(velocityX: Int, velocityY: Int) =
-                    if (this@setOnFlingListener.layoutManager?.canScrollHorizontally() == true) {
-                        listener(velocityX)
-                    } else {
-                        listener(velocityY)
-                    }
-
-        }
     }
 }
