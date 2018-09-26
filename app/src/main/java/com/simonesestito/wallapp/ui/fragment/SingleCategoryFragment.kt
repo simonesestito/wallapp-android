@@ -208,16 +208,13 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
                 ?.spanCount ?: currentLayoutSpanCount
 
         if (spanCount > 1) {
-            detachSnapFromRecyclerView()
+            // Detach
+            snapHelper.attachToRecyclerView(null)
         } else {
+            // Attach
             snapHelper.attachToRecyclerView(wallpapersRecyclerView)
         }
     }
 
     override fun getSharedElements() = sharedElements
-
-    private fun detachSnapFromRecyclerView() {
-        wallpapersRecyclerView.onFlingListener = null
-        wallpapersRecyclerView.clearOnScrollListeners()
-    }
 }
