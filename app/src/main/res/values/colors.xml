@@ -26,6 +26,5 @@
     <color name="intro_done_button_color">@color/color_accent</color>
     <color name="unseen_category_counter_background">@color/color_accent</color>
     <color name="unseen_category_counter_text">#FFF</color>
-    <color name="menu_icon_tint">@color/dark_gray</color>
 
 </resources>
