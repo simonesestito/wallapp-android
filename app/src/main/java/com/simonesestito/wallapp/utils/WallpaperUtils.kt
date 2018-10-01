@@ -23,22 +23,6 @@ import com.simonesestito.wallapp.enums.*
 import java.io.File
 import java.io.IOException
 
-/**
- * Apply the wallpaper
- * Support method: callable from each Platform version
- * @param context Context
- * @param wallpaperFile File which contains the wallpaper
- * @param location Location where the wallpaper should be applied. On pre-Nougat has no effect
- * @return True in case of success, false otherwise
- */
-@WorkerThread
-fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int) =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            applyWallpaper(context, wallpaperFile)
-        } else {
-            applyWallpaper(context, wallpaperFile, location)
-        }
-
 @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
 @WorkerThread
 fun backupWallpaper(context: Context) {
@@ -91,6 +75,22 @@ fun Bitmap.writeToFile(dest: File, recycleOnEnd: Boolean) {
         }
     }
 }
+
+/**
+ * Apply the wallpaper
+ * Support method: callable from each Platform version
+ * @param context Context
+ * @param wallpaperFile File which contains the wallpaper
+ * @param location Location where the wallpaper should be applied. On pre-Nougat has no effect
+ * @return True in case of success, false otherwise
+ */
+@WorkerThread
+fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int) =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            applyWallpaper(context, wallpaperFile)
+        } else {
+            applyWallpaper(context, wallpaperFile, location)
+        }
 
 @WorkerThread
 private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {

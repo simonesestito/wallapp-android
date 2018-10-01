@@ -6,6 +6,7 @@
 package com.simonesestito.wallapp.ui.dialog
 
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -73,6 +74,14 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
                     // It can lead to crash in case of bad selection
                     viewModel.currentWallpaperLocation
             )
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            // Hide wallpaper location selection
+            // It isn't supported before 7.0 (API 24)
+            view.wallpaperLocationTitle?.visibility = View.GONE
+            view.wallpaperLocationChipGroup?.visibility = View.GONE
+            viewModel.currentWallpaperLocation = WALLPAPER_LOCATION_BOTH
         }
     }
 
