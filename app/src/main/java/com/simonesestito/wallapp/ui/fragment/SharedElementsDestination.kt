@@ -5,9 +5,11 @@
 
 package com.simonesestito.wallapp.ui.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import androidx.annotation.RequiresApi
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import com.simonesestito.wallapp.utils.addListener
@@ -15,6 +17,7 @@ import com.simonesestito.wallapp.utils.addListener
 /**
  * Special fragment that acts as a destination for a SharedElements transition
  */
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 abstract class SharedElementsDestination : AbstractAppFragment() {
     /**
      * Called when the fragment needs to create the Shared Elements transition

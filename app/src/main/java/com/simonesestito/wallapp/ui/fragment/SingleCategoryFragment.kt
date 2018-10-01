@@ -8,6 +8,7 @@ package com.simonesestito.wallapp.ui.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -26,6 +27,7 @@ import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.WallpapersAdapter
+import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.localized
@@ -171,6 +173,9 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Change layout row count with fade animation
+     */
     private fun changeLayoutRowCount(spanCount: Int) {
         currentLayoutSpanCount = spanCount
         val fadeOut = AlphaAnimation(1f, 0f)
@@ -204,15 +209,30 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
      * Useful when restoring state
      */
     private fun adjustRecyclerViewState() {
-        val spanCount = (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)
-                ?.spanCount ?: currentLayoutSpanCount
+        val layoutManager = wallpapersRecyclerView?.layoutManager as GridLayoutManager?
+        val spanCount = layoutManager?.spanCount ?: currentLayoutSpanCount
 
-        if (spanCount > 1) {
-            // Detach
-            snapHelper.attachToRecyclerView(null)
-        } else {
-            // Attach
-            snapHelper.attachToRecyclerView(wallpapersRecyclerView)
+        if (layoutManager == null) {
+            Log.e(this@SingleCategoryFragment.TAG, "adjustRecyclerViewState(): layoutManager is null")
+            return
+        }
+
+        // Post to the next tick to wait until layout request has finished
+        Handler().post {
+            if (spanCount > 1) {
+                // Detach
+                snapHelper.attachToRecyclerView(null)
+            } else {
+                // Avoid glitch to return in position
+                // Go to the right position without animation
+                snapHelper.findSnapView(layoutManager)?.let { view ->
+                    val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager, view)!!
+                    wallpapersRecyclerView.scrollBy(distance[0], distance[1])
+                }
+
+                // Attach
+                snapHelper.attachToRecyclerView(wallpapersRecyclerView)
+            }
         }
     }
 
