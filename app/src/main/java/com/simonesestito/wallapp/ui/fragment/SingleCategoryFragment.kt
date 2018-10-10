@@ -21,7 +21,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
@@ -47,7 +46,6 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
     private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments)
     }
-    private val snapHelper = LinearSnapHelper()
 
     /**
      * Keep the current live data in memory
@@ -219,20 +217,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
 
         // Post to the next tick to wait until layout request has finished
         Handler().post {
-            if (spanCount > 1) {
-                // Detach
-                snapHelper.attachToRecyclerView(null)
-            } else {
-                // Avoid glitch to return in position
-                // Go to the right position without animation
-                snapHelper.findSnapView(layoutManager)?.let { view ->
-                    val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager, view)!!
-                    wallpapersRecyclerView.scrollBy(distance[0], distance[1])
-                }
-
-                // Attach
-                snapHelper.attachToRecyclerView(wallpapersRecyclerView)
-            }
+            wallpapersRecyclerView.snapEnabled = spanCount == 1
         }
     }
 

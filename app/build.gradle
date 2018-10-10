@@ -55,10 +55,10 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.firebase:firebase-firestore:17.1.0'
-    implementation 'com.google.firebase:firebase-storage:16.0.2'
-    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-firestore:17.1.1'
+    implementation 'com.google.firebase:firebase-storage:16.0.3'
+    implementation 'com.google.firebase:firebase-auth:16.0.4'
 
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
@@ -70,11 +70,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:4.0-alpha-3-SNAPSHOT'
     testImplementation 'org.mockito:mockito-core:2.21.0'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test:rules:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0-alpha4'
+    androidTestImplementation 'androidx.test:runner:1.1.0-beta01'
+    androidTestImplementation 'androidx.test:rules:1.1.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0-beta01'
 }
 
 apply plugin: 'com.google.gms.google-services'

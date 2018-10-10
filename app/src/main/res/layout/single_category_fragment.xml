@@ -28,7 +28,7 @@
             android:gravity="center"
             android:textAppearance="@style/AppTheme.Text.Standard" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.simonesestito.wallapp.ui.SnapRecyclerView
             android:id="@+id/wallpapersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
