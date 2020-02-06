@@ -20,6 +20,7 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
@@ -54,11 +55,6 @@ class SingleCategoryFragment : AbstractAppFragment() {
      */
     private var oldLiveData: LiveData<List<Wallpaper>>? = null
 
-    /**
-     * Needed for SharedElements transaction
-     */
-    private val sharedElements = mutableMapOf<String, View>()
-
     @Inject
     lateinit var adapter: WallpapersAdapter
     @Inject
@@ -73,13 +69,16 @@ class SingleCategoryFragment : AbstractAppFragment() {
         adapter.onItemClickListener = { wallpaper, transitionView ->
             // Setup SharedElements
             val name = ViewCompat.getTransitionName(transitionView) ?: ""
-            sharedElements.clear()
-            sharedElements[name] = transitionView
 
             val directions = SingleCategoryFragmentDirections
                     .toWallpaperDetails(wallpaper.id, wallpaper.categoryId)
                     .setTransitionName(name)
-            findNavController().navigate(directions)
+
+            findNavController().navigate(directions,
+                    FragmentNavigator.Extras
+                            .Builder()
+                            .addSharedElement(transitionView, name)
+                            .build())
         }
 
         setHasOptionsMenu(true)
