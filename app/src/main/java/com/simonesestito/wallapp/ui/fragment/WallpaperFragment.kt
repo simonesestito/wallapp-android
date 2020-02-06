@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -37,13 +37,12 @@ import com.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import javax.inject.Inject
-import com.bumptech.glide.request.transition.Transition as GlideTransition
 
 class WallpaperFragment : SharedElementsDestination() {
     override val title = ""
 
     private val args by lazy {
-        WallpaperFragmentArgs.fromBundle(arguments)
+        WallpaperFragmentArgs.fromBundle(arguments ?: bundleOf())
     }
 
     private val wallpaper: Wallpaper by lazy {

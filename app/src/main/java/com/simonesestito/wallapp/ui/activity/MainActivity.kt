@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.activity
@@ -51,7 +51,7 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
         setContentView(R.layout.main_activity)
         findNavController(R.id.navHostFragment).let {
             setupActionBarWithNavController(this, it)
-            it.addOnNavigatedListener { _, _ ->
+            it.addOnDestinationChangedListener { _, _, _ ->
                 onDestinationChanged()
             }
         }
@@ -66,7 +66,7 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_VIEW) {
             Log.d(TAG, "Received VIEW Intent with url: ${intent.data}")
-            findNavController(R.id.navHostFragment).onHandleDeepLink(intent)
+            findNavController(R.id.navHostFragment).handleDeepLink(intent)
         }
     }
 
@@ -87,8 +87,8 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
         invalidateOptionsMenu()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) =
-            when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
                 R.id.aboutMenuItem -> {
                     findNavController(R.id.navHostFragment).let {
                         if (it.currentDestination?.id != R.id.aboutFragment)

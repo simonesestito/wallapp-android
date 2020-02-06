@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.dialog
@@ -42,7 +42,7 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
     }
 
     private val wallpaperArg: Wallpaper by lazy {
-        arguments!!.getParcelable<Wallpaper>(EXTRA_WALLPAPER_SETUP_PARCELABLE)
+        arguments?.getParcelable<Wallpaper>(EXTRA_WALLPAPER_SETUP_PARCELABLE)!!
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -173,17 +173,17 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
         }
 
         // Auto dismiss after some time
-        Handler(Looper.myLooper()).postDelayed(BOTTOMSHEET_AUTO_DISMISS_DELAY) {
+        Handler(Looper.myLooper()!!).postDelayed(BOTTOMSHEET_AUTO_DISMISS_DELAY) {
             tryDismiss()
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         viewModel.stopDownloadTask()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         viewModel.stopDownloadTask()
     }

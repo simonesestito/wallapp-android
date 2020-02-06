@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 apply plugin: 'com.android.application'
@@ -11,11 +11,11 @@ apply plugin: 'kotlin-kapt'
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.simonesestito.wallapp"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 11
         versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -40,41 +40,31 @@ dependencies {
     implementation project(":library")
 
     // AndroidX
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.transition:transition:1.3.0"
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05'
-    implementation 'androidx.core:core-ktx:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.2.0'
+    implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'com.github.lion4ik:arch-navigation-shared-elements:0.1'
-    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'androidx.browser:browser:1.2.0'
 
     // Dagger 2
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-firestore:17.1.1'
-    implementation 'com.google.firebase:firebase-storage:16.0.3'
-    implementation 'com.google.firebase:firebase-auth:16.0.4'
+    implementation 'com.google.firebase:firebase-core:17.2.2'
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
 
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
-    implementation 'com.github.bumptech.glide:glide:4.8.0-SNAPSHOT'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    kapt 'com.github.bumptech.glide:compiler:4.8.0-SNAPSHOT'
-
-    // Android Testing
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:4.0-alpha-3-SNAPSHOT'
-    testImplementation 'org.mockito:mockito-core:2.21.0'
-    androidTestImplementation 'androidx.test:runner:1.1.0-beta01'
-    androidTestImplementation 'androidx.test:rules:1.1.0-beta01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta01'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0-beta01'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0-beta01'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
+import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.LiveData
@@ -36,7 +37,7 @@ import javax.inject.Inject
 
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
-class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
+class SingleCategoryFragment : AbstractAppFragment() {
     override val title
         get() = args.category.displayName.localized
 
@@ -44,7 +45,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         getViewModel<WallpapersViewModel>(viewModelFactory)
     }
     private val args by lazy {
-        SingleCategoryFragmentArgs.fromBundle(arguments)
+        SingleCategoryFragmentArgs.fromBundle(arguments ?: bundleOf())
     }
 
     /**
@@ -115,7 +116,7 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         oldLiveData = viewModel.getWallpapersByCategoryId(args.category.id)
 
         // Finally, observe for updates
-        oldLiveData?.observe(this, Observer { walls ->
+        oldLiveData?.observe(viewLifecycleOwner, Observer { walls ->
             val oldData = this.adapter.data
 
             // On wallpapers update, refresh the list
@@ -150,17 +151,17 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.single_category_fragment_menu, menu)
-        menu?.findItem(R.id.singleCategoryLayoutSwitch)?.setIcon(
+        inflater.inflate(R.menu.single_category_fragment_menu, menu)
+        menu.findItem(R.id.singleCategoryLayoutSwitch)?.setIcon(
                 if (currentLayoutSpanCount == 1) R.drawable.ic_grid_large_black_24dp
                 else R.drawable.ic_category_layout_single_row_scroll
         )
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.singleCategoryLayoutSwitch -> {
                 (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)?.let {
                     changeLayoutRowCount(if (it.spanCount == 1) 2 else 1)
@@ -220,6 +221,4 @@ class SingleCategoryFragment : AbstractAppFragment(), SharedElementsStart {
             wallpapersRecyclerView.snapEnabled = spanCount == 1
         }
     }
-
-    override fun getSharedElements() = sharedElements
 }

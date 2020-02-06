@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.backend.model
@@ -23,10 +23,10 @@ data class Category(
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             mutableMapOf<String, Any>().apply {
-                parcel.readMap(this, this.javaClass.classLoader)
+                parcel.readMap(this as Map<*, *>, this.javaClass.classLoader)
             },
             mutableMapOf<String, Any>().apply {
-                parcel.readMap(this, this.javaClass.classLoader)
+                parcel.readMap(this as Map<*, *>, this.javaClass.classLoader)
             },
             parcel.readLong())
 
