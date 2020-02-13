@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp
@@ -19,7 +19,8 @@ const val KEY_PUBLISHED = "published"
 const val KEY_CREATION_DATE = "creationDate"
 const val KEY_DISPLAY_NAME = "displayName"
 const val KEY_DESCRIPTION = "description"
-const val KEY_COUNT = "count"
+const val KEY_CATEGORY_ITEMS_COUNT = "count"
+const val KEY_CATEGORY_GROUP = "group"
 const val FIRESTORE_USED_VIEWED_WALLS_COUNT = "viewed_walls_count"
 const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
