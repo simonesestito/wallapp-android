@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,11 +48,6 @@
         <argument
             android:name="categoryId"
             app:argType="string" />
-        <argument
-            android:name="transitionName"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
         <deepLink
             android:autoVerify="true"
             app:uri="wallapp-b7805.firebaseapp.com/{categoryId}/{wallpaperId}"

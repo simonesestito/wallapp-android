@@ -259,7 +259,7 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     override fun onPrepareSharedElements(createdView: View) {
-        createdView.wallpaperImage.transitionName = args.transitionName
+        createdView.wallpaperImage.transitionName = args.wallpaperId
         bottomAppBar?.replaceMenu(R.menu.wallpaper_fragment_bottom_bar_menu)
     }
     //endregion

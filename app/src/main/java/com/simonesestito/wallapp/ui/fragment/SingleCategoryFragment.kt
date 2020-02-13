@@ -14,9 +14,11 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
-import androidx.core.view.ViewCompat
+import androidx.core.view.children
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -38,13 +40,14 @@ import javax.inject.Inject
 
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
-class SingleCategoryFragment : AbstractAppFragment() {
+class SingleCategoryFragment : SharedElementsDestination() {
     override val title
         get() = args.category.displayName.localized
 
     private val viewModel by lazy {
         getViewModel<WallpapersViewModel>(viewModelFactory)
     }
+
     private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments ?: bundleOf())
     }
@@ -66,22 +69,27 @@ class SingleCategoryFragment : AbstractAppFragment() {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
 
-        adapter.onItemClickListener = { wallpaper, transitionView ->
+        adapter.onItemClickListener = { wallpaper, itemView ->
             // Setup SharedElements
-            val name = ViewCompat.getTransitionName(transitionView) ?: ""
-
             val directions = SingleCategoryFragmentDirections
                     .toWallpaperDetails(wallpaper.id, wallpaper.categoryId)
-                    .setTransitionName(name)
 
-            findNavController().navigate(directions,
-                    FragmentNavigator.Extras
-                            .Builder()
-                            .addSharedElement(transitionView, name)
-                            .build())
+            findNavController().navigate(directions, FragmentNavigator.Extras
+                    .Builder()
+                    .addSharedElement(itemView, itemView.transitionName)
+                    .build())
         }
 
         setHasOptionsMenu(true)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Requires this fragment to call startPostponedEnterTransition manually.
+        // Field changed here (in onDestroyView) so that:
+        // - if we're about to do the return transition, it's set to false
+        // - otherwise, it's set to true (default value in superclass)
+        shouldStartTransition = false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -143,6 +151,18 @@ class SingleCategoryFragment : AbstractAppFragment() {
                 singleCategoryEmptyView.visibility = View.GONE
             }
         })
+    }
+
+    override fun onPrepareSharedElements(createdView: View) {
+        createdView.wallpapersRecyclerView.doOnLayout {
+            createdView.wallpapersRecyclerView.children
+                    .map { it.findViewById<ImageView>(R.id.wallpaperImagePreview) }
+                    .map { it.transitionName }
+                    .forEach { Log.d(TAG, "Transition name: $it") }
+
+            if (createdView.wallpapersRecyclerView.childCount > 0)
+                startPostponedEnterTransition()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
