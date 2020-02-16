@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -9,10 +9,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.di.component.AppInjector
+import com.simonesestito.wallapp.enums.CATEGORY_GROUP_COMMUNITY
+import com.simonesestito.wallapp.enums.CATEGORY_GROUP_ORIGINAL
+import com.simonesestito.wallapp.enums.CategoryGroup
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
@@ -27,8 +30,10 @@ class CategoriesListFragment : AbstractAppFragment() {
     override val title
         get() = getString(R.string.app_name)
 
-    @Inject lateinit var viewModelFactory: AppViewModelFactory
-    @Inject lateinit var categoriesAdapter: CategoriesAdapter
+    @Inject
+    lateinit var viewModelFactory: AppViewModelFactory
+    @Inject
+    lateinit var categoriesAdapter: CategoriesAdapter
 
     private val viewModel: WallpapersViewModel by lazy {
         getViewModel<WallpapersViewModel>(viewModelFactory)
@@ -70,11 +75,30 @@ class CategoriesListFragment : AbstractAppFragment() {
             val direction = CategoriesListFragmentDirections.toCategory(it)
             findNavController().navigate(direction)
         }
+
+        view.categoriesBottomNavigation.setOnNavigationItemSelectedListener {
+            @CategoryGroup val categoryGroup = when (it.itemId) {
+                R.id.categoryGroupCommunity -> CATEGORY_GROUP_COMMUNITY
+                R.id.categoryGroupOriginal -> CATEGORY_GROUP_ORIGINAL
+                else -> return@setOnNavigationItemSelectedListener false
+            }
+
+            viewModel.updateCategoryGroup(categoryGroup)
+
+            return@setOnNavigationItemSelectedListener true
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.categories.observe(this, Observer { list ->
+        loadCategoriesList()
+    }
+
+    /**
+     * Load categories according to the current category group
+     */
+    private fun loadCategoriesList() {
+        viewModel.currentCategories.observe(this) { list ->
             // Hide loading spinner
             categoriesLoadingBar.hide()
 
@@ -94,6 +118,6 @@ class CategoriesListFragment : AbstractAppFragment() {
                 // Show Empty View
                 categoriesEmptyView.visibility = View.VISIBLE
             }
-        })
+        }
     }
 }

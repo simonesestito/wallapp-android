@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.adapter
@@ -22,6 +22,8 @@ import javax.inject.Inject
 
 /**
  * Adapter for categories list
+ * @param categoryRepository Used to load category header image and to fetch unseen wallpapers.
+ * List of categories is always given by the fragment using this Adapter
  */
 class CategoriesAdapter @Inject constructor(private val categoryRepository: CategoryRepository)
     : AsyncAdapter<Category, CategoriesVH>() {
