@@ -5,12 +5,12 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/category_group_original"
+        android:id="@+id/categoryGroupOriginal"
         android:checked="true"
         android:icon="@drawable/brush"
         android:title="@string/category_group_original" />
     <item
-        android:id="@+id/category_group_community"
+        android:id="@+id/categoryGroupCommunity"
         android:icon="@drawable/community"
         android:title="@string/category_group_community" />
 </menu>
