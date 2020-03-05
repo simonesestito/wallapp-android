@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +24,7 @@ import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.sharedPreferences
 
 
-class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
+class MainActivity : AppCompatActivity(), ElevatingAppbar {
     private val defaultAppbarElevation by lazy {
         resources.getDimension(R.dimen.default_appbar_elevation)
     }
