@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -56,10 +56,6 @@ class AboutFragment : AbstractAppFragment() {
 
             aboutFeedbackMailButton.setOnClickListener {
                 sendEmail(AUTHOR_1_MAIL)
-            }
-
-            aboutFeedbackSocialButton.setOnClickListener {
-                context?.openUrl(TWITTER_LINK)
             }
         }
     }

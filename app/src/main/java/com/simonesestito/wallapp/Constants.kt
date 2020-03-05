@@ -57,5 +57,4 @@ const val AUTHOR_2_PORTFOLIO_WEBSITE = "https://www.paologiubilato.com"
 const val AUTHOR_2_MAIL = "giubilato95@gmail.com"
 
 const val GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-const val TWITTER_LINK = "https://twitter.com/wallapp_info"
 
