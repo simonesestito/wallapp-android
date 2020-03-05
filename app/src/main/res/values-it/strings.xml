@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 <resources>
     <string name="categories_empty_view_text">Connessione ad Internet richiesta</string>
@@ -47,7 +47,6 @@
     <string name="intro_slide_no_subs_title">È tuo, per sempre.</string>
     <string name="intro_slide_no_subs_description">Nessun acquisto in-app o abbonamenti nascosti. Solo un\'app pulita per offrirti sfondi spettacolari.</string>
     <string name="intro_slide_welcome_description">L\'ultima app di sfondi basata su cloud, senza pubblicità o abbonamenti. Solo sfondi.</string>
-    <string name="about_feedback_social">Seguici sui social</string>
     <string name="about_feedback_bug_report">Segnala un bug</string>
     <string name="policy_checker_failed_message">Questa app non è stata acquistata / scaricata da Google Play</string>
     <string name="policy_checker_failed_title">App piratata!</string>
