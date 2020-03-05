@@ -14,10 +14,8 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
-import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
-import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -155,11 +153,6 @@ class SingleCategoryFragment : SharedElementsDestination() {
 
     override fun onPrepareSharedElements(createdView: View) {
         createdView.wallpapersRecyclerView.doOnLayout {
-            createdView.wallpapersRecyclerView.children
-                    .map { it.findViewById<ImageView>(R.id.wallpaperImagePreview) }
-                    .map { it.transitionName }
-                    .forEach { Log.d(TAG, "Transition name: $it") }
-
             if (createdView.wallpapersRecyclerView.childCount > 0)
                 startPostponedEnterTransition()
         }
