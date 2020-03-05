@@ -55,4 +55,6 @@
     <string name="policy_checker_offline_message">Non è stato possibile verificare l\'autenticità di questa app. Per favore, controlla la tua connessione ad Internet</string>
     <string name="single_category_empty_view_text">Sei offline</string>
     <string name="singleCategoryLayoutRowSwitch">Cambia layout</string>
+    <string name="category_group_original">Originali WallApp</string>
+    <string name="category_group_community">Community</string>
 </resources>
