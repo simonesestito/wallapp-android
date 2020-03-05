@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <resources>
@@ -61,4 +61,6 @@
     <string name="policy_checker_offline_title">License verification failed</string>
     <string name="policy_checker_offline_message">App purchase can\'t be verified. Please check your Internet connection</string>
     <string name="singleCategoryLayoutRowSwitch">Switch layout</string>
+    <string name="category_group_original">WallApp Originals</string>
+    <string name="category_group_community">Community</string>
 </resources>

@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.utils
@@ -61,14 +61,23 @@ fun @receiver:ColorInt Int.isLightColor() =
 /**
  * Map [LiveData] value
  */
-fun <X, Y> LiveData<X>.map(converter: (X) -> Y): LiveData<Y> {
+fun <T, R> LiveData<T>.map(converter: (T) -> R): LiveData<R> {
     return Transformations.map(this, converter)
 }
 
 /**
- * Map all items in a list contained in a [LiveData]
+ * Filter items from a list wrapped inside a [LiveData]
  */
-inline fun <L : List<I>, I, T> LiveData<L>.mapList(crossinline converter: (I) -> T): LiveData<List<T>> {
+inline fun <T> LiveData<List<T>>.filter(crossinline predicate: (T) -> Boolean): LiveData<List<T>> {
+    return Transformations.map(this) { list ->
+        list.filter(predicate)
+    }
+}
+
+/**
+ * Map all items in a list wrapped in a [LiveData]
+ */
+inline fun <T, R> LiveData<List<T>>.mapList(crossinline converter: (T) -> R): LiveData<List<R>> {
     return Transformations.map(this) { list ->
         list.map(converter)
     }
