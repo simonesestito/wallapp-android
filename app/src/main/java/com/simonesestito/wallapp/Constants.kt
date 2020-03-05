@@ -50,8 +50,8 @@ const val MAX_CACHED_PALETTE_SIZE = 15
 
 const val IO_EXECUTOR_MAX_THREADS = 1
 
-const val AUTHOR_1_PORTFOLIO_WEBSITE = "https://sestito.tk"
-const val AUTHOR_1_MAIL = "simone.dev.help@gmail.com"
+const val AUTHOR_1_PORTFOLIO_WEBSITE = "https://simonesestito.com"
+const val AUTHOR_1_MAIL = "simone@simonesestito.com"
 
 const val AUTHOR_2_PORTFOLIO_WEBSITE = "https://www.paologiubilato.com"
 const val AUTHOR_2_MAIL = "giubilato95@gmail.com"
