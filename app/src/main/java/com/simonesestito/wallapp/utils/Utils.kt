@@ -317,6 +317,8 @@ fun Context.openUrl(url: String, forceChrome: Boolean = false, useCustomTab: Boo
  * Warning: always use .apply()
  */
 val Context.sharedPreferences: SharedPreferences by thisLazy {
-    Log.e("SharedPreferences", "Initializing SharedPreferences")
     getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE)
 }
+
+val Fragment.sharedPreferences
+    get() = requireContext().sharedPreferences
