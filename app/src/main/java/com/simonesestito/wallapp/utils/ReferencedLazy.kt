@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.utils
@@ -14,4 +14,7 @@ class ReferencedLazy<T, R>(private inline val initializer: T.() -> R) {
     operator fun getValue(thisRef: T, property: KProperty<*>) = thisRef.initializer()
 }
 
+/**
+ * Use "by lazy" delegate with "this" reference as outer function
+ */
 fun <T, R> thisLazy(initializer: T.() -> R) = ReferencedLazy(initializer)

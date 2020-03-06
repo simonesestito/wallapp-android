@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
+import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
 import androidx.core.view.doOnLayout
@@ -23,15 +24,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.simonesestito.wallapp.PREFS_SINGLE_CATEGORY_LAYOUT_ROWS
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.WallpapersAdapter
-import com.simonesestito.wallapp.utils.TAG
-import com.simonesestito.wallapp.utils.findNavController
-import com.simonesestito.wallapp.utils.getViewModel
-import com.simonesestito.wallapp.utils.localized
+import com.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
 import javax.inject.Inject
@@ -98,11 +97,6 @@ class SingleCategoryFragment : SharedElementsDestination() {
         super.onViewCreated(view, savedInstanceState)
         view.categoryLoadingSpinner.show()
 
-        // Update current span count if it's present in savedInstanceState Bundle
-        savedInstanceState?.getInt(KEY_LAYOUT_ROW_COUNT, currentLayoutSpanCount)?.let {
-            currentLayoutSpanCount = it
-        }
-
         // Update seen wallpapers count
         viewModel.updateSeenWallpapers(args.category)
 
@@ -149,6 +143,10 @@ class SingleCategoryFragment : SharedElementsDestination() {
                 singleCategoryEmptyView.visibility = View.GONE
             }
         })
+
+        // Get layout span count from preferences
+        val layoutRows = sharedPreferences.getInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, currentLayoutSpanCount)
+        changeLayoutRowCount(layoutRows)
     }
 
     override fun onPrepareSharedElements(createdView: View) {
@@ -188,7 +186,14 @@ class SingleCategoryFragment : SharedElementsDestination() {
      * Change layout row count with fade animation
      */
     private fun changeLayoutRowCount(spanCount: Int) {
+        // Update field
         currentLayoutSpanCount = spanCount
+
+        // Update SharedPreferences
+        sharedPreferences.edit {
+            putInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, spanCount)
+        }
+
         val fadeOut = AlphaAnimation(1f, 0f)
         val shortDuration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
         fadeOut.interpolator = DecelerateInterpolator()
