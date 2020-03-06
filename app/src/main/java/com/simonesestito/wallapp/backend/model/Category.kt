@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.enums.CATEGORY_GROUP_ORIGINAL
 import com.simonesestito.wallapp.enums.CategoryGroup
+import com.simonesestito.wallapp.enums.FORMAT_COVER
 import com.simonesestito.wallapp.utils.LocalizedString
 
 data class Category(
@@ -46,6 +47,8 @@ data class Category(
         parcel.writeString(group)
         parcel.writeLong(wallpapersCount)
     }
+
+    fun previewImageUrl() = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$FORMAT_COVER"
 
     override fun describeContents() = hashCode()
 
