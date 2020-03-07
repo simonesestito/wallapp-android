@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".backend.service.PreviewService" />
+        <service android:name=".backend.androidservice.PreviewService" />
 
         <activity
             android:name=".ui.activity.IntroActivity"

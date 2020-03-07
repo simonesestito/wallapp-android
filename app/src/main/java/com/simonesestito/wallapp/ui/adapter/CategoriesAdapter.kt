@@ -50,7 +50,7 @@ class CategoriesAdapter @Inject constructor(private val categoryRepository: Cate
             nameView.text = category.displayName.localized
             descriptionView.text = category.description.localized
             setWallpapersCount(category.wallpapersCount)
-            categoryRepository.loadCoverOn(category.id, coverView)
+            categoryRepository.loadCoverOn(category, coverView)
             itemView.setOnClickListener {
                 onItemClickListener?.invoke(category)
             }

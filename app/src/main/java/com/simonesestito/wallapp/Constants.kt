@@ -20,6 +20,8 @@ const val KEY_CATEGORY_GROUP = "group"
 const val FIRESTORE_USED_VIEWED_WALLS_COUNT = "viewed_walls_count"
 const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
+const val SCALEWAY_BUCKET_URL = "https://wallapp-bucket.s3.fr-par.scw.cloud"
+
 const val CHROME_PACKAGE_NAME = "com.android.chrome"
 
 const val SHARED_PREFERENCES_FILENAME = "wallapp_prefs"

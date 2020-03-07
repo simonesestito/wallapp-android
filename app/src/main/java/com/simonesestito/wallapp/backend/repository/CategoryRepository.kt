@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.backend.repository
@@ -9,15 +9,17 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.storage.FirebaseStorage
-import com.simonesestito.wallapp.*
+import com.simonesestito.wallapp.FIRESTORE_CATEGORIES
+import com.simonesestito.wallapp.FIRESTORE_USED_VIEWED_WALLS_COUNT
+import com.simonesestito.wallapp.KEY_CREATION_DATE
+import com.simonesestito.wallapp.KEY_PUBLISHED
 import com.simonesestito.wallapp.backend.model.Category
-import com.simonesestito.wallapp.enums.FORMAT_COVER
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import com.simonesestito.wallapp.utils.TAG
@@ -26,7 +28,6 @@ import com.simonesestito.wallapp.utils.mapList
 import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(private val firestore: FirebaseFirestore,
-                                             private val storage: FirebaseStorage,
                                              private val auth: FirebaseAuth) {
     fun getCategories(): LiveData<List<Category>> {
         val ref = firestore
@@ -48,13 +49,12 @@ class CategoryRepository @Inject constructor(private val firestore: FirebaseFire
         }
     }
 
-    fun loadCoverOn(categoryId: String, imageView: ImageView) {
-        val imageRef = storage.getReference("$STORAGE_CATEGORIES/$categoryId/$FORMAT_COVER")
+    fun loadCoverOn(category: Category, imageView: ImageView) {
         val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
 
-        GlideApp
+        Glide
                 .with(imageView)
-                .load(imageRef)
+                .load(category.previewImageUrl)
                 .transition(DrawableTransitionOptions().crossFade(shortAnim))
                 .into(imageView)
     }

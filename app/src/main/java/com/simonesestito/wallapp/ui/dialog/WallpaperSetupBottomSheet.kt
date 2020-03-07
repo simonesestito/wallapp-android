@@ -20,9 +20,13 @@ import com.simonesestito.wallapp.BOTTOMSHEET_AUTO_DISMISS_DELAY
 import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.enums.*
+import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
+import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
+import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_LOCK
+import com.simonesestito.wallapp.enums.WallpaperLocation
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import com.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
 import com.simonesestito.wallapp.utils.getViewModel
@@ -89,11 +93,11 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
         super.onStart()
         viewModel.getDownloadStatus().observe(this, Observer { status ->
             when (status) {
-                STATUS_DOWNLOADING -> onDownloadStarted()
-                STATUS_FINALIZING -> onDownloadFinalizing()
-                STATUS_SUCCESS -> onDownloadResult(true)
-                STATUS_ERROR -> onDownloadResult(false)
-                // Ignore STATUS_NOTHING
+                is DownloadStatus.Progressing -> onDownloadStarted(status.progress)
+                DownloadStatus.Finalizing -> onDownloadFinalizing()
+                DownloadStatus.Success -> onDownloadResult(true)
+                DownloadStatus.Error -> onDownloadResult(false)
+                // Ignore DownloadStatus.Cancelled
             }
         })
     }
@@ -112,28 +116,32 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
                 else -> throw IllegalArgumentException("Unknown chip selection")
             }
 
-    private fun onDownloadStarted() {
-        // Fade out setup
-        wallpaperSetup.animate()
-                .alpha(0f)
-                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .withEndAction {
-                    // Use INVISIBLE instead of GONE to preserve its space in layout
-                    wallpaperSetup?.visibility = View.INVISIBLE
-                }.start()
+    private fun onDownloadStarted(progress: Int) {
+        if (progress == 0) {
+            // Fade out setup
+            wallpaperSetup.animate()
+                    .alpha(0f)
+                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                    .withEndAction {
+                        // Use INVISIBLE instead of GONE to preserve its space in layout
+                        wallpaperSetup?.visibility = View.INVISIBLE
+                    }.start()
 
-        wallpaperDownloading.animate()
-                .alpha(1f)
-                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .withStartAction {
-                    // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
-                    wallpaperDownloading.alpha = 0f
-                    wallpaperDownloading.visibility = View.VISIBLE
-                }
-                .start()
+            wallpaperDownloading.animate()
+                    .alpha(1f)
+                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                    .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                    .withStartAction {
+                        // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
+                        wallpaperDownloading.alpha = 0f
+                        wallpaperDownloading.visibility = View.VISIBLE
+                    }
+                    .start()
 
-        wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+            wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+        } else {
+            // TODO Show progress
+        }
     }
 
     private fun onDownloadFinalizing() {

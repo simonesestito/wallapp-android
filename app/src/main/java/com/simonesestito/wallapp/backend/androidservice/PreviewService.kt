@@ -1,9 +1,9 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
-package com.simonesestito.wallapp.backend.service
+package com.simonesestito.wallapp.backend.androidservice
 
 import android.annotation.SuppressLint
 import android.content.Intent

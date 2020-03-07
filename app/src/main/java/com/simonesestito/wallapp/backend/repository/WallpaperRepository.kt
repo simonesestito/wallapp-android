@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 @file:Suppress("DEPRECATION")
@@ -12,6 +12,7 @@ import android.widget.ImageView
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.palette.graphics.Palette
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
@@ -19,8 +20,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.storage.FirebaseStorage
-import com.simonesestito.wallapp.*
+import com.simonesestito.wallapp.FIRESTORE_CATEGORIES
+import com.simonesestito.wallapp.FIRESTORE_WALLPAPERS
+import com.simonesestito.wallapp.KEY_CREATION_DATE
+import com.simonesestito.wallapp.KEY_PUBLISHED
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.enums.WallpaperFormat
@@ -29,12 +32,10 @@ import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
 import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
 import com.simonesestito.wallapp.utils.map
 import com.simonesestito.wallapp.utils.mapList
-import java.io.File
 import javax.inject.Inject
 
 class WallpaperRepository @Inject constructor(private val paletteCache: PaletteCache,
-                                              private val firestore: FirebaseFirestore,
-                                              private val storage: FirebaseStorage) {
+                                              private val firestore: FirebaseFirestore) {
     fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>> {
         val ref = firestore
                 .collection("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS")
@@ -58,11 +59,6 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
         }
     }
 
-    fun downloadWallpaper(wallpaper: Wallpaper, @WallpaperFormat format: String, destination: File) =
-            storage
-                    .getReference(wallpaper.getStorageFilePath(format))
-                    .getFile(destination)
-
     /**
      * @param useExactFormatSize Don't trasform image and its size. Set true only in case of problems (e.g.: return Shared Elements transition)
      */
@@ -72,10 +68,9 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
                       imageView: ImageView,
                       useExactFormatSize: Boolean = false,
                       onPaletteReady: ((Palette) -> Unit)? = null) {
-        val imageRef = storage.getReference(wallpaper.getStorageFilePath(format))
         val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
 
-        GlideApp
+        Glide
                 .with(imageView)
                 .asBitmap()
                 .transition(BitmapTransitionOptions().crossFade(shortAnim))
@@ -85,7 +80,7 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
                                 .dontTransform()
                     }
                 }
-                .load(imageRef)
+                .load(wallpaper.getStorageFileUrl(format))
                 .listener(object : RequestListener<Bitmap> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean) = false
 

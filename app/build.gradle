@@ -64,13 +64,10 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.2'
     implementation 'com.google.firebase:firebase-firestore:21.4.0'
-    implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
 
     // Firebase UI
-    implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

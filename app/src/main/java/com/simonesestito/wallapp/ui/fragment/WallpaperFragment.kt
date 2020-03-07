@@ -58,7 +58,7 @@ class WallpaperFragment : SharedElementsDestination() {
         super.onViewCreated(view, savedInstanceState)
         wallpaperRepository.loadWallpaper(
                 wallpaper,
-                FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
+                FORMAT_PREVIEW,
                 imageView = wallpaperImage,
                 useExactFormatSize = true,
                 onPaletteReady = { applyLayoutColor(it) }

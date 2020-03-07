@@ -1,13 +1,12 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.di.module
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -18,10 +17,6 @@ class FirebaseModule {
     @Provides
     @Singleton
     fun firestore() = FirebaseFirestore.getInstance()
-
-    @Provides
-    @Singleton
-    fun storage() = FirebaseStorage.getInstance()
 
     @Provides
     @Singleton
