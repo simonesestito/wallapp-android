@@ -226,7 +226,6 @@ class SingleCategoryFragment : SharedElementsDestination() {
      */
     private fun adjustRecyclerViewState() {
         val layoutManager = wallpapersRecyclerView?.layoutManager as GridLayoutManager?
-        val spanCount = layoutManager?.spanCount ?: currentLayoutSpanCount
 
         if (layoutManager == null) {
             Log.e(this@SingleCategoryFragment.TAG, "adjustRecyclerViewState(): layoutManager is null")
@@ -235,7 +234,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
 
         // Post to the next tick to wait until layout request has finished
         Handler().post {
-            wallpapersRecyclerView.snapEnabled = spanCount == 1
+            wallpapersRecyclerView.snapEnabled = currentLayoutSpanCount == 1
         }
     }
 }
