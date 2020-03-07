@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.simonesestito.wallapp.NavGraphDirections
 import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.backend.service.PreviewService
+import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.sharedPreferences

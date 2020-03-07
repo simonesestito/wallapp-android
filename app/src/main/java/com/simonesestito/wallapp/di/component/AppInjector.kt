@@ -1,11 +1,11 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.di.component
 
-import com.simonesestito.wallapp.backend.service.PreviewService
+import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.di.module.CacheModule
 import com.simonesestito.wallapp.di.module.FirebaseModule
 import com.simonesestito.wallapp.di.module.ThreadModule
