@@ -20,10 +20,10 @@ import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.backend.service.PreviewService
 import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.enums.*
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.isSetLiveWallpaper
@@ -36,7 +36,8 @@ import javax.inject.Inject
 
 
 class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by lazy {
         getViewModel<WallpaperSetupViewModel>(viewModelFactory)
@@ -65,20 +66,20 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
 
         viewModel.getDownloadStatus().observe(viewLifecycleOwner, Observer { status ->
             when (status) {
-                STATUS_INIT -> {
-                    view.wallpaperDownloadText.setText(R.string.wallpaper_preview_state_backup)
+                is DownloadStatus.Progressing -> {
+                    if (status.progress == 0)
+                        view.wallpaperDownloadText.setText(R.string.wallpaper_preview_state_backup)
+                    else
+                        view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
                 }
-                STATUS_DOWNLOADING -> {
-                    view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
-                }
-                STATUS_FINALIZING -> {
+                DownloadStatus.Finalizing -> {
                     view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
                 }
-                STATUS_SUCCESS -> {
+                DownloadStatus.Cancelled -> {
                     tryDismiss()
                     startPreviewMode()
                 }
-                STATUS_ERROR -> {
+                DownloadStatus.Error -> {
                     showFailedResult()
                 }
             }
