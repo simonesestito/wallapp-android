@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.backend.model
@@ -8,6 +8,7 @@ package com.simonesestito.wallapp.backend.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.simonesestito.wallapp.Identifiable
+import com.simonesestito.wallapp.SCALEWAY_BUCKET_URL
 import com.simonesestito.wallapp.STORAGE_CATEGORIES
 import com.simonesestito.wallapp.STORAGE_WALLPAPERS
 import com.simonesestito.wallapp.enums.WallpaperFormat
@@ -23,8 +24,8 @@ data class Wallpaper constructor(override val id: String, val categoryId: String
         parcel.writeString(categoryId)
     }
 
-    fun getStorageFilePath(@WallpaperFormat format: String) =
-            "$STORAGE_CATEGORIES/$categoryId/$STORAGE_WALLPAPERS/$id/$format"
+    fun getStorageFileUrl(@WallpaperFormat format: String) =
+            "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$categoryId/$STORAGE_WALLPAPERS/$id/$format"
 
     override fun describeContents() = hashCode()
 

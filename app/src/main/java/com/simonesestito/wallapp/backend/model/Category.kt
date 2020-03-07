@@ -21,6 +21,8 @@ data class Category(
         @CategoryGroup val group: String,
         val wallpapersCount: Long
 ) : Identifiable<String>, Parcelable {
+    val previewImageUrl = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$FORMAT_COVER"
+
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             mutableMapOf<String, Any>().apply {
@@ -47,8 +49,6 @@ data class Category(
         parcel.writeString(group)
         parcel.writeLong(wallpapersCount)
     }
-
-    fun previewImageUrl() = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$FORMAT_COVER"
 
     override fun describeContents() = hashCode()
 
