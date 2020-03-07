@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModel
 import com.simonesestito.wallapp.backend.DownloadService
 import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
-import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WallpaperFormat
@@ -26,16 +25,12 @@ import java.io.File
 import javax.inject.Inject
 
 class WallpaperSetupViewModel @Inject constructor(
-        private val wallpaperRepository: WallpaperRepository,
         private val threads: ThreadUtils,
         private val downloadService: DownloadService
 ) : ViewModel() {
     private var currentTempFile: File? = null
     private var currentDownloadTask: DownloadService.Task? = null
-    private val mutableDownloadStatus = MutableLiveData<DownloadStatus>().apply {
-        // Set initial value
-        this.value = DownloadStatus.Progressing(0)
-    }
+    private val mutableDownloadStatus = MutableLiveData<DownloadStatus>()
 
     /**
      * Updated from the Fragment view

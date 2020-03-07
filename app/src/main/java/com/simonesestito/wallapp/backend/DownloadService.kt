@@ -43,11 +43,14 @@ class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) 
         val isDownloading = AtomicBoolean(true)
         val task = Task(onCancelListener = { isDownloading.set(false) })
 
+        onProgressUpdate(0)
+
         threadUtils.runOnIoThread {
             try {
                 // Open network connection
                 val urlConnection = URL(url).openConnection() as HttpURLConnection
                 val contentLength = urlConnection.contentLength
+                var oldProgress = 0
                 urlConnection.inputStream.use { input ->
                     file.outputStream().use { output ->
                         // Manually copy the buffer so we can check the progress
@@ -59,8 +62,13 @@ class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) 
                         while (size > 0 && isDownloading.get()) {
                             output.write(buffer, 0, size)
                             bytesCopied += size
-                            handler.post { onProgressUpdate(bytesCopied * 100 / contentLength) }
                             size = input.read(buffer)
+
+                            val currentProgress = bytesCopied * 100 / contentLength
+                            if (currentProgress > oldProgress) {
+                                handler.post { onProgressUpdate(currentProgress) }
+                                oldProgress = currentProgress
+                            }
                         }
 
                         if (isDownloading.get()) {
