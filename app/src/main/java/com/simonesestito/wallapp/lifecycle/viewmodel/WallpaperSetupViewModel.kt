@@ -99,7 +99,6 @@ class WallpaperSetupViewModel @Inject constructor(
             return
         }
 
-        mutableDownloadStatus.value = DownloadStatus.Progressing(0)
         threads.runOnIoThread {
             backupWallpaper(context)
             threads.runOnMainThread {

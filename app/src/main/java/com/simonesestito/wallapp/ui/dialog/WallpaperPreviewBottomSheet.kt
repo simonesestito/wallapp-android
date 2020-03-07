@@ -72,16 +72,10 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
                     else
                         view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
                 }
-                DownloadStatus.Finalizing -> {
-                    view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
-                }
-                DownloadStatus.Cancelled -> {
-                    tryDismiss()
-                    startPreviewMode()
-                }
-                DownloadStatus.Error -> {
-                    showFailedResult()
-                }
+                DownloadStatus.Finalizing -> view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
+                DownloadStatus.Cancelled -> tryDismiss()
+                DownloadStatus.Success -> startPreviewMode()
+                DownloadStatus.Error -> showFailedResult()
             }
         })
         viewModel.applyPreviewWallpaper(requireContext(), wallpaperArg)
