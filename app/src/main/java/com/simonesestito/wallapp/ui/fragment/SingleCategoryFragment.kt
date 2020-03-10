@@ -38,9 +38,6 @@ import javax.inject.Inject
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
 class SingleCategoryFragment : SharedElementsDestination() {
-    override val title
-        get() = args.category.displayName.localized
-
     private val viewModel by lazy {
         getViewModel<WallpapersViewModel>(viewModelFactory)
     }
@@ -78,6 +75,11 @@ class SingleCategoryFragment : SharedElementsDestination() {
         }
 
         setHasOptionsMenu(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().title = args.category.displayName.localized
     }
 
     override fun onDestroyView() {

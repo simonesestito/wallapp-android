@@ -20,9 +20,6 @@ import kotlinx.android.synthetic.main.about_fragment.view.*
 
 
 class AboutFragment : AbstractAppFragment() {
-    override val title: CharSequence
-        get() = getString(R.string.about_fragment_title)
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.about_fragment, container, false)
 

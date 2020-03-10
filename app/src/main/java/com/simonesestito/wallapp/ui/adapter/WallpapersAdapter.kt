@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.adapter
@@ -43,7 +43,6 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
             itemView.wallpaperImagePreview.apply {
                 setOnClickListener {
                     onItemClickListener?.invoke(wallpaper, it)
-
                 }
             }
         }

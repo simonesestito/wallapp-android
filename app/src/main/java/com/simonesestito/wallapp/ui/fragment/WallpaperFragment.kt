@@ -41,8 +41,6 @@ import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import javax.inject.Inject
 
 class WallpaperFragment : SharedElementsDestination() {
-    override val title = ""
-
     private val args by lazy {
         WallpaperFragmentArgs.fromBundle(arguments ?: bundleOf())
     }

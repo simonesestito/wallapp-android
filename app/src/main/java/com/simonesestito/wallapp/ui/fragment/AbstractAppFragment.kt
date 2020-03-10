@@ -20,7 +20,6 @@ private const val KEY_FRAGMENT_HIDDEN_APPBAR = "have_hidden_appbar"
 
 abstract class AbstractAppFragment : Fragment() {
     private var haveHiddenAppbar = false
-    abstract val title: CharSequence
 
     protected var statusBarColor: Int
         get() = activity?.window?.statusBarColor ?: Color.WHITE
@@ -39,11 +38,6 @@ abstract class AbstractAppFragment : Fragment() {
                 activity?.setLightNavBar(color.isLightColor())
             }
         }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.title = title
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

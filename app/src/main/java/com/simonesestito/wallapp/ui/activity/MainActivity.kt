@@ -113,6 +113,11 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 
+    override fun setTitle(title: CharSequence?) {
+        super.setTitle(title)
+        supportActionBar?.title = title
+    }
+
     override fun showAppbarElevation() {
         supportActionBar?.elevation = scrollAppbarElevation
     }

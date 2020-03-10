@@ -27,9 +27,6 @@ import kotlinx.android.synthetic.main.categories_fragment.view.*
 import javax.inject.Inject
 
 class CategoriesListFragment : AbstractAppFragment() {
-    override val title
-        get() = getString(R.string.app_name)
-
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     @Inject
