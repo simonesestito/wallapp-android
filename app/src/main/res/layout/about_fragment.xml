@@ -32,7 +32,7 @@
             android:layout_marginBottom="@dimen/margin_separator_small"
             android:text="@string/app_name"
             android:textAppearance="@style/AppTheme.Text.Title"
-            android:textColor="@color/color_accent"
+            android:textColor="?colorAccent"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -41,8 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_separator_normal"
             android:text="@string/app_motto"
-            android:textAppearance="@style/AppTheme.Text.Standard"
-            android:textColor="@android:color/black" />
+            android:textAppearance="@style/AppTheme.Text.Standard" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/aboutDescription"
