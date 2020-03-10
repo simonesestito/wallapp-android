@@ -13,6 +13,7 @@
         <item name="colorAccent">@color/color_accent</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:fontFamily">@font/montserrat</item>
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
         <item name="materialCardViewStyle">@style/AppTheme.CardView</item>
     </style>
 
@@ -54,6 +55,11 @@
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar">
         <item name="fabCradleRoundedCornerRadius">@dimen/bottom_appbar_cradle_radius</item>
         <item name="backgroundTint">?colorSurface</item>
+    </style>
+
+    <!-- Toolbar theme -->
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">?android:colorBackground</item>
     </style>
 
     <!-- CardView theme -->
