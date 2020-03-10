@@ -10,8 +10,7 @@ import com.simonesestito.wallapp.di.module.CacheModule
 import com.simonesestito.wallapp.di.module.FirebaseModule
 import com.simonesestito.wallapp.di.module.ThreadModule
 import com.simonesestito.wallapp.di.module.ViewModelModule
-import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
-import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
+import com.simonesestito.wallapp.ui.dialog.AbstractWallpaperBottomSheet
 import com.simonesestito.wallapp.ui.fragment.CategoriesListFragment
 import com.simonesestito.wallapp.ui.fragment.SingleCategoryFragment
 import com.simonesestito.wallapp.ui.fragment.WallpaperFragment
@@ -39,7 +38,6 @@ interface AppInjector {
     fun inject(categoriesListFragment: CategoriesListFragment)
     fun inject(wallpaperFragment: WallpaperFragment)
     fun inject(singleCategoryFragment: SingleCategoryFragment)
-    fun inject(bottomSheet: WallpaperPreviewBottomSheet)
-    fun inject(bottomSheet: WallpaperSetupBottomSheet)
+    fun inject(bottomSheet: AbstractWallpaperBottomSheet)
     fun inject(previewService: PreviewService)
 }
