@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.google.firebase.auth.FirebaseAuth

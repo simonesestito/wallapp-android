@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <resources>
 
     <!-- General AppTheme -->
     <!-- Organization for V21/23/27 variants inspired by AppCompat -->
-    <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
-        <item name="actionBarTheme">@style/AppTheme.ActionBar.Light</item>
+        <item name="actionBarTheme">@style/AppTheme.ActionBar</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:fontFamily">@font/montserrat</item>
+        <item name="materialCardViewStyle">@style/AppTheme.CardView</item>
     </style>
 
-    <style name="AppTheme.ActionBar.Light" parent="Base.Widget.AppCompat.Light.ActionBar">
+    <style name="AppTheme.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
         <item name="android:background">@color/action_bar_color</item>
     </style>
 
@@ -48,16 +49,16 @@
 
     <!-- Chip themes -->
     <style name="AppTheme.OutlineChip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/outline_chip_background_color</item>
+        <item name="chipBackgroundColor">?attr/colorControlNormal</item>
         <item name="chipStrokeWidth">@dimen/outline_chip_stroke_width</item>
-        <item name="chipStrokeColor">@color/outline_chip_stroke_color</item>
-        <item name="android:textColor">@color/outline_chip_text_color</item>
+        <item name="chipStrokeColor">?attr/colorControlNormal</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
     </style>
 
     <!-- BottomAppBar theme -->
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar">
         <item name="fabCradleRoundedCornerRadius">@dimen/bottom_appbar_cradle_radius</item>
-        <item name="backgroundTint">@color/activity_background_color</item>
+        <item name="backgroundTint">?colorSurface</item>
     </style>
 
     <!-- CardView theme -->
@@ -65,11 +66,11 @@
         <item name="cardElevation">@dimen/card_elevation</item>
         <item name="cardCornerRadius">@dimen/card_corner_radius</item>
         <item name="cardUseCompatPadding">true</item>
+        <item name="android:textColor">?colorOnSurface</item>
     </style>
 
     <!-- Custom font themes, use them with android:textAppearance -->
     <style name="AppTheme.Text.Title" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">20sp</item>
         <item name="fontFamily">@font/montserrat</item>
     </style>
@@ -81,7 +82,6 @@
     </style>
 
     <style name="AppTheme.Text.Standard" parent="Base.TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/light_gray</item>
         <item name="android:textSize">14sp</item>
         <item name="fontFamily">@font/montserrat</item>
     </style>

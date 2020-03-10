@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_background_color"
+    android:background="?android:colorBackground"
     android:paddingTop="?attr/actionBarSize"
     tools:context=".ui.fragment.CategoriesListFragment">
 
@@ -54,7 +54,7 @@
         android:id="@+id/categoriesBottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
+        android:background="?colorSurface"
         app:itemIconTint="@color/stateful_icon_color"
         app:itemTextColor="@color/stateful_icon_color"
         app:layout_constraintBottom_toBottomOf="parent"
