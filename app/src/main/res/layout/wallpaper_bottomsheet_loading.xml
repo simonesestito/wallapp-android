@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,7 +23,7 @@
         android:id="@+id/wallpaperDownloadText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/wallpaper_setup_status_downloading"
+        android:text="@string/wallpaper_preview_state_backup"
         android:textAppearance="@style/AppTheme.Text.Standard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
