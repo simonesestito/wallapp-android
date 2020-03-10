@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
         firebaseAuth.signInAnonymously().addOnCompleteListener {
             Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
         }

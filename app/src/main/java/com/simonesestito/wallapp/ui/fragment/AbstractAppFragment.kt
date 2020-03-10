@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -9,11 +9,10 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.isLightColor
+import com.simonesestito.wallapp.utils.resolveIntAttribute
 import com.simonesestito.wallapp.utils.setLightNavBar
 import com.simonesestito.wallapp.utils.setLightStatusBar
 
@@ -49,8 +48,10 @@ abstract class AbstractAppFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         hideAppbarElevation()
-        statusBarColor = ResourcesCompat.getColor(resources, R.color.status_bar_color, null)
-        navigationBarColor = ResourcesCompat.getColor(resources, R.color.navigation_bar_color, null)
+        requireActivity().theme.apply {
+            statusBarColor = resolveIntAttribute(android.R.attr.statusBarColor)
+            navigationBarColor = resolveIntAttribute(android.R.attr.navigationBarColor)
+        }
         showAppbar()
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <resources>
@@ -8,8 +8,6 @@
     <color name="color_primary_dark">#757575</color>
     <color name="color_accent">#039be5</color>
 
-    <color name="status_bar_color">@color/color_primary_dark</color>
-    <color name="navigation_bar_color">@color/color_primary_dark</color>
     <color name="action_bar_color">@color/activity_background_color</color>
 
     <color name="activity_background_color">@color/color_primary</color>

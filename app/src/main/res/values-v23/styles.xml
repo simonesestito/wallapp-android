@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <resources>
 
     <style name="Base.V23.AppTheme" parent="Base.V21.AppTheme">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:windowLightStatusBar">@bool/light_theme_status_bar</item>
     </style>
 
     <style name="AppTheme" parent="Base.V23.AppTheme" />

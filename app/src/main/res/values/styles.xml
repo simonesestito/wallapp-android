@@ -11,19 +11,14 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
-        <item name="actionBarTheme">@style/AppTheme.ActionBar</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:fontFamily">@font/montserrat</item>
         <item name="materialCardViewStyle">@style/AppTheme.CardView</item>
     </style>
 
-    <style name="AppTheme.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
-        <item name="android:background">@color/action_bar_color</item>
-    </style>
-
     <style name="Base.V21.AppTheme" parent="Base.AppTheme">
-        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
-        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:navigationBarColor">@color/dark_gray</item>
+        <item name="android:statusBarColor">@color/dark_gray</item>
     </style>
 
     <style name="AppTheme" parent="Base.V21.AppTheme" />
@@ -37,7 +32,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+        <item name="android:navigationBarColor">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
     </style>
 

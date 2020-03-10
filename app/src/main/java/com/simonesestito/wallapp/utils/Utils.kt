@@ -8,9 +8,11 @@ package com.simonesestito.wallapp.utils
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.*
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
@@ -322,3 +324,9 @@ val Context.sharedPreferences: SharedPreferences by thisLazy {
 
 val Fragment.sharedPreferences
     get() = requireContext().sharedPreferences
+
+fun Resources.Theme.resolveIntAttribute(id: Int): Int {
+    val typedValue = TypedValue()
+    resolveAttribute(id, typedValue, true)
+    return typedValue.data
+}
