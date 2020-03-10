@@ -6,7 +6,7 @@
 <resources>
 
     <style name="Base.V21.AppTheme" parent="Base.AppTheme">
-        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarColor">@color/color_surface</item>
         <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 

@@ -6,6 +6,7 @@
 package com.simonesestito.wallapp.ui.dialog
 
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.os.postDelayed
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.simonesestito.wallapp.BOTTOMSHEET_AUTO_DISMISS_DELAY
 import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
@@ -23,6 +25,7 @@ import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import com.simonesestito.wallapp.utils.getViewModel
+import com.simonesestito.wallapp.utils.setLightStatusBar
 import com.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
@@ -36,7 +39,7 @@ import javax.inject.Inject
  * Base class for both Setup and Preview wallpaper bottom sheets
  * Created to optimize code recycling
  */
-abstract class AbstractWallpaperBottomSheet : ThemedBottomSheet() {
+abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment() {
     companion object {
         const val PROGRESS_INDETERMINATE = -1
     }
@@ -55,6 +58,10 @@ abstract class AbstractWallpaperBottomSheet : ThemedBottomSheet() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requireActivity().setLightStatusBar(false)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

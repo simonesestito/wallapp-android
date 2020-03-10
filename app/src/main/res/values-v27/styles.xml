@@ -6,10 +6,16 @@
 <resources>
 
     <style name="Base.V27.AppTheme" parent="Base.V23.AppTheme">
-        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarColor">@color/color_surface</item>
         <item name="android:windowLightNavigationBar">@bool/light_theme_status_bar</item>
-        <item name="android:navigationBarDividerColor">?colorSurface</item>
     </style>
 
     <style name="AppTheme" parent="Base.V27.AppTheme" />
+
+    <style name="Base.V27.AppTheme.BottomSheet.Dialog" parent="Base.V23.AppTheme.BottomSheet.Dialog">
+        <item name="android:navigationBarColor">@color/color_surface</item>
+        <item name="android:windowLightNavigationBar">@bool/light_theme_status_bar</item>
+    </style>
+
+    <style name="AppTheme.BottomSheet.Dialog" parent="Base.V27.AppTheme.BottomSheet.Dialog" />
 </resources>
