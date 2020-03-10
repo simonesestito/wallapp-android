@@ -116,31 +116,43 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
                 else -> throw IllegalArgumentException("Unknown chip selection")
             }
 
+    private fun hideSetupLayout() {
+        if (wallpaperSetup?.visibility != View.VISIBLE)
+            return
+
+        wallpaperSetup.animate()
+                .alpha(0f)
+                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .withEndAction {
+                    // Use INVISIBLE instead of GONE to preserve its space in layout
+                    wallpaperSetup?.visibility = View.INVISIBLE
+                }.start()
+    }
+
+    private fun showDownloadProgress() {
+        if (wallpaperDownloading.visibility == View.VISIBLE)
+            return
+
+        wallpaperDownloading.animate()
+                .alpha(1f)
+                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .withStartAction {
+                    // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
+                    wallpaperDownloading.alpha = 0f
+                    wallpaperDownloading.visibility = View.VISIBLE
+                }
+                .start()
+
+        wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+    }
+
     private fun onDownloadStarted(progress: Int) {
         if (progress == 0) {
-            // Fade out setup
-            wallpaperSetup.animate()
-                    .alpha(0f)
-                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .withEndAction {
-                        // Use INVISIBLE instead of GONE to preserve its space in layout
-                        wallpaperSetup?.visibility = View.INVISIBLE
-                    }.start()
-
-            wallpaperDownloading.animate()
-                    .alpha(1f)
-                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .withStartAction {
-                        // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
-                        wallpaperDownloading.alpha = 0f
-                        wallpaperDownloading.visibility = View.VISIBLE
-                    }
-                    .start()
-
-            wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+            hideSetupLayout()
+            showDownloadProgress()
         } else {
-            // TODO Show progress
+            // TODO Update progress
         }
     }
 
@@ -149,6 +161,7 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
     }
 
     private fun onDownloadResult(success: Boolean) {
+        hideSetupLayout()
         if (success) {
             wallpaperFeedbackImage
                     ?.setImageResource(R.drawable.ic_sentiment_very_satisfied_green_24dp)
