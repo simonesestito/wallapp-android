@@ -62,4 +62,7 @@
     <string name="singleCategoryLayoutRowSwitch">Switch layout</string>
     <string name="category_group_original">WallApp Originals</string>
     <string name="category_group_community">Community</string>
+    <string name="preview_service_notification_title">Preview Mode is running</string>
+    <string name="preview_service_notification_text">Click to stop Preview Mode</string>
+    <string name="overlay_permission_request">Please, grant this permission to use Preview Mode</string>
 </resources>

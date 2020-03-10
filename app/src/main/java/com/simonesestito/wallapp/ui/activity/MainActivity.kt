@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
 
     override fun onStart() {
         super.onStart()
+        // Be sure to stop PreviewService every time the user launches the main app
         stopService(Intent(this, PreviewService::class.java))
     }
 

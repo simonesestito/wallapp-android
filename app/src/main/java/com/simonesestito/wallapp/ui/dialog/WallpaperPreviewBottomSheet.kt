@@ -74,7 +74,10 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
                 }
                 DownloadStatus.Finalizing -> view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
                 DownloadStatus.Cancelled -> tryDismiss()
-                DownloadStatus.Success -> startPreviewMode()
+                DownloadStatus.Success -> {
+                    tryDismiss()
+                    startPreviewMode()
+                }
                 DownloadStatus.Error -> showFailedResult()
             }
         })
@@ -107,21 +110,20 @@ class WallpaperPreviewBottomSheet : ThemedBottomSheet() {
     }
 
     private fun startPreviewMode() {
+        // Open the launcher
         startActivity(Intent().apply {
             action = Intent.ACTION_MAIN
             addCategory(Intent.CATEGORY_HOME)
         })
 
-        requireContext()
-                .startService(
-                        Intent(
-                                requireContext(),
-                                PreviewService::class.java
-                        ).putExtra(
-                                EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE,
-                                wallpaperArg
-                        )
-                )
+        // Start Preview service
+        ContextCompat.startForegroundService(requireContext(), Intent(
+                requireContext(),
+                PreviewService::class.java
+        ).putExtra(
+                EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE,
+                wallpaperArg
+        ))
     }
 
     override fun onDismiss(dialog: DialogInterface) {

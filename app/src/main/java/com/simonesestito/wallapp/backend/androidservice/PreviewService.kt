@@ -6,20 +6,26 @@
 package com.simonesestito.wallapp.backend.androidservice
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
+import com.simonesestito.wallapp.ui.activity.MainActivity
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.ThreadUtils
 import com.simonesestito.wallapp.utils.isLightColor
@@ -58,6 +64,34 @@ class PreviewService : FloatingWindowService() {
     override fun onCreate() {
         super.onCreate()
         AppInjector.getInstance().inject(this)
+        startForeground()
+    }
+
+    private fun startForeground() {
+        val pendingIntent = PendingIntent.getActivity(
+                this,
+                PREVIEW_SERVICE_PENDING_INTENT_ID,
+                getMainActivityIntent(),
+                0)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            val channel = NotificationChannel(
+                    PREVIEW_SERVICE_NOTIFICATION_CHANNEL,
+                    getString(R.string.preview_mode_title),
+                    NotificationManager.IMPORTANCE_LOW
+            )
+            notificationManager?.createNotificationChannel(channel)
+        }
+        val notification = NotificationCompat.Builder(this, PREVIEW_SERVICE_NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.drawable.brush)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setContentTitle(getString(R.string.preview_service_notification_title))
+                .setContentText(getString(R.string.preview_service_notification_text))
+                .setContentIntent(pendingIntent)
+                .build()
+
+        startForeground(PREVIEW_SERVICE_NOTIFICATION_ID, notification)
     }
 
     override fun onViewAdded(view: View, arguments: Bundle?) {
@@ -90,6 +124,10 @@ class PreviewService : FloatingWindowService() {
                         WindowManager.LayoutParams.FLAG_FULLSCREEN
             }
 
+    private fun getMainActivityIntent() = Intent(this, MainActivity::class.java).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
     /**
      * Caller must have registered a [android.content.BroadcastReceiver] with [LocalBroadcastManager]
      * Broadcasts are sent with action [ACTION_PREVIEW_RESULT]
@@ -117,8 +155,12 @@ class PreviewService : FloatingWindowService() {
                                 else
                                     RESULT_WALLPAPER_CANCELED)
 
+                // Notify the rest of the app about the user decision
                 LocalBroadcastManager.getInstance(this)
                         .sendBroadcast(intent)
+
+                // Resume app in the foreground
+                startActivity(getMainActivityIntent())
                 stopSelf()
             }
         }

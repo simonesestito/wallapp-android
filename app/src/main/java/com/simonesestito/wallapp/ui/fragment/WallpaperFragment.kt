@@ -12,12 +12,15 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
@@ -30,7 +33,6 @@ import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
-import com.simonesestito.wallapp.ui.activity.MainActivity
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import com.simonesestito.wallapp.utils.*
@@ -49,7 +51,8 @@ class WallpaperFragment : SharedElementsDestination() {
         Wallpaper(args.wallpaperId, args.categoryId)
     }
 
-    @Inject lateinit var wallpaperRepository: WallpaperRepository
+    @Inject
+    lateinit var wallpaperRepository: WallpaperRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.wallpaper_fragment, container, false)
@@ -150,14 +153,11 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     private fun openPreviewBottomSheet() {
+        // Register receiver to be updated about user decision from PreviewService
         LocalBroadcastManager.getInstance(requireContext())
-                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, receiverContext ->
-                    // Resume current Activity
-                    receiverContext.startActivity(
-                            Intent(receiverContext, MainActivity::class.java).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                    )
+                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, _ ->
+                    // This activity is resumed in the foreground by PreviewService
+                    // This block handles data received from PreviewService
 
                     // Handle received result
                     val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
@@ -167,7 +167,7 @@ class WallpaperFragment : SharedElementsDestination() {
                             openSetupBottomSheet()
                         }
                     }
-                    return@registerReceiver true
+                    return@registerReceiver true // Unregister automatically
                 }
 
         WallpaperPreviewBottomSheet()
@@ -215,16 +215,31 @@ class WallpaperFragment : SharedElementsDestination() {
         startActivity(Intent.createChooser(i, getString(R.string.wallpaper_share_chooser_title)))
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun requestOverlayPermission() {
+        startActivityForResult(
+                Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        "package:${BuildConfig.APPLICATION_ID}".toUri()
+                ),
+                REQUEST_PREVIEW_OVERLAY_PERMISSION
+        )
+
+        Toast.makeText(requireContext(), R.string.overlay_permission_request, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_PREVIEW_OVERLAY_PERMISSION && requireContext().canDrawOverlays()) {
+            // Overlay permission granted
+            doPreview()
+        }
+    }
+
     private fun doPreview() {
         // Check Overlay permission
         if (!requireContext().canDrawOverlays()) {
-            startActivityForResult(
-                    Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            "package:${BuildConfig.APPLICATION_ID}".toUri()
-                    ),
-                    REQUEST_PREVIEW_OVERLAY_PERMISSION
-            )
+            requestOverlayPermission()
             return
         }
 

@@ -33,6 +33,10 @@ const val REQUEST_READ_STORAGE_PERMISSION = 2
 
 const val ACTION_PREVIEW_RESULT = "preview_window_result"
 
+const val PREVIEW_SERVICE_NOTIFICATION_ID = 1
+const val PREVIEW_SERVICE_PENDING_INTENT_ID = 1
+const val PREVIEW_SERVICE_NOTIFICATION_CHANNEL = "preview_service"
+
 const val EXTRA_WALLPAPER_SETUP_PARCELABLE = "wallpaper_extra"
 const val EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE = "wallpaper_preview"
 const val EXTRA_WALLPAPER_PREVIEW_RESULT = "preview_result_extra"
@@ -56,4 +60,3 @@ const val AUTHOR_2_PORTFOLIO_WEBSITE = "https://www.paologiubilato.com"
 const val AUTHOR_2_MAIL = "giubilato95@gmail.com"
 
 const val GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-
