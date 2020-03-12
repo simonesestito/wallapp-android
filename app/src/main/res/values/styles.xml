@@ -50,10 +50,10 @@
 
     <!-- Chip themes -->
     <style name="AppTheme.OutlineChip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">?attr/colorControlNormal</item>
         <item name="chipStrokeWidth">@dimen/outline_chip_stroke_width</item>
-        <item name="chipStrokeColor">?attr/colorControlNormal</item>
-        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="chipBackgroundColor">@color/outline_chip_background_color</item>
+        <item name="chipStrokeColor">@color/outline_chip_stroke_color</item>
+        <item name="android:textColor">@color/outline_chip_stroke_color</item>
     </style>
 
     <!-- BottomAppBar theme -->
