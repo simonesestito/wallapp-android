@@ -130,25 +130,6 @@ fun Activity.setLightStatusBar(light: Boolean) {
 }
 
 /**
- * Set light navigation bar altering [View.setSystemUiVisibility] flags
- */
-@RequiresApi(Build.VERSION_CODES.O)
-fun Activity.setLightNavBar(light: Boolean) {
-    val decorView = window?.decorView
-    decorView ?: return
-
-    if (light) {
-        // Set light system bars (black icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility or
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-    } else {
-        // Set dark system bars (light icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility and
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-    }
-}
-
-/**
  * Add a listener to a [Transition]
  */
 inline fun Transition.addListener(crossinline onStart: () -> Unit = {},

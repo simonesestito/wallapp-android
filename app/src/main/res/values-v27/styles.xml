@@ -6,7 +6,7 @@
 <resources>
 
     <style name="Base.V27.AppTheme" parent="Base.V23.AppTheme">
-        <item name="android:navigationBarColor">@color/color_surface</item>
+        <item name="android:navigationBarColor">@color/translucent_system_bars_color</item>
         <item name="android:windowLightNavigationBar">@bool/light_theme_status_bar</item>
     </style>
 

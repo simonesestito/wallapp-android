@@ -184,9 +184,6 @@ class WallpaperFragment : SharedElementsDestination() {
         val vibrant = palette.getVibrantColor(defaultColor)
         val isVibrantLight = vibrant.isLightColor()
 
-        // Status bar as primary color
-        statusBarColor = primary
-
         // Download FAB background as vibrant
         downloadFab.backgroundTintList = ColorStateList.valueOf(vibrant)
 

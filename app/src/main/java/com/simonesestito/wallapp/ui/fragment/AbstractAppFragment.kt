@@ -5,47 +5,19 @@
 
 package com.simonesestito.wallapp.ui.fragment
 
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.simonesestito.wallapp.ui.ElevatingAppbar
-import com.simonesestito.wallapp.utils.isLightColor
-import com.simonesestito.wallapp.utils.resolveIntAttribute
-import com.simonesestito.wallapp.utils.setLightNavBar
-import com.simonesestito.wallapp.utils.setLightStatusBar
 
 private const val KEY_FRAGMENT_HIDDEN_APPBAR = "have_hidden_appbar"
 
 abstract class AbstractAppFragment : Fragment() {
     private var haveHiddenAppbar = false
 
-    protected var statusBarColor: Int
-        get() = activity?.window?.statusBarColor ?: Color.WHITE
-        set(color) {
-            activity?.window?.statusBarColor = color
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                activity?.setLightStatusBar(color.isLightColor())
-            }
-        }
-
-    protected var navigationBarColor: Int
-        get() = activity?.window?.navigationBarColor ?: Color.WHITE
-        set(color) {
-            activity?.window?.navigationBarColor = color
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                activity?.setLightNavBar(color.isLightColor())
-            }
-        }
-
     override fun onDestroyView() {
         super.onDestroyView()
         hideAppbarElevation()
-        requireActivity().theme.apply {
-            statusBarColor = resolveIntAttribute(android.R.attr.statusBarColor)
-            navigationBarColor = resolveIntAttribute(android.R.attr.navigationBarColor)
-        }
         showAppbar()
     }
 

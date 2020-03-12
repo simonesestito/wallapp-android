@@ -10,6 +10,7 @@
     <color name="color_surface">#fafafa</color>
     <color name="color_accent_translucent">#33039be5</color>
 
+    <color name="translucent_system_bars_color">#4DFFFFFF</color>
     <color name="action_bar_color">@color/activity_background_color</color>
 
     <color name="activity_background_color">@color/color_primary</color>

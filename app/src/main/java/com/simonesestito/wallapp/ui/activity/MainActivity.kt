@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
@@ -58,6 +59,10 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
                 onDestinationChanged()
             }
         }
+
+        // Draw edge to edge
+        findViewById<View>(R.id.navHostFragment).systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 
     override fun onStart() {
