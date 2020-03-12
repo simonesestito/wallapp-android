@@ -20,10 +20,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.simonesestito.wallapp.FIRESTORE_CATEGORIES
-import com.simonesestito.wallapp.FIRESTORE_WALLPAPERS
-import com.simonesestito.wallapp.KEY_CREATION_DATE
-import com.simonesestito.wallapp.KEY_PUBLISHED
+import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.enums.WallpaperFormat
@@ -73,6 +70,7 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
         Glide
                 .with(imageView)
                 .asBitmap()
+                .placeholder(R.color.color_surface)
                 .transition(BitmapTransitionOptions().crossFade(shortAnim))
                 .apply {
                     if (useExactFormatSize) {
