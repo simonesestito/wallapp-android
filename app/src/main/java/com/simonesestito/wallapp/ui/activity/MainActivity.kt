@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        setContentView(R.layout.main_activity)
 
         firebaseAuth.signInAnonymously().addOnCompleteListener {
             Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
@@ -52,7 +53,6 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
             startActivity(Intent(this, IntroActivity::class.java))
         }
 
-        setContentView(R.layout.main_activity)
         findNavController(R.id.navHostFragment).let {
             setupActionBarWithNavController(this, it)
             it.addOnDestinationChangedListener { _, _, _ ->
@@ -127,6 +127,6 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
     }
 
     override fun hideAppbarElevation() {
-        supportActionBar?.elevation = defaultAppbarElevation
+        supportActionBar?.elevation = defaultAppbarElevation + 1
     }
 }
