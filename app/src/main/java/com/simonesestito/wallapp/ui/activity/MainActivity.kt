@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.simonesestito.wallapp.NavGraphDirections
 import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
@@ -43,6 +44,9 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         setContentView(R.layout.main_activity)
 
+        // Set custom toolbar
+        setSupportActionBar(findViewById<MaterialToolbar>(R.id.appToolbar))
+
         firebaseAuth.signInAnonymously().addOnCompleteListener {
             Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
         }
@@ -53,16 +57,16 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
             startActivity(Intent(this, IntroActivity::class.java))
         }
 
+        // Draw edge to edge
+        findViewById<View>(R.id.root).systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
         findNavController(R.id.navHostFragment).let {
             setupActionBarWithNavController(this, it)
             it.addOnDestinationChangedListener { _, _, _ ->
                 onDestinationChanged()
             }
         }
-
-        // Draw edge to edge
-        findViewById<View>(R.id.navHostFragment).systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 
     override fun onStart() {
@@ -127,6 +131,6 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
     }
 
     override fun hideAppbarElevation() {
-        supportActionBar?.elevation = defaultAppbarElevation + 1
+        supportActionBar?.elevation = defaultAppbarElevation
     }
 }

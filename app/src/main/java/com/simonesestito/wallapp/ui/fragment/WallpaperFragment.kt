@@ -25,7 +25,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
+import androidx.core.view.updatePadding
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.*
@@ -80,6 +82,13 @@ class WallpaperFragment : SharedElementsDestination() {
                 else -> return@setOnMenuItemClickListener false
             }
             return@setOnMenuItemClickListener true
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            view.bottomAppBar.updatePadding(bottom = insets.systemWindowInsets.bottom)
+            view.backButton.updatePadding(top = insets.systemWindowInsets.top)
+
+            return@setOnApplyWindowInsetsListener insets
         }
     }
 

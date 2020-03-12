@@ -7,7 +7,7 @@
 
     <!-- General AppTheme -->
     <!-- Organization for V21/23/27 variants inspired by AppCompat -->
-    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
@@ -21,6 +21,7 @@
     <style name="Base.V21.AppTheme" parent="Base.AppTheme">
         <item name="android:navigationBarColor">@color/dark_gray</item>
         <item name="android:statusBarColor">@color/dark_gray</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="AppTheme" parent="Base.V21.AppTheme" />

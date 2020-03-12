@@ -9,17 +9,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:colorBackground"
-    android:paddingTop="?attr/actionBarSize"
     tools:context=".ui.fragment.CategoriesListFragment">
 
-    <!-- 56dp = bottom navigation height -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoriesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:padding="@dimen/activity_content_margin"
-        android:layout_marginBottom="56dp"
+        android:layout_marginTop="56dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
