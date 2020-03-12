@@ -16,7 +16,6 @@
         <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
         <item name="materialCardViewStyle">@style/AppTheme.CardView</item>
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheet.Dialog</item>
-        <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
     </style>
 
     <style name="Base.V21.AppTheme" parent="Base.AppTheme">
@@ -33,14 +32,21 @@
     <!-- BottomSheet theme -->
     <style name="Base.V21.AppTheme.BottomSheet.Dialog" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="AppTheme.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
 
     <style name="AppTheme.BottomSheet.Dialog" parent="Base.V21.AppTheme.BottomSheet.Dialog" />
+
+    <style name="AppTheme.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/AppTheme.BottomSheet.ShapeOverlay</item>
+    </style>
+
+    <style name="AppTheme.BottomSheet.ShapeOverlay">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/bottom_sheet_corner_radius</item>
+        <item name="cornerSizeTopLeft">@dimen/bottom_sheet_corner_radius</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
 
     <!-- Chip themes -->
     <style name="AppTheme.OutlineChip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
