@@ -26,7 +26,19 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
         super.onViewCreated(view, savedInstanceState)
         // Apply default selection
         view.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
-        view.wallpaperLocationChipGroup.setOnCheckedChangeListener { _, _ ->
+
+        // Necessary in the following listener
+        var lastChecked = view.wallpaperLocationChipGroup.checkedChipId
+        
+        view.wallpaperLocationChipGroup.setOnCheckedChangeListener { group, checkedId ->
+            // Always require a selection
+            // NOTE: this block of code will no longer be necessary since material library 1.2.0
+            if (checkedId == View.NO_ID)
+                group.check(lastChecked)
+            else
+                lastChecked = checkedId
+
+
             try {
                 viewModel.currentWallpaperLocation = getSelectedLocation()
             } catch (_: IllegalArgumentException) {
