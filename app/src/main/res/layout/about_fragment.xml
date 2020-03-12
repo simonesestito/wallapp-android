@@ -95,6 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_email"
+                    android:textColor="?colorAccent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton1" />
 
@@ -105,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_portfolio"
+                    android:textColor="?colorAccent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorCardRole1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -147,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_email"
+                    android:textColor="?colorAccent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton2" />
 
@@ -157,6 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_portfolio"
+                    android:textColor="?colorAccent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorCardRole2" />
 
