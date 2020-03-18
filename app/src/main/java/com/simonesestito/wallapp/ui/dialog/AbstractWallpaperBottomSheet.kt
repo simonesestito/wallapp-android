@@ -6,13 +6,20 @@
 package com.simonesestito.wallapp.ui.dialog
 
 import android.content.DialogInterface
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.core.os.postDelayed
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -32,6 +39,7 @@ import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.view.*
 import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.wallpaperDownloading
 import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.wallpaperFeedback
 import javax.inject.Inject
+
 
 /**
  * Base class for both Setup and Preview wallpaper bottom sheets
@@ -56,6 +64,12 @@ abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            setNavigationBarColor()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -98,6 +112,26 @@ abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment() {
                     .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                     .start()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    protected fun setNavigationBarColor(@ColorRes colorRes: Int = R.color.color_surface) {
+        val window = dialog?.window ?: return
+        val metrics = DisplayMetrics()
+        window.windowManager.defaultDisplay.getMetrics(metrics)
+
+        val dimDrawable = GradientDrawable()
+
+        val navigationBarDrawable = GradientDrawable()
+        navigationBarDrawable.shape = GradientDrawable.RECTANGLE
+        navigationBarDrawable.setColor(ContextCompat.getColor(requireContext(), colorRes))
+
+        val layers = arrayOf(dimDrawable, navigationBarDrawable)
+
+        val windowBackground = LayerDrawable(layers)
+        windowBackground.setLayerInsetTop(1, metrics.heightPixels)
+
+        window.setBackgroundDrawable(windowBackground)
     }
 
     private fun hideDownloadLayout() {

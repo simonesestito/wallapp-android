@@ -33,7 +33,6 @@
     <!-- BottomSheet theme -->
     <style name="Base.V21.AppTheme.BottomSheet.Dialog" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
-        <item name="android:navigationBarColor">@color/dark_gray</item>
     </style>
 
     <style name="AppTheme.BottomSheet.Dialog" parent="Base.V21.AppTheme.BottomSheet.Dialog" />
