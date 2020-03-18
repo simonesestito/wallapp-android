@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.simonesestito.wallapp.NavGraphDirections
 import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         setContentView(R.layout.main_activity)
 
         // Set custom toolbar
-        setSupportActionBar(findViewById<MaterialToolbar>(R.id.appToolbar))
+        setSupportActionBar(findViewById(R.id.appToolbar))
 
         firebaseAuth.signInAnonymously().addOnCompleteListener {
             Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
@@ -127,10 +127,10 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
     }
 
     override fun showAppbarElevation() {
-        supportActionBar?.elevation = scrollAppbarElevation
+        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = scrollAppbarElevation
     }
 
     override fun hideAppbarElevation() {
-        supportActionBar?.elevation = defaultAppbarElevation
+        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = defaultAppbarElevation
     }
 }
