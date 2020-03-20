@@ -9,14 +9,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:paddingTop="?attr/actionBarSize">
+    android:layout_margin="0dp"
+    android:paddingTop="@dimen/app_bar_height">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_separator_normal">
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/aboutAppLogo"
@@ -32,7 +32,7 @@
             android:layout_marginBottom="@dimen/margin_separator_small"
             android:text="@string/app_name"
             android:textAppearance="@style/AppTheme.Text.Title"
-            android:textColor="@color/color_accent"
+            android:textColor="?colorAccent"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -41,8 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_separator_normal"
             android:text="@string/app_motto"
-            android:textAppearance="@style/AppTheme.Text.Standard"
-            android:textColor="@android:color/black" />
+            android:textAppearance="@style/AppTheme.Text.Standard" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/aboutDescription"
@@ -96,6 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_email"
+                    android:textColor="?colorAccent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton1" />
 
@@ -106,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_portfolio"
+                    android:textColor="?colorAccent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorCardRole1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -148,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_email"
+                    android:textColor="?colorAccent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/authorPortfolioButton2" />
 
@@ -158,6 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/about_button_portfolio"
+                    android:textColor="?colorAccent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorCardRole2" />
 

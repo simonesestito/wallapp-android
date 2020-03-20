@@ -11,9 +11,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.simonesestito.wallapp.NavGraphDirections
 import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
@@ -38,6 +41,11 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        setContentView(R.layout.main_activity)
+
+        // Set custom toolbar
+        setSupportActionBar(findViewById(R.id.appToolbar))
 
         firebaseAuth.signInAnonymously().addOnCompleteListener {
             Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
@@ -49,7 +57,10 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
             startActivity(Intent(this, IntroActivity::class.java))
         }
 
-        setContentView(R.layout.main_activity)
+        // Draw edge to edge
+        findViewById<View>(R.id.root).systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
         findNavController(R.id.navHostFragment).let {
             setupActionBarWithNavController(this, it)
             it.addOnDestinationChangedListener { _, _, _ ->
@@ -110,11 +121,16 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 
+    override fun setTitle(title: CharSequence?) {
+        super.setTitle(title)
+        supportActionBar?.title = title
+    }
+
     override fun showAppbarElevation() {
-        supportActionBar?.elevation = scrollAppbarElevation
+        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = scrollAppbarElevation
     }
 
     override fun hideAppbarElevation() {
-        supportActionBar?.elevation = defaultAppbarElevation
+        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = defaultAppbarElevation
     }
 }

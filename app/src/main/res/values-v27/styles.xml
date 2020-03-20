@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <resources>
 
     <style name="Base.V27.AppTheme" parent="Base.V23.AppTheme">
-        <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:navigationBarDividerColor">@color/navbar_divider_color</item>
+        <item name="android:navigationBarColor">@color/translucent_system_bars_color</item>
+        <item name="android:windowLightNavigationBar">@bool/light_theme_status_bar</item>
     </style>
 
     <style name="AppTheme" parent="Base.V27.AppTheme" />
 
     <style name="Base.V27.AppTheme.BottomSheet.Dialog" parent="Base.V23.AppTheme.BottomSheet.Dialog">
-        <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:navigationBarDividerColor">@color/navbar_divider_color</item>
+        <item name="android:navigationBarColor">@color/color_surface</item>
+        <item name="android:windowLightNavigationBar">@bool/light_theme_status_bar</item>
     </style>
 
     <style name="AppTheme.BottomSheet.Dialog" parent="Base.V27.AppTheme.BottomSheet.Dialog" />

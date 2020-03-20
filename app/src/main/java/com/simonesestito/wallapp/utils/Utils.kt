@@ -8,9 +8,11 @@ package com.simonesestito.wallapp.utils
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.*
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
@@ -20,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -124,25 +128,6 @@ fun Activity.setLightStatusBar(light: Boolean) {
         // Set dark system bars (light icons)
         decorView.systemUiVisibility = decorView.systemUiVisibility and
                 View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-    }
-}
-
-/**
- * Set light navigation bar altering [View.setSystemUiVisibility] flags
- */
-@RequiresApi(Build.VERSION_CODES.O)
-fun Activity.setLightNavBar(light: Boolean) {
-    val decorView = window?.decorView
-    decorView ?: return
-
-    if (light) {
-        // Set light system bars (black icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility or
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-    } else {
-        // Set dark system bars (light icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility and
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
     }
 }
 
@@ -322,3 +307,25 @@ val Context.sharedPreferences: SharedPreferences by thisLazy {
 
 val Fragment.sharedPreferences
     get() = requireContext().sharedPreferences
+
+fun Resources.Theme.resolveIntAttribute(id: Int): Int {
+    val typedValue = TypedValue()
+    resolveAttribute(id, typedValue, true)
+    return typedValue.data
+}
+
+/**
+ * Call [View.setOnApplyWindowInsetsListener], ensuring the listener is called only once
+ */
+inline fun View.setOnApplyWindowInsetsListenerOnce(crossinline listener: (View, WindowInsetsCompat) -> Unit) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        // Remove the listener
+        ViewCompat.setOnApplyWindowInsetsListener(view, null)
+
+        // Call the given listener
+        listener(view, insets)
+
+        // Return the same insets
+        return@setOnApplyWindowInsetsListener insets
+    }
+}

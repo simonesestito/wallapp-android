@@ -55,10 +55,10 @@ class CategoriesAdapter @Inject constructor(private val categoryRepository: Cate
                 onItemClickListener?.invoke(category)
             }
         }
-        loadUnviewedWallsCount(holder, category, position)
+        loadUnseenWallsCount(holder, category, position)
     }
 
-    private fun loadUnviewedWallsCount(holder: CategoriesVH, category: Category, position: Int) {
+    private fun loadUnseenWallsCount(holder: CategoriesVH, category: Category, position: Int) {
         // Check cache first.
         if (unseenCounterCache.containsKey(category.id)) {
             // Use cached value

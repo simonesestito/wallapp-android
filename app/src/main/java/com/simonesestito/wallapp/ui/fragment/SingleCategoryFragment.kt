@@ -17,7 +17,9 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
+import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -38,9 +40,6 @@ import javax.inject.Inject
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
 class SingleCategoryFragment : SharedElementsDestination() {
-    override val title
-        get() = args.category.displayName.localized
-
     private val viewModel by lazy {
         getViewModel<WallpapersViewModel>(viewModelFactory)
     }
@@ -78,6 +77,11 @@ class SingleCategoryFragment : SharedElementsDestination() {
         }
 
         setHasOptionsMenu(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().title = args.category.displayName.localized
     }
 
     override fun onDestroyView() {
@@ -147,6 +151,14 @@ class SingleCategoryFragment : SharedElementsDestination() {
         // Get layout span count from preferences
         val layoutRows = sharedPreferences.getInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, currentLayoutSpanCount)
         changeLayoutRowCount(layoutRows)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            view.wallpapersRecyclerView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = insets.systemGestureInsets.bottom
+            }
+
+            return@setOnApplyWindowInsetsListener insets
+        }
     }
 
     override fun onPrepareSharedElements(createdView: View) {

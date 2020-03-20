@@ -9,27 +9,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.enums.CATEGORY_GROUP_COMMUNITY
-import com.simonesestito.wallapp.enums.CATEGORY_GROUP_ORIGINAL
-import com.simonesestito.wallapp.enums.CategoryGroup
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.onScrollListener
+import com.simonesestito.wallapp.utils.setOnApplyWindowInsetsListenerOnce
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 import javax.inject.Inject
 
 class CategoriesListFragment : AbstractAppFragment() {
-    override val title
-        get() = getString(R.string.app_name)
-
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     @Inject
@@ -71,21 +67,17 @@ class CategoriesListFragment : AbstractAppFragment() {
             val firstIndex = layoutManager.findFirstCompletelyVisibleItemPosition()
             adjustElevation(firstIndex)
         }
+
         categoriesAdapter.onItemClickListener = {
             val direction = CategoriesListFragmentDirections.toCategory(it)
             findNavController().navigate(direction)
         }
 
-        view.categoriesBottomNavigation.setOnNavigationItemSelectedListener {
-            @CategoryGroup val categoryGroup = when (it.itemId) {
-                R.id.categoryGroupCommunity -> CATEGORY_GROUP_COMMUNITY
-                R.id.categoryGroupOriginal -> CATEGORY_GROUP_ORIGINAL
-                else -> return@setOnNavigationItemSelectedListener false
-            }
-
-            viewModel.updateCategoryGroup(categoryGroup)
-
-            return@setOnNavigationItemSelectedListener true
+        view.categoriesRecyclerView.setOnApplyWindowInsetsListenerOnce { recyclerView, insets ->
+            recyclerView.updatePadding(
+                    bottom = insets.systemWindowInsets.bottom,
+                    top = insets.systemWindowInsetTop + recyclerView.paddingTop
+            )
         }
     }
 
@@ -98,7 +90,7 @@ class CategoriesListFragment : AbstractAppFragment() {
      * Load categories according to the current category group
      */
     private fun loadCategoriesList() {
-        viewModel.currentCategories.observe(this) { list ->
+        viewModel.allCategories.observe(this) { list ->
             // Hide loading spinner
             categoriesLoadingBar.hide()
 

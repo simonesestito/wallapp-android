@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of WallApp for Android.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
+  -->
+
+<resources>
+    <color name="color_surface">#2d2d2d</color>
+    <color name="translucent_system_bars_color">#4A000000</color>
+</resources>

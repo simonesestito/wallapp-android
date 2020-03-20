@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/AppTheme.CardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_content_margin">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
                 android:textAppearance="@style/AppTheme.Text.Standard"
-                android:textColor="@color/text_secondary_color_wallpapers_counter"
+                android:textColor="?colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/categoryItemDescription" />
 
@@ -65,7 +65,7 @@
                 android:layout_marginEnd="@dimen/margin_separator_normal"
                 android:background="@drawable/circle"
                 android:gravity="center"
-                android:textColor="@color/unseen_category_counter_text"
+                android:textColor="?colorOnSecondary"
                 android:textStyle="bold"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/categoryItemWallpapersCount"
