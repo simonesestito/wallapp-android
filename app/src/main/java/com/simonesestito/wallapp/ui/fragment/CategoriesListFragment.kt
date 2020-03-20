@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +20,7 @@ import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.onScrollListener
+import com.simonesestito.wallapp.utils.setOnApplyWindowInsetsListenerOnce
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 import javax.inject.Inject
@@ -73,10 +73,11 @@ class CategoriesListFragment : AbstractAppFragment() {
             findNavController().navigate(direction)
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
-            view.categoriesRecyclerView.updatePadding(bottom = insets.systemWindowInsets.bottom)
-
-            return@setOnApplyWindowInsetsListener insets
+        view.categoriesRecyclerView.setOnApplyWindowInsetsListenerOnce { recyclerView, insets ->
+            recyclerView.updatePadding(
+                    bottom = insets.systemWindowInsets.bottom,
+                    top = insets.systemWindowInsetTop + recyclerView.paddingTop
+            )
         }
     }
 

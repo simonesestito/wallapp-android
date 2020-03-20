@@ -12,12 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.utils.openUrl
+import com.simonesestito.wallapp.utils.setOnApplyWindowInsetsListenerOnce
 import kotlinx.android.synthetic.main.about_fragment.view.*
 
 
@@ -27,13 +27,11 @@ class AboutFragment : AbstractAppFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setOnApplyWindowInsetsListener(view.aboutScrollContentRoot) { root, insets ->
+        view.aboutScrollContentRoot.setOnApplyWindowInsetsListenerOnce { root, insets ->
             root.updatePadding(
                     top = insets.systemWindowInsetTop + root.paddingTop,
                     bottom = insets.systemWindowInsetBottom
             )
-
-            return@setOnApplyWindowInsetsListener insets
         }
 
         view.aboutScrollContentRoot.setOnScrollChangeListener { _: NestedScrollView?, _: Int, y: Int, _: Int, _: Int ->

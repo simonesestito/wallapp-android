@@ -22,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -310,4 +312,20 @@ fun Resources.Theme.resolveIntAttribute(id: Int): Int {
     val typedValue = TypedValue()
     resolveAttribute(id, typedValue, true)
     return typedValue.data
+}
+
+/**
+ * Call [View.setOnApplyWindowInsetsListener], ensuring the listener is called only once
+ */
+inline fun View.setOnApplyWindowInsetsListenerOnce(crossinline listener: (View, WindowInsetsCompat) -> Unit) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        // Remove the listener
+        ViewCompat.setOnApplyWindowInsetsListener(view, null)
+
+        // Call the given listener
+        listener(view, insets)
+
+        // Return the same insets
+        return@setOnApplyWindowInsetsListener insets
+    }
 }
