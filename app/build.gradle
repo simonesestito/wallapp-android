@@ -66,7 +66,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.4.1'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
 
-    // Firebase UI
+    // Room database
+    implementation 'androidx.room:room-runtime:2.2.5'
+    implementation 'androidx.room:room-ktx:2.2.5'
+    kapt 'androidx.room:room-compiler:2.2.5'
+
     implementation 'com.github.bumptech.glide:glide:4.11.0'
 }
 
