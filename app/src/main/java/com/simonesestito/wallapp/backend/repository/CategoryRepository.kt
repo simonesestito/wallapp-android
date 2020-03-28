@@ -5,94 +5,58 @@
 
 package com.simonesestito.wallapp.backend.repository
 
-import android.util.Log
 import android.widget.ImageView
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
-import com.simonesestito.wallapp.FIRESTORE_CATEGORIES
-import com.simonesestito.wallapp.FIRESTORE_USED_VIEWED_WALLS_COUNT
-import com.simonesestito.wallapp.KEY_CREATION_DATE
-import com.simonesestito.wallapp.KEY_PUBLISHED
+import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
+import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 import com.simonesestito.wallapp.backend.model.Category
-import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
-import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
-import com.simonesestito.wallapp.utils.TAG
-import com.simonesestito.wallapp.utils.map
-import com.simonesestito.wallapp.utils.mapList
+import com.simonesestito.wallapp.backend.model.FirebaseCategory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CategoryRepository @Inject constructor(private val firestore: FirebaseFirestore,
-                                             private val auth: FirebaseAuth) {
-    fun getCategories(): LiveData<List<Category>> {
-        val ref = firestore
-                .collection(FIRESTORE_CATEGORIES)
-                .whereEqualTo(KEY_PUBLISHED, true)
-                .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
+class CategoryRepository @Inject constructor(private val firebaseCategoryRepository: FirebaseCategoryRepository,
+                                             private val seenWallpapersCountDao: SeenWallpapersCountDao) {
+    var categoryCounts: List<SeenWallpapersCount>? = null
 
-        return FirestoreLiveCollection(ref).mapList { snap ->
-            Category(snap)
-        }
-    }
-
-    fun getCategoryById(id: String): LiveData<Category> {
-        val ref = firestore
-                .document("$FIRESTORE_CATEGORIES/$id")
-
-        return FirestoreLiveDocument(ref).map { snap ->
-            Category(snap)
-        }
-    }
-
-    fun loadCoverOn(category: Category, imageView: ImageView) {
-        val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
-
-        Glide
-                .with(imageView)
-                .load(category.previewImageUrl)
-                .transition(DrawableTransitionOptions().crossFade(shortAnim))
-                .into(imageView)
-    }
-
-    fun markCategoryAsViewed(category: Category) {
-        val currentUser = auth.currentUser
-        currentUser ?: return
-
-        firestore.document("users/${currentUser.uid}/categories/${category.id}")
-                .set(mapOf(
-                        FIRESTORE_USED_VIEWED_WALLS_COUNT to category.wallpapersCount
-                ), SetOptions.merge())
-                .addOnCompleteListener {
-                    Log.d(TAG, "User wallpapers count updated, success: ${it.isSuccessful}")
-                    if (!it.isSuccessful) {
-                        it.exception?.printStackTrace()
+    fun getCategories() =
+            MediatorLiveData<List<Category>>().apply {
+                addSource(firebaseCategoryRepository.getCategories()) { list ->
+                    if (categoryCounts == null) {
+                        // If counts list is null, query the database
+                        CoroutineScope(Dispatchers.IO).launch {
+                            categoryCounts = seenWallpapersCountDao.getAllCounts()
+                            doCountsMapping(list, this@apply)
+                        }
+                    } else {
+                        doCountsMapping(list, this)
                     }
                 }
-    }
-
-    fun getUnviewedCategoryWallpapers(category: Category): LiveData<Long> {
-        val currentUser = auth.currentUser
-        currentUser ?: return MutableLiveData<Long>().also {
-            it.postValue(0L)
-        }
-
-        val ref = firestore
-                .document("users/${currentUser.uid}/categories/${category.id}")
-
-        return FirestoreLiveDocument(ref).map { snap ->
-            val viewed = snap.getLong(FIRESTORE_USED_VIEWED_WALLS_COUNT) ?: 0L
-            val unseen = category.wallpapersCount - viewed
-            return@map if (viewed > 0 && unseen > 0) {
-                // Unseen value is valid
-                unseen
-            } else {
-                0L // Fallback value
             }
+
+    private fun doCountsMapping(firebaseCategories: List<FirebaseCategory>,
+                                liveData: MutableLiveData<List<Category>>) {
+        val counts = categoryCounts ?: return
+
+        // Transform the seen wallpapers count list to a Map for better efficiency
+        val countsMap = counts.map { it.categoryId to it.count }.toMap()
+
+        val categories = firebaseCategories.map {
+            val seen = countsMap[it.id] ?: it.wallpapersCount
+            Category(data = it, unseenCount = it.wallpapersCount - seen)
         }
+
+        liveData.postValue(categories)
     }
+
+    fun loadCoverOn(category: Category, imageView: ImageView) =
+            firebaseCategoryRepository.loadCoverOn(category.data, imageView)
+
+    suspend fun markCategoryAsViewed(category: Category) =
+            seenWallpapersCountDao.insertOrUpdate(SeenWallpapersCount(
+                    category.data.id,
+                    category.data.wallpapersCount
+            ))
 }

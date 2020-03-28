@@ -7,6 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="@dimen/activity_content_margin">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -53,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAllCaps="true"
+                tools:text="5 wallpapers"
                 android:textAppearance="@style/AppTheme.Text.Standard"
                 android:textColor="?colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +67,7 @@
                 android:layout_marginEnd="@dimen/margin_separator_normal"
                 android:background="@drawable/circle"
                 android:gravity="center"
-                android:textColor="?colorOnSecondary"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/categoryItemWallpapersCount"

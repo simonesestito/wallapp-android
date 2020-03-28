@@ -10,6 +10,7 @@ const val FIRESTORE_WALLPAPERS = "wallpapers"
 const val BASE_WEBAPP_URL = "https://wallapp.app"
 const val STORAGE_CATEGORIES = "categories"
 const val STORAGE_WALLPAPERS = "wallpapers"
+const val ROOM_DATABASE_NAME = "wallapp-db"
 
 const val KEY_PUBLISHED = "published"
 const val KEY_CREATION_DATE = "creationDate"

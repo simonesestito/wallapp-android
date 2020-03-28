@@ -5,11 +5,9 @@
 
 package com.simonesestito.wallapp.di.component
 
+import com.simonesestito.wallapp.WallappApplication
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
-import com.simonesestito.wallapp.di.module.CacheModule
-import com.simonesestito.wallapp.di.module.FirebaseModule
-import com.simonesestito.wallapp.di.module.ThreadModule
-import com.simonesestito.wallapp.di.module.ViewModelModule
+import com.simonesestito.wallapp.di.module.*
 import com.simonesestito.wallapp.ui.dialog.AbstractWallpaperBottomSheet
 import com.simonesestito.wallapp.ui.fragment.CategoriesListFragment
 import com.simonesestito.wallapp.ui.fragment.SingleCategoryFragment
@@ -22,14 +20,18 @@ import javax.inject.Singleton
     ViewModelModule::class,
     FirebaseModule::class,
     CacheModule::class,
-    ThreadModule::class
+    ThreadModule::class,
+    DatabaseModule::class,
+    ContextModule::class
 ])
 interface AppInjector {
     companion object {
         private var injector: AppInjector? = null
         fun getInstance(): AppInjector {
             if (injector == null) {
-                injector = DaggerAppInjector.create()
+                injector = DaggerAppInjector.builder()
+                        .contextModule(ContextModule(WallappApplication.INSTANCE))
+                        .build()
             }
             return injector!!
         }

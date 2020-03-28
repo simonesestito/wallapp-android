@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModel
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.backend.repository.WallpaperRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class WallpapersViewModel @Inject constructor(private val categoryRepository: CategoryRepository,
@@ -19,6 +22,8 @@ class WallpapersViewModel @Inject constructor(private val categoryRepository: Ca
             wallpaperRepository.getWallpapersByCategoryId(categoryId)
 
     fun updateSeenWallpapers(category: Category) {
-        categoryRepository.markCategoryAsViewed(category)
+        CoroutineScope(Dispatchers.IO).launch {
+            categoryRepository.markCategoryAsViewed(category)
+        }
     }
 }
