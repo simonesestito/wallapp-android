@@ -65,6 +65,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.3'
     implementation 'com.google.firebase:firebase-firestore:21.4.1'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
     // Room database
     implementation 'androidx.room:room-runtime:2.2.5'

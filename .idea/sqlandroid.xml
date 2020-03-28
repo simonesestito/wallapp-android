@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SQLAndroidSettings">
+    <option name="databases">
+      <map>
+        <entry key="wallapp-db_C:\Users\Simone\AndroidStudioProjects\WallApp\wallapp-android\AndroidSqlEditorDatabases\">
+          <value>
+            <list>
+              <option value="52bec46a" />
+              <option value="/databases/wallapp-db" />
+              <option value="wallapp-db" />
+              <option value="wallapp-db" />
+              <option value="false" />
+              <option value="com.simonesestito.wallapp" />
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="storageVersion" value="2" />
+  </component>
+</project>

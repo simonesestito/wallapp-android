@@ -38,7 +38,6 @@ class CategoriesListFragment : AbstractAppFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
-        categoriesAdapter.lifecycleOwner = this
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +54,18 @@ class CategoriesListFragment : AbstractAppFragment() {
         view.categoriesRecyclerView.layoutManager = LinearLayoutManager(context)
         view.categoriesRecyclerView.setHasFixedSize(true)
 
+        categoriesAdapter.onItemClickListener = {
+            val direction = CategoriesListFragmentDirections.toCategory(it)
+            findNavController().navigate(direction)
+        }
+
+        view.categoriesRecyclerView.setOnApplyWindowInsetsListenerOnce { recyclerView, insets ->
+            recyclerView.updatePadding(
+                    bottom = insets.systemWindowInsets.bottom,
+                    top = insets.systemWindowInsetTop + recyclerView.paddingTop
+            )
+        }
+
         view.categoriesRecyclerView.onScrollListener { recyclerView ->
             val layoutManager = recyclerView.layoutManager
             if (layoutManager == null || layoutManager !is LinearLayoutManager)
@@ -68,17 +79,7 @@ class CategoriesListFragment : AbstractAppFragment() {
             adjustElevation(firstIndex)
         }
 
-        categoriesAdapter.onItemClickListener = {
-            val direction = CategoriesListFragmentDirections.toCategory(it)
-            findNavController().navigate(direction)
-        }
-
-        view.categoriesRecyclerView.setOnApplyWindowInsetsListenerOnce { recyclerView, insets ->
-            recyclerView.updatePadding(
-                    bottom = insets.systemWindowInsets.bottom,
-                    top = insets.systemWindowInsetTop + recyclerView.paddingTop
-            )
-        }
+        hideAppbarElevation()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

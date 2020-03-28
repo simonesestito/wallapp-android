@@ -81,7 +81,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().title = args.category.displayName.localized
+        requireActivity().title = args.category.data.displayName.localized
     }
 
     override fun onDestroyView() {
@@ -105,7 +105,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
         viewModel.updateSeenWallpapers(args.category)
 
         // Set category description
-        categoryDescription.text = args.category.description.localized
+        categoryDescription.text = args.category.data.description.localized
 
         wallpapersRecyclerView.adapter = this.adapter
         wallpapersRecyclerView.layoutManager = GridLayoutManager(requireContext(), currentLayoutSpanCount, LinearLayoutManager.HORIZONTAL, false)
