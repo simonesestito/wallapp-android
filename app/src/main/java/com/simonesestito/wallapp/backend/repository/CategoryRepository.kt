@@ -8,6 +8,7 @@ package com.simonesestito.wallapp.backend.repository
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 import com.simonesestito.wallapp.backend.model.Category
@@ -21,21 +22,32 @@ class CategoryRepository @Inject constructor(private val firebaseCategoryReposit
                 val firebaseCategories = firebaseCategoryRepository.getCategories()
                 val wallpapersCounts = seenWallpapersCountDao.getAllCounts()
 
-                addSource(firebaseCategories) { value = doCountsMapping(firebaseCategories, wallpapersCounts) }
-                addSource(wallpapersCounts) { value = doCountsMapping(firebaseCategories, wallpapersCounts) }
+                val onChanged = { _: Any ->
+                    doMappingAndSetResult(
+                            firebaseCategories,
+                            wallpapersCounts,
+                            this
+                    )
+                }
+
+                addSource(firebaseCategories, onChanged)
+                addSource(wallpapersCounts, onChanged)
             }
 
-    private fun doCountsMapping(firebaseCategories: LiveData<List<FirebaseCategory>>,
-                                wallpapersCounts: LiveData<List<SeenWallpapersCount>>): List<Category> {
+    private fun doMappingAndSetResult(firebaseCategories: LiveData<List<FirebaseCategory>>,
+                                      wallpapersCounts: LiveData<List<SeenWallpapersCount>>,
+                                      resultLiveData: MutableLiveData<List<Category>>) {
         val countsMap = wallpapersCounts.value
                 ?.map { it.categoryId to it.count }
                 ?.toMap()
                 ?: emptyMap()
 
-        return firebaseCategories.value?.map {
+        val categories = firebaseCategories.value?.map {
             val seen = countsMap[it.id] ?: it.wallpapersCount
             Category(data = it, unseenCount = it.wallpapersCount - seen)
-        } ?: emptyList()
+        } ?: return
+
+        resultLiveData.value = categories
     }
 
     fun loadCoverOn(category: Category, imageView: ImageView) =
