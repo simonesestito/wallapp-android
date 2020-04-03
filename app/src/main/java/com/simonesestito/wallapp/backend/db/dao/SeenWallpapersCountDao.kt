@@ -5,6 +5,7 @@
 
 package com.simonesestito.wallapp.backend.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -16,9 +17,6 @@ interface SeenWallpapersCountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(seenWallpapersCount: SeenWallpapersCount)
 
-    @Query("SELECT * FROM SeenWallpapersCount WHERE categoryId = :categoryId")
-    suspend fun getCountByCategoryId(categoryId: String): SeenWallpapersCount?
-
     @Query("SELECT * FROM SeenWallpapersCount")
-    suspend fun getAllCounts(): List<SeenWallpapersCount>
+    fun getAllCounts(): LiveData<List<SeenWallpapersCount>>
 }

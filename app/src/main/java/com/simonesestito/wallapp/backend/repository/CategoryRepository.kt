@@ -6,49 +6,36 @@
 package com.simonesestito.wallapp.backend.repository
 
 import android.widget.ImageView
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.model.FirebaseCategory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(private val firebaseCategoryRepository: FirebaseCategoryRepository,
                                              private val seenWallpapersCountDao: SeenWallpapersCountDao) {
-    var categoryCounts: List<SeenWallpapersCount>? = null
-
     fun getCategories() =
             MediatorLiveData<List<Category>>().apply {
-                addSource(firebaseCategoryRepository.getCategories()) { list ->
-                    if (categoryCounts == null) {
-                        // If counts list is null, query the database
-                        CoroutineScope(Dispatchers.IO).launch {
-                            categoryCounts = seenWallpapersCountDao.getAllCounts()
-                            doCountsMapping(list, this@apply)
-                        }
-                    } else {
-                        doCountsMapping(list, this)
-                    }
-                }
+                val firebaseCategories = firebaseCategoryRepository.getCategories()
+                val wallpapersCounts = seenWallpapersCountDao.getAllCounts()
+
+                addSource(firebaseCategories) { value = doCountsMapping(firebaseCategories, wallpapersCounts) }
+                addSource(wallpapersCounts) { value = doCountsMapping(firebaseCategories, wallpapersCounts) }
             }
 
-    private fun doCountsMapping(firebaseCategories: List<FirebaseCategory>,
-                                liveData: MutableLiveData<List<Category>>) {
-        val counts = categoryCounts ?: return
+    private fun doCountsMapping(firebaseCategories: LiveData<List<FirebaseCategory>>,
+                                wallpapersCounts: LiveData<List<SeenWallpapersCount>>): List<Category> {
+        val countsMap = wallpapersCounts.value
+                ?.map { it.categoryId to it.count }
+                ?.toMap()
+                ?: emptyMap()
 
-        // Transform the seen wallpapers count list to a Map for better efficiency
-        val countsMap = counts.map { it.categoryId to it.count }.toMap()
-
-        val categories = firebaseCategories.map {
+        return firebaseCategories.value?.map {
             val seen = countsMap[it.id] ?: it.wallpapersCount
             Category(data = it, unseenCount = it.wallpapersCount - seen)
-        }
-
-        liveData.postValue(categories)
+        } ?: emptyList()
     }
 
     fun loadCoverOn(category: Category, imageView: ImageView) =
