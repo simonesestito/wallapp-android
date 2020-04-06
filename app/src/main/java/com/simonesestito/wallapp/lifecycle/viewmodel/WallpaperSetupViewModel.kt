@@ -13,9 +13,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.simonesestito.wallapp.backend.DownloadService
 import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
+import com.simonesestito.wallapp.backend.storage.DownloadService
+import com.simonesestito.wallapp.backend.storage.DownloadTask
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WallpaperFormat
@@ -29,7 +30,7 @@ class WallpaperSetupViewModel @Inject constructor(
         private val downloadService: DownloadService
 ) : ViewModel() {
     private var currentTempFile: File? = null
-    private var currentDownloadTask: DownloadService.Task? = null
+    private var currentDownloadTask: DownloadTask? = null
     private val mutableDownloadStatus = MutableLiveData<DownloadStatus>()
 
     /**
@@ -62,29 +63,33 @@ class WallpaperSetupViewModel @Inject constructor(
         currentTempFile = context.createCacheFile("wall-${wallpaper.id}-$format")
         currentDownloadTask = downloadService.downloadToFile(
                 url = wallpaper.getStorageFileUrl(format),
-                file = currentTempFile!!,
-                onProgressUpdate = {
-                    mutableDownloadStatus.value = DownloadStatus.Progressing(it)
-                },
-                onSuccess = {
-                    mutableDownloadStatus.value = DownloadStatus.Finalizing
-                    threads.runOnIoThread {
-                        val success = supportApplyWallpaper(context, currentTempFile!!, location)
-                        mutableDownloadStatus.postValue(
-                                if (success)
-                                    DownloadStatus.Success
-                                else
-                                    DownloadStatus.Error)
-                        currentTempFile?.delete()
-                    }
-                },
-                onCancel = {
-                    mutableDownloadStatus.value = DownloadStatus.Cancelled
-                },
-                onError = {
-                    mutableDownloadStatus.value = DownloadStatus.Error
+                file = currentTempFile!!
+        ).apply {
+            onProgressUpdate = {
+                mutableDownloadStatus.value = DownloadStatus.Progressing(it)
+            }
+
+            onSuccess = {
+                mutableDownloadStatus.value = DownloadStatus.Finalizing
+                threads.runOnIoThread {
+                    val success = supportApplyWallpaper(context, currentTempFile!!, location)
+                    mutableDownloadStatus.postValue(
+                            if (success)
+                                DownloadStatus.Success
+                            else
+                                DownloadStatus.Error)
+                    currentTempFile?.delete()
                 }
-        )
+            }
+
+            onCancel = {
+                mutableDownloadStatus.value = DownloadStatus.Cancelled
+            }
+
+            onError = {
+                mutableDownloadStatus.value = DownloadStatus.Error
+            }
+        }.start()
     }
 
     /**

@@ -3,7 +3,7 @@
  * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
-package com.simonesestito.wallapp.backend
+package com.simonesestito.wallapp.backend.storage
 
 import android.os.Handler
 import android.os.Looper
@@ -19,10 +19,6 @@ import javax.inject.Inject
  * Download files
  */
 class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) {
-    class Task(private val onCancelListener: () -> Unit) {
-        fun cancel() = onCancelListener()
-    }
-
     /**
      * Download a file by the given URL.
      * It downloads the file on a separate Thread
@@ -32,18 +28,18 @@ class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) 
      *
      * @return Callback to cancel current download
      */
-    fun downloadToFile(url: String,
-                       file: File,
-                       onProgressUpdate: (Int) -> Unit,
-                       onError: (Exception) -> Unit,
-                       onSuccess: () -> Unit,
-                       onCancel: () -> Unit
-    ): Task {
-        val handler = Handler(Looper.myLooper() ?: Looper.getMainLooper())
+    fun downloadToFile(url: String, file: File): DownloadTask {
         val isDownloading = AtomicBoolean(true)
-        val task = Task(onCancelListener = { isDownloading.set(false) })
+        return DownloadTask(
+                onCancelListener = { isDownloading.set(false) },
+                task = { executeDownloadToFile(it, url, file, isDownloading) }
+        )
+    }
 
-        onProgressUpdate(0)
+    private fun executeDownloadToFile(task: DownloadTask, url: String, file: File, isDownloading: AtomicBoolean) {
+        val currentThreadHandler = Handler(Looper.myLooper() ?: Looper.getMainLooper())
+
+        task.onProgressUpdate?.invoke(0)
 
         threadUtils.runOnIoThread {
             try {
@@ -66,25 +62,25 @@ class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) 
 
                             val currentProgress = bytesCopied * 100 / contentLength
                             if (currentProgress > oldProgress) {
-                                handler.post { onProgressUpdate(currentProgress) }
+                                currentThreadHandler.post {
+                                    task.onProgressUpdate?.invoke(currentProgress)
+                                }
                                 oldProgress = currentProgress
                             }
                         }
 
                         if (isDownloading.get()) {
-                            handler.post { onProgressUpdate(100) }
-                            handler.post(onSuccess)
+                            currentThreadHandler.post { task.onProgressUpdate?.invoke(100) }
+                            currentThreadHandler.post(task.onSuccess)
                             isDownloading.set(false)
                         } else {
-                            handler.post { onCancel() }
+                            currentThreadHandler.post(task.onCancel)
                         }
                     }
                 }
             } catch (e: IOException) {
-                handler.post { onError(e) }
+                currentThreadHandler.post { task.onError?.invoke(e) }
             }
         }
-
-        return task
     }
 }
