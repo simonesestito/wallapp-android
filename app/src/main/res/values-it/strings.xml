@@ -62,4 +62,5 @@
     <string name="overlay_permission_request">La modalità Anteprima richiede questo permesso per funzionare.</string>
     <string name="permission_write_storage_request_message">Per permettere all\'app di salvare lo sfondo nella galleria, concedi questo permesso</string>
     <string name="wallpaper_setup_download_button">Salva</string>
+    <string name="wallpaper_location_miui_warning">Lo sfondo verrà impostato solo sulla homescreen. Per applicarlo sulla lockscreen, scaricalo e applicalo a mano dalle impostazioni.</string>
 </resources>

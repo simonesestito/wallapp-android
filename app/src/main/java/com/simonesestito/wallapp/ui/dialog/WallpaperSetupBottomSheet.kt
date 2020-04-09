@@ -68,14 +68,19 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
         view.wallpaperDownloadButton.setOnClickListener { saveToGallery() }
 
         // -- API < 24 and MIUI fallback
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || requireContext().isPlatformMIUI()) {
+        val isMIUI = requireContext().isPlatformMIUI()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || isMIUI) {
             // Hide wallpaper location selection
             // It isn't supported before 7.0 (API 24)
             // On MIUI apps can't overwrite lockscreen wallpaper
-            // TODO Download to gallery on MIUI
             view.wallpaperLocationTitle?.visibility = View.GONE
             view.wallpaperLocationChipGroup?.visibility = View.GONE
             viewModel.currentWallpaperLocation = WALLPAPER_LOCATION_BOTH
+
+            if (isMIUI) {
+                // Display MIUI warning
+                view.wallpaperMiuiWarning?.visibility = View.VISIBLE
+            }
         }
     }
 

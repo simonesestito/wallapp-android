@@ -31,13 +31,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/wallpaperSetupTitle" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/wallpaperMiuiWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/margin_separator_small"
+        android:text="@string/wallpaper_location_miui_warning"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperLocationTitle" />
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/wallpaperLocationChipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_separator_normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wallpaperLocationTitle"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperMiuiWarning"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
