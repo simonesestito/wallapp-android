@@ -9,6 +9,8 @@ import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 import com.simonesestito.wallapp.backend.model.Category
@@ -50,8 +52,15 @@ class CategoryRepository @Inject constructor(private val firebaseCategoryReposit
         resultLiveData.value = categories
     }
 
-    fun loadCoverOn(category: Category, imageView: ImageView) =
-            firebaseCategoryRepository.loadCoverOn(category.data, imageView)
+    fun loadCoverOn(category: Category, imageView: ImageView) {
+        val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
+
+        Glide
+                .with(imageView)
+                .load(category.data.previewImageUrl)
+                .transition(DrawableTransitionOptions().crossFade(shortAnim))
+                .into(imageView)
+    }
 
     suspend fun markCategoryAsViewed(category: Category) =
             seenWallpapersCountDao.insertOrUpdate(SeenWallpapersCount(

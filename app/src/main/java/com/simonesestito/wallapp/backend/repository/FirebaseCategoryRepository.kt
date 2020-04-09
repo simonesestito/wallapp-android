@@ -4,10 +4,7 @@
  */
 package com.simonesestito.wallapp.backend.repository
 
-import android.widget.ImageView
 import androidx.lifecycle.LiveData
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.simonesestito.wallapp.FIRESTORE_CATEGORIES
@@ -28,15 +25,5 @@ class FirebaseCategoryRepository @Inject constructor(private val firestore: Fire
         return FirestoreLiveCollection(ref).mapList { snap ->
             FirebaseCategory(snap)
         }
-    }
-
-    fun loadCoverOn(category: FirebaseCategory, imageView: ImageView) {
-        val shortAnim = imageView.resources.getInteger(android.R.integer.config_shortAnimTime)
-
-        Glide
-                .with(imageView)
-                .load(category.previewImageUrl)
-                .transition(DrawableTransitionOptions().crossFade(shortAnim))
-                .into(imageView)
     }
 }

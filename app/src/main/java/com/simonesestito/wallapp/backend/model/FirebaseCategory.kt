@@ -21,7 +21,7 @@ data class FirebaseCategory(
         @CategoryGroup val group: String,
         val wallpapersCount: Int
 ) : Identifiable<String>, Parcelable {
-    val previewImageUrl = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$FORMAT_COVER"
+    val previewImageUrl = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$id/$FORMAT_COVER"
 
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
