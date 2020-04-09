@@ -19,6 +19,8 @@ import com.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
 
@@ -47,14 +49,16 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
         }
 
         view.wallpaperApplyButton.setOnClickListener {
-            viewModel.applyWallpaper(
-                    requireContext(),
-                    wallpaperArg,
-                    getSuggestedWallpaperFormat(resources.displayMetrics),
-                    // Use saved location in ViewModel instead of getting it now
-                    // It can lead to crash in case of bad selection
-                    viewModel.currentWallpaperLocation
-            )
+            CoroutineScope(coroutineContext).launch {
+                viewModel.applyWallpaper(
+                        requireContext(),
+                        wallpaperArg,
+                        getSuggestedWallpaperFormat(resources.displayMetrics),
+                        // Use saved location in ViewModel instead of getting it now
+                        // It can lead to crash in case of bad selection
+                        viewModel.currentWallpaperLocation
+                )
+            }
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {

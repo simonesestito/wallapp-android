@@ -38,6 +38,9 @@ import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*
 import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.view.*
 import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.wallpaperDownloading
 import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.wallpaperFeedback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 
@@ -45,7 +48,9 @@ import javax.inject.Inject
  * Base class for both Setup and Preview wallpaper bottom sheets
  * Created to optimize code recycling
  */
-abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment() {
+abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment(),
+        CoroutineScope by CoroutineScope(Dispatchers.Main) {
+
     companion object {
         const val PROGRESS_INDETERMINATE = -1
     }
@@ -198,10 +203,12 @@ abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         viewModel.stopDownloadTask()
+        coroutineContext.cancel()
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         viewModel.stopDownloadTask()
+        coroutineContext.cancel()
     }
 }
