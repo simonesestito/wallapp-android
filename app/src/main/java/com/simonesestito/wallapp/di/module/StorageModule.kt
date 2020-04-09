@@ -6,19 +6,20 @@
 package com.simonesestito.wallapp.di.module
 
 import android.os.Build
-import com.simonesestito.wallapp.backend.storage.IWallpaperDownloadService
-import com.simonesestito.wallapp.backend.storage.WallpaperDownloadServiceLegacy
-import com.simonesestito.wallapp.backend.storage.WallpaperDownloadServiceV29
+import com.simonesestito.wallapp.backend.storage.DownloadService
+import com.simonesestito.wallapp.backend.storage.IStorageDownloadService
+import com.simonesestito.wallapp.backend.storage.StorageDownloadServiceLegacy
+import com.simonesestito.wallapp.backend.storage.StorageDownloadServiceV29
 import dagger.Module
 import dagger.Provides
 
 @Module
 class StorageModule {
     @Provides
-    fun wallpaperDownloadService(): IWallpaperDownloadService {
+    fun storageDownloadService(downloadService: DownloadService): IStorageDownloadService {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            WallpaperDownloadServiceV29()
+            StorageDownloadServiceV29(downloadService)
         else
-            WallpaperDownloadServiceLegacy()
+            StorageDownloadServiceLegacy(downloadService)
     }
 }
