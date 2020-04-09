@@ -20,10 +20,7 @@ import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_LOCK
 import com.simonesestito.wallapp.enums.WallpaperLocation
-import com.simonesestito.wallapp.utils.TAG
-import com.simonesestito.wallapp.utils.checkSelfPermissions
-import com.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
-import com.simonesestito.wallapp.utils.requestPermissionsRationale
+import com.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
@@ -70,12 +67,20 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
 
         view.wallpaperDownloadButton.setOnClickListener { saveToGallery() }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        // -- API < 24 and MIUI fallback
+        val isMIUI = requireContext().isPlatformMIUI()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || isMIUI) {
             // Hide wallpaper location selection
             // It isn't supported before 7.0 (API 24)
+            // On MIUI apps can't overwrite lockscreen wallpaper
             view.wallpaperLocationTitle?.visibility = View.GONE
             view.wallpaperLocationChipGroup?.visibility = View.GONE
             viewModel.currentWallpaperLocation = WALLPAPER_LOCATION_BOTH
+
+            if (isMIUI) {
+                // Display MIUI warning
+                view.wallpaperMiuiWarning?.visibility = View.VISIBLE
+            }
         }
     }
 

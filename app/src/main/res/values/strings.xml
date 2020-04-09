@@ -67,4 +67,5 @@
     <string name="overlay_permission_request">Preview Mode requires this permission to be used.</string>
     <string name="permission_write_storage_request_message">To allow the app to save this wallpaper into your gallery, please grant this permission</string>
     <string name="wallpaper_setup_download_button">Download</string>
+    <string name="wallpaper_location_miui_warning">This wallpaper will be set on homescreen only. To apply on lockscreen, download it and apply it manually from system settings.</string>
 </resources>
