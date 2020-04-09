@@ -18,12 +18,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.simonesestito.wallapp.NavGraphDirections
-import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
-import com.simonesestito.wallapp.utils.sharedPreferences
 
 
 class MainActivity : AppCompatActivity(), ElevatingAppbar {
@@ -42,11 +40,11 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         // Set custom toolbar
         setSupportActionBar(findViewById(R.id.appToolbar))
 
-        if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
+        // TODO: IntroActivity
+        //if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
             // Show first launch activity
             // It's responsibility of IntroActivity to set FIRST_LAUNCH to false
-            startActivity(Intent(this, IntroActivity::class.java))
-        }
+        //}
 
         // Draw edge to edge
         findViewById<View>(R.id.root).systemUiVisibility =
