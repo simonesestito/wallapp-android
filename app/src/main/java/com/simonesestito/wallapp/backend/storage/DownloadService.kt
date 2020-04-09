@@ -7,7 +7,6 @@ package com.simonesestito.wallapp.backend.storage
 
 import android.os.Handler
 import android.os.Looper
-import com.simonesestito.wallapp.utils.ThreadUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
@@ -19,7 +18,7 @@ import javax.inject.Inject
 /**
  * Download files
  */
-class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) {
+class DownloadService @Inject constructor() {
     /**
      * Download a file by the given URL.
      * It downloads the file on a separate Thread
@@ -57,12 +56,12 @@ class DownloadService @Inject constructor(private val threadUtils: ThreadUtils) 
                             oldProgress = currentProgress
                         }
                     }
-
-                    if (isActive) {
-                        currentThreadHandler.post { progress(100) }
-                        return@withContext
-                    }
                 }
+            }
+            if (isActive) {
+                currentThreadHandler.post { progress(100) }
+            } else {
+                file.delete()
             }
         }
     }

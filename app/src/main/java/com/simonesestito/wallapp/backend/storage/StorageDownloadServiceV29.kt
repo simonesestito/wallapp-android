@@ -5,10 +5,8 @@
 
 package com.simonesestito.wallapp.backend.storage
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 
 /**
  * Implementation of [IStorageDownloadService] to work on Android Q and higher
@@ -19,20 +17,9 @@ import androidx.fragment.app.Fragment
  */
 @RequiresApi(Build.VERSION_CODES.Q)
 class StorageDownloadServiceV29(private val downloadService: DownloadService) : IStorageDownloadService {
-    override fun requestPermission(context: Fragment) {
+    override val requiredPermissions = emptyArray<String>()
+
+    override suspend fun downloadToStorage(url: String, filename: String, progress: (Int) -> Unit) {
         TODO("Not yet implemented")
     }
-
-    override fun hasPermission(context: Context): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun handlePermissionResult(requestCode: Int, grantResults: IntArray): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun downloadToStorage(context: Fragment, url: String, filename: String, progress: (Int) -> Unit) {
-        TODO("Not yet implemented")
-    }
-
 }

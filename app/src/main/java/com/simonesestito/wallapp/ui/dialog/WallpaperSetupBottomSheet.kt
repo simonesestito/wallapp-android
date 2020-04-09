@@ -5,17 +5,25 @@
 
 package com.simonesestito.wallapp.ui.dialog
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.REQUEST_WRITE_STORAGE_PERMISSION
 import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_LOCK
 import com.simonesestito.wallapp.enums.WallpaperLocation
+import com.simonesestito.wallapp.utils.TAG
+import com.simonesestito.wallapp.utils.checkSelfPermissions
 import com.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
+import com.simonesestito.wallapp.utils.requestPermissionsRationale
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
@@ -23,7 +31,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Apply default selection
@@ -31,7 +38,7 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
 
         // Necessary in the following listener
         var lastChecked = view.wallpaperLocationChipGroup.checkedChipId
-        
+
         view.wallpaperLocationChipGroup.setOnCheckedChangeListener { group, checkedId ->
             // Always require a selection
             // NOTE: this block of code will no longer be necessary since material library 1.2.0
@@ -61,6 +68,8 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
             }
         }
 
+        view.wallpaperDownloadButton.setOnClickListener { saveToGallery() }
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             // Hide wallpaper location selection
             // It isn't supported before 7.0 (API 24)
@@ -73,14 +82,38 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
     override fun onStart() {
         super.onStart()
         viewModel.getDownloadStatus().observe(this, Observer { status ->
+            Log.d(TAG, status.toString())
             when (status) {
                 is DownloadStatus.Progressing -> onDownloadStarted(status.progress)
                 DownloadStatus.Finalizing -> onDownloadFinalizing()
                 DownloadStatus.Success -> onDownloadResult(true)
                 DownloadStatus.Error -> onDownloadResult(false)
-                // Ignore DownloadStatus.Cancelled
             }
         })
+    }
+
+    /**
+     * Save current wallpaper to gallery
+     */
+    private fun saveToGallery() {
+        // Check required permissions
+        val permissions = viewModel.storagePermissions
+        if (permissions.isNotEmpty() && !requireContext().checkSelfPermissions(*permissions)) {
+            // Missing permissions
+            requestPermissionsRationale(
+                    R.string.permission_write_storage_request_message,
+                    REQUEST_WRITE_STORAGE_PERMISSION,
+                    *permissions
+            )
+            return
+        }
+
+        // Start downloading the wallpaper
+        CoroutineScope(coroutineContext).launch {
+            viewModel.downloadToGallery(wallpaperArg, getSuggestedWallpaperFormat(
+                    requireContext().resources.displayMetrics
+            ))
+        }
     }
 
     /**
@@ -107,6 +140,28 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
     private fun onDownloadFinalizing() {
         wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
         updateProgress(PROGRESS_INDETERMINATE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_WRITE_STORAGE_PERMISSION && resultCode == Activity.RESULT_OK) {
+            // Rationale dialog shown
+            // User accepted, ask for permissions again
+            requestPermissions(viewModel.storagePermissions, REQUEST_WRITE_STORAGE_PERMISSION)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.any { it != PackageManager.PERMISSION_GRANTED }) {
+            // Permissions denied
+            return
+        }
+
+        if (requestCode == REQUEST_WRITE_STORAGE_PERMISSION) {
+            // Storage permission granted
+            return saveToGallery()
+        }
     }
 
     private fun onDownloadResult(success: Boolean) {

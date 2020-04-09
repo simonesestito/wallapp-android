@@ -8,16 +8,15 @@ package com.simonesestito.wallapp.backend.storage
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.ContentValues
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import com.simonesestito.wallapp.PICTURES_DOWNLOAD_SUBDIR
 import com.simonesestito.wallapp.WallappApplication
+import kotlinx.coroutines.isActive
 import java.io.File
 import java.util.*
+import kotlin.coroutines.coroutineContext
 
 
 /**
@@ -30,17 +29,12 @@ import java.util.*
 class StorageDownloadServiceLegacy(private val downloadService: DownloadService)
     : IStorageDownloadService {
 
-    companion object {
-        const val PERMISSION_REQUEST_CODE = 8
-    }
-
-    override suspend fun downloadToStorage(context: Fragment, url: String, filename: String, progress: (Int) -> Unit) {
-        if (!hasPermission(context.requireContext()))
-            throw SecurityException("Missing permissions")
-
+    @Throws(SecurityException::class)
+    override suspend fun downloadToStorage(url: String, filename: String, progress: (Int) -> Unit) {
         val file = createStorageFile(filename)
         downloadService.downloadToFile(url, file, progress)
-        addToMediaStore(file)
+        if (coroutineContext.isActive)
+            addToMediaStore(file)
     }
 
     private fun addToMediaStore(file: File) {
@@ -67,29 +61,9 @@ class StorageDownloadServiceLegacy(private val downloadService: DownloadService)
                 .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, args)
     }
 
-    override fun hasPermission(context: Context) =
-            context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED
-
-    override fun requestPermission(context: Fragment) {
-        context.requestPermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                PERMISSION_REQUEST_CODE
-        )
-    }
-
-    /**
-     * Handle permission result from current [Fragment]
-     *
-     * @return true if permissions have been granted,
-     *      false if this permission request hasn't been generated from this class
-     *      or if not every permission has been granted
-     */
-    override fun handlePermissionResult(requestCode: Int, grantResults: IntArray): Boolean {
-        return requestCode == PERMISSION_REQUEST_CODE &&
-                !grantResults.contains(PackageManager.PERMISSION_DENIED)
-    }
+    override val requiredPermissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @TargetApi(Build.VERSION_CODES.P)
     @Suppress("DEPRECATION")

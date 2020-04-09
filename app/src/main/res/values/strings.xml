@@ -18,9 +18,9 @@
     <string name="wallpaper_setup_location_both">Both</string>
     <string name="wallpaper_setup_apply_button">Apply</string>
     <string name="wallpaper_setup_status_downloading">Downloading chosen wallpaper…</string>
-    <string name="wallpaper_setup_status_success">Wallpaper applied! Enjoy</string>
+    <string name="wallpaper_setup_status_success">Wallpaper downloaded! Enjoy</string>
     <string name="wallpaper_setup_status_failed">An error has occurred, please retry</string>
-    <string name="wallpaper_setup_status_finalizing">Perfecting your wallpaper…</string>
+    <string name="wallpaper_setup_status_finalizing">Applying your wallpaper…</string>
     <string name="preview_mode_title">Preview Mode</string>
     <string name="permission_request_dialog_title">Permission requested</string>
     <string name="permission_request_positive_button">Grant</string>
@@ -64,6 +64,7 @@
     <string name="category_group_community">Community</string>
     <string name="preview_service_notification_title">Preview Mode is running</string>
     <string name="preview_service_notification_text">Click to stop Preview Mode</string>
-    <string name="overlay_permission_request">Please, grant this permission to use Preview Mode</string>
+    <string name="overlay_permission_request">Preview Mode requires this permission to be used.</string>
     <string name="permission_write_storage_request_message">To allow the app to save this wallpaper into your gallery, please grant this permission</string>
+    <string name="wallpaper_setup_download_button">Download</string>
 </resources>

@@ -46,7 +46,6 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
                     view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
                     updateProgress(PROGRESS_INDETERMINATE)
                 }
-                DownloadStatus.Cancelled -> tryDismiss()
                 DownloadStatus.Success -> {
                     tryDismiss()
                     startPreviewMode()

@@ -16,19 +16,23 @@ import androidx.lifecycle.ViewModel
 import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.backend.storage.DownloadService
+import com.simonesestito.wallapp.backend.storage.IStorageDownloadService
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WallpaperFormat
 import com.simonesestito.wallapp.enums.WallpaperLocation
 import com.simonesestito.wallapp.utils.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 class WallpaperSetupViewModel @Inject constructor(
-        private val downloadService: DownloadService
+        private val downloadService: DownloadService,
+        private val storageDownloadService: IStorageDownloadService
 ) : ViewModel() {
     private var currentTempFile: File? = null
     private val mutableDownloadStatus = MutableLiveData<DownloadStatus>()
@@ -94,7 +98,7 @@ class WallpaperSetupViewModel @Inject constructor(
 
         withContext(Dispatchers.IO) { backupWallpaper(context) }
 
-        if (mutableDownloadStatus.value !is DownloadStatus.Cancelled) {
+        if (coroutineContext.isActive) {
             // Apply wallpaper only if task has not been cancelled
             // and status is still the same
             applyWallpaper(
@@ -112,8 +116,30 @@ class WallpaperSetupViewModel @Inject constructor(
         if (!isTaskInProgress()) {
             currentTempFile?.delete()
         }
+    }
 
-        mutableDownloadStatus.postValue(DownloadStatus.Cancelled)
+    /**
+     * Get required storage permissions to download the wallpaper
+     */
+    val storagePermissions = storageDownloadService.requiredPermissions
+
+    @Throws(SecurityException::class)
+    suspend fun downloadToGallery(wallpaper: Wallpaper, @WallpaperFormat format: String) {
+        val extension = format.split('.').last()
+
+        try {
+            mutableDownloadStatus.postValue(DownloadStatus.Progressing(0))
+
+            storageDownloadService.downloadToStorage(
+                    wallpaper.getStorageFileUrl(format),
+                    "${wallpaper.categoryId}_${wallpaper.id}.$extension") {
+                mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))
+            }
+
+            mutableDownloadStatus.postValue(DownloadStatus.Success)
+        } catch (e: IOException) {
+            mutableDownloadStatus.postValue(DownloadStatus.Error)
+        }
     }
 
     /**
