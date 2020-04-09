@@ -14,7 +14,7 @@
     <string name="wallpaper_setup_location_both">Entrambe</string>
     <string name="wallpaper_setup_apply_button">Applica</string>
     <string name="wallpaper_setup_status_downloading">Scaricamento dello sfondo scelto in corso…</string>
-    <string name="wallpaper_setup_status_success">Sfondo applicato!</string>
+    <string name="wallpaper_setup_status_success">Sfondo scaricato!</string>
     <string name="wallpaper_setup_status_failed">Si è verificato un errore. Riprova piú tardi</string>
     <string name="wallpaper_setup_status_finalizing">Applicazione dello sfondo in corso…</string>
     <string name="preview_mode_title">Modalità anteprima</string>
@@ -57,4 +57,9 @@
     <string name="singleCategoryLayoutRowSwitch">Cambia layout</string>
     <string name="category_group_original">Originali WallApp</string>
     <string name="category_group_community">Community</string>
+    <string name="preview_service_notification_title">Modalità Anteprima in esecuzione</string>
+    <string name="preview_service_notification_text">Premi per fermare la modalità Anteprima</string>
+    <string name="overlay_permission_request">La modalità Anteprima richiede questo permesso per funzionare.</string>
+    <string name="permission_write_storage_request_message">Per permettere all\'app di salvare lo sfondo nella galleria, concedi questo permesso</string>
+    <string name="wallpaper_setup_download_button">Salva</string>
 </resources>

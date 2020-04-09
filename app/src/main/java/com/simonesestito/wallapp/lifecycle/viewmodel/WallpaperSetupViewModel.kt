@@ -13,23 +13,28 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.simonesestito.wallapp.backend.DownloadService
 import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
+import com.simonesestito.wallapp.backend.storage.DownloadService
+import com.simonesestito.wallapp.backend.storage.IStorageDownloadService
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WallpaperFormat
 import com.simonesestito.wallapp.enums.WallpaperLocation
 import com.simonesestito.wallapp.utils.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 class WallpaperSetupViewModel @Inject constructor(
-        private val threads: ThreadUtils,
-        private val downloadService: DownloadService
+        private val downloadService: DownloadService,
+        private val storageDownloadService: IStorageDownloadService
 ) : ViewModel() {
     private var currentTempFile: File? = null
-    private var currentDownloadTask: DownloadService.Task? = null
     private val mutableDownloadStatus = MutableLiveData<DownloadStatus>()
 
     /**
@@ -46,45 +51,37 @@ class WallpaperSetupViewModel @Inject constructor(
     /**
      * To be notified about the status, observe [getDownloadStatus] return value
      */
-    fun applyWallpaper(context: Context,
-                       wallpaper: Wallpaper,
-                       @WallpaperFormat format: String,
-                       @WallpaperLocation location: Int) {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun applyWallpaper(context: Context,
+                               wallpaper: Wallpaper,
+                               @WallpaperFormat format: String,
+                               @WallpaperLocation location: Int) {
         if (isTaskInProgress()) {
             return
         }
 
         if (!context.isConnectivityOnline()) {
-            mutableDownloadStatus.value = DownloadStatus.Error
+            mutableDownloadStatus.postValue(DownloadStatus.Error)
             return
         }
 
-        currentTempFile = context.createCacheFile("wall-${wallpaper.id}-$format")
-        currentDownloadTask = downloadService.downloadToFile(
-                url = wallpaper.getStorageFileUrl(format),
-                file = currentTempFile!!,
-                onProgressUpdate = {
-                    mutableDownloadStatus.value = DownloadStatus.Progressing(it)
-                },
-                onSuccess = {
-                    mutableDownloadStatus.value = DownloadStatus.Finalizing
-                    threads.runOnIoThread {
-                        val success = supportApplyWallpaper(context, currentTempFile!!, location)
-                        mutableDownloadStatus.postValue(
-                                if (success)
-                                    DownloadStatus.Success
-                                else
-                                    DownloadStatus.Error)
-                        currentTempFile?.delete()
-                    }
-                },
-                onCancel = {
-                    mutableDownloadStatus.value = DownloadStatus.Cancelled
-                },
-                onError = {
-                    mutableDownloadStatus.value = DownloadStatus.Error
-                }
-        )
+        currentTempFile = withContext(Dispatchers.IO) {
+            context.createCacheFile("wall-${wallpaper.id}-$format")
+        }
+
+        try {
+            downloadService.downloadToFile(wallpaper.getStorageFileUrl(format), currentTempFile!!) {
+                mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))
+            }
+        } catch (e: IOException) {
+            mutableDownloadStatus.postValue(DownloadStatus.Error)
+            return
+        }
+
+        mutableDownloadStatus.postValue(DownloadStatus.Finalizing)
+        supportApplyWallpaper(context, currentTempFile!!, location)
+        mutableDownloadStatus.postValue(DownloadStatus.Success)
+        withContext(Dispatchers.IO) { currentTempFile?.delete() }
     }
 
     /**
@@ -92,40 +89,57 @@ class WallpaperSetupViewModel @Inject constructor(
      * First, do a backup
      * Then, apply the wallpaper to HOME location only
      */
-    fun applyPreviewWallpaper(context: Context, wallpaper: Wallpaper) {
+    suspend fun applyPreviewWallpaper(context: Context, wallpaper: Wallpaper) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             mutableDownloadStatus.value = DownloadStatus.Error
             return
         }
 
-        threads.runOnIoThread {
-            backupWallpaper(context)
-            threads.runOnMainThread {
-                if (mutableDownloadStatus.value !is DownloadStatus.Cancelled) {
-                    // Apply wallpaper only if task has not been cancelled
-                    // and status is still the same
-                    applyWallpaper(
-                            context,
-                            wallpaper,
-                            getSuggestedWallpaperFormat(context.resources.displayMetrics),
-                            WALLPAPER_LOCATION_HOME
-                    )
-                } else {
-                    Log.e(this@WallpaperSetupViewModel.TAG, "Task cancellation detected. Doing nothing")
-                }
-            }
+        withContext(Dispatchers.IO) { backupWallpaper(context) }
+
+        if (coroutineContext.isActive) {
+            // Apply wallpaper only if task has not been cancelled
+            // and status is still the same
+            applyWallpaper(
+                    context,
+                    wallpaper,
+                    getSuggestedWallpaperFormat(context.resources.displayMetrics),
+                    WALLPAPER_LOCATION_HOME
+            )
+        } else {
+            Log.e(this@WallpaperSetupViewModel.TAG, "Task cancellation detected. Doing nothing")
         }
     }
 
     fun stopDownloadTask() {
-        currentDownloadTask?.cancel()
-
         if (!isTaskInProgress()) {
             currentTempFile?.delete()
         }
+    }
 
-        mutableDownloadStatus.value = DownloadStatus.Cancelled
+    /**
+     * Get required storage permissions to download the wallpaper
+     */
+    val storagePermissions = storageDownloadService.requiredPermissions
+
+    @Throws(SecurityException::class)
+    suspend fun downloadToGallery(wallpaper: Wallpaper, @WallpaperFormat format: String) {
+        val extension = format.split('.').last()
+
+        try {
+            mutableDownloadStatus.postValue(DownloadStatus.Progressing(0))
+
+            storageDownloadService.downloadToStorage(
+                    wallpaper.getStorageFileUrl(format),
+                    "${wallpaper.categoryId}_${wallpaper.id}.$extension") {
+                mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))
+            }
+
+            mutableDownloadStatus.postValue(DownloadStatus.Success)
+        } catch (e: IOException) {
+            mutableDownloadStatus.postValue(DownloadStatus.Error)
+        }
     }
 
     /**

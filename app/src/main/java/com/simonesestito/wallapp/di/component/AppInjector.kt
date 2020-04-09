@@ -22,7 +22,8 @@ import javax.inject.Singleton
     CacheModule::class,
     ThreadModule::class,
     DatabaseModule::class,
-    ContextModule::class
+    ContextModule::class,
+    StorageModule::class
 ])
 interface AppInjector {
     companion object {

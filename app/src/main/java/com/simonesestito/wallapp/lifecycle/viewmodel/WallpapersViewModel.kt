@@ -11,19 +11,27 @@ import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class WallpapersViewModel @Inject constructor(private val categoryRepository: CategoryRepository,
-                                              private val wallpaperRepository: WallpaperRepository) : ViewModel() {
+                                              private val wallpaperRepository: WallpaperRepository)
+    : ViewModel() {
     val allCategories by lazy { categoryRepository.getCategories() }
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun getWallpapersByCategoryId(categoryId: String) =
             wallpaperRepository.getWallpapersByCategoryId(categoryId)
 
     fun updateSeenWallpapers(category: Category) {
-        CoroutineScope(Dispatchers.IO).launch {
+        coroutineScope.launch {
             categoryRepository.markCategoryAsViewed(category)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        coroutineScope.cancel()
     }
 }

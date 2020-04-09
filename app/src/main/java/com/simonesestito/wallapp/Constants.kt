@@ -18,7 +18,6 @@ const val KEY_DISPLAY_NAME = "displayName"
 const val KEY_DESCRIPTION = "description"
 const val KEY_CATEGORY_ITEMS_COUNT = "count"
 const val KEY_CATEGORY_GROUP = "group"
-const val FIRESTORE_USED_VIEWED_WALLS_COUNT = "viewed_walls_count"
 const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
 const val SCALEWAY_BUCKET_URL = "https://wallapp-bucket.s3.fr-par.scw.cloud"
@@ -31,6 +30,7 @@ const val PREFS_SINGLE_CATEGORY_LAYOUT_ROWS = "single_category_layout_rows"
 
 const val REQUEST_PREVIEW_OVERLAY_PERMISSION = 1
 const val REQUEST_READ_STORAGE_PERMISSION = 2
+const val REQUEST_WRITE_STORAGE_PERMISSION = 3
 
 const val ACTION_PREVIEW_RESULT = "preview_window_result"
 
@@ -46,6 +46,9 @@ const val RESULT_WALLPAPER_CONFIRMED = 1
 const val RESULT_WALLPAPER_CANCELED = 2
 
 const val BACKUP_WALLPAPER_FILENAME = "wall-backup.png"
+
+// Relative to /sdcard/Pictures, or the given folder by Environment
+const val PICTURES_DOWNLOAD_SUBDIR = "WallApp"
 
 const val BOTTOMSHEET_FADE_ANIMATION_DURATION = 120L
 const val BOTTOMSHEET_AUTO_DISMISS_DELAY = 1200L

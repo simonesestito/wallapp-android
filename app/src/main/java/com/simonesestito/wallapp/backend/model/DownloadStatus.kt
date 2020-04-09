@@ -10,5 +10,4 @@ sealed class DownloadStatus {
     object Finalizing : DownloadStatus()
     object Error : DownloadStatus()
     object Success : DownloadStatus()
-    object Cancelled : DownloadStatus()
 }

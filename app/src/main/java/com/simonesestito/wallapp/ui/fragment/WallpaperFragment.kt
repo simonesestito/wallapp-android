@@ -6,6 +6,7 @@
 package com.simonesestito.wallapp.ui.fragment
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -237,6 +238,9 @@ class WallpaperFragment : SharedElementsDestination() {
         if (requestCode == REQUEST_PREVIEW_OVERLAY_PERMISSION && requireContext().canDrawOverlays()) {
             // Overlay permission granted
             doPreview()
+        } else if (requestCode == REQUEST_READ_STORAGE_PERMISSION && resultCode == Activity.RESULT_OK) {
+            // User wants to grant storage permission
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_STORAGE_PERMISSION)
         }
     }
 

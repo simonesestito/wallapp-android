@@ -11,11 +11,13 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
+        <item name="colorOnSecondary">#fff</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="android:fontFamily">@font/montserrat</item>
         <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
         <item name="materialCardViewStyle">@style/AppTheme.CardView</item>
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheet.Dialog</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
     </style>
 
     <style name="Base.V21.AppTheme" parent="Base.AppTheme">
@@ -30,6 +32,16 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Overlay -->
+    <style name="AppTheme.Dialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/AppTheme.Dialog.ButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AppTheme.Dialog.ButtonStyle</item>
+    </style>
+
+    <style name="AppTheme.Dialog.ButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?colorAccent</item>
+    </style>
+
     <!-- BottomSheet theme -->
     <style name="Base.V21.AppTheme.BottomSheet.Dialog" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
@@ -41,7 +53,7 @@
         <item name="shapeAppearanceOverlay">@style/AppTheme.BottomSheet.ShapeOverlay</item>
     </style>
 
-    <style name="AppTheme.BottomSheet.ShapeOverlay">
+    <style name="AppTheme.BottomSheet.ShapeOverlay" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">@dimen/bottom_sheet_corner_radius</item>
         <item name="cornerSizeTopLeft">@dimen/bottom_sheet_corner_radius</item>

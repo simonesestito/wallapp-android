@@ -18,6 +18,8 @@ import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.utils.isSetLiveWallpaper
 import com.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
@@ -44,7 +46,6 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
                     view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
                     updateProgress(PROGRESS_INDETERMINATE)
                 }
-                DownloadStatus.Cancelled -> tryDismiss()
                 DownloadStatus.Success -> {
                     tryDismiss()
                     startPreviewMode()
@@ -56,7 +57,9 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
         updateProgress(PROGRESS_INDETERMINATE)
         view.wallpaperDownloadText.setText(R.string.wallpaper_preview_state_backup)
 
-        viewModel.applyPreviewWallpaper(requireContext(), wallpaperArg)
+        CoroutineScope(coroutineContext).launch {
+            viewModel.applyPreviewWallpaper(requireContext(), wallpaperArg)
+        }
     }
 
     private fun startPreviewMode() {
