@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.google.android.material.appbar.AppBarLayout
-import com.google.firebase.auth.FirebaseAuth
 import com.simonesestito.wallapp.NavGraphDirections
 import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
 import com.simonesestito.wallapp.R
@@ -35,10 +34,6 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         resources.getDimension(R.dimen.scroll_appbar_elevation)
     }
 
-    private val firebaseAuth by lazy {
-        FirebaseAuth.getInstance()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -46,10 +41,6 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
 
         // Set custom toolbar
         setSupportActionBar(findViewById(R.id.appToolbar))
-
-        firebaseAuth.signInAnonymously().addOnCompleteListener {
-            Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
-        }
 
         if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
             // Show first launch activity
