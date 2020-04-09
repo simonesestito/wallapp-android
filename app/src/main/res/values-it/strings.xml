@@ -16,7 +16,7 @@
     <string name="wallpaper_setup_status_downloading">Scaricamento dello sfondo scelto in corso…</string>
     <string name="wallpaper_setup_status_success">Sfondo applicato!</string>
     <string name="wallpaper_setup_status_failed">Si è verificato un errore. Riprova piú tardi</string>
-    <string name="wallpaper_setup_status_finalizing">Applicazione dello sfondo in corso…</string>
+    <string name="wallpaper_setup_status_finalizing">Perfezionando il tuo sfondo…</string>
     <string name="preview_mode_title">Modalità anteprima</string>
     <string name="permission_request_dialog_title">Permesso necessario</string>
     <string name="permission_request_positive_button">Concedi</string>
