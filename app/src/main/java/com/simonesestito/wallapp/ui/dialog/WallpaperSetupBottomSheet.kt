@@ -110,7 +110,7 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
 
         // Start downloading the wallpaper
         CoroutineScope(coroutineContext).launch {
-            viewModel.downloadToGallery(wallpaperArg, getSuggestedWallpaperFormat(
+            viewModel.downloadToGallery(requireContext(), wallpaperArg, getSuggestedWallpaperFormat(
                     requireContext().resources.displayMetrics
             ))
         }

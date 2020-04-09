@@ -124,13 +124,14 @@ class WallpaperSetupViewModel @Inject constructor(
     val storagePermissions = storageDownloadService.requiredPermissions
 
     @Throws(SecurityException::class)
-    suspend fun downloadToGallery(wallpaper: Wallpaper, @WallpaperFormat format: String) {
+    suspend fun downloadToGallery(context: Context, wallpaper: Wallpaper, @WallpaperFormat format: String) {
         val extension = format.split('.').last()
 
         try {
             mutableDownloadStatus.postValue(DownloadStatus.Progressing(0))
 
             storageDownloadService.downloadToStorage(
+                    context,
                     wallpaper.getStorageFileUrl(format),
                     "${wallpaper.categoryId}_${wallpaper.id}.$extension") {
                 mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))

@@ -5,6 +5,8 @@
 
 package com.simonesestito.wallapp.backend.storage
 
+import android.content.Context
+
 /**
  * Download a file from a URL to external storage (/sdcard).
  * It downloads a file in WallApp relative subdir of Pictures system directory.
@@ -17,5 +19,5 @@ package com.simonesestito.wallapp.backend.storage
  */
 interface IStorageDownloadService {
     val requiredPermissions: Array<String>
-    suspend fun downloadToStorage(url: String, filename: String, progress: (Int) -> Unit)
+    suspend fun downloadToStorage(context: Context, url: String, filename: String, progress: (Int) -> Unit)
 }
