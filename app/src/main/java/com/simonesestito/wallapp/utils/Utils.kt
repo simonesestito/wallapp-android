@@ -8,6 +8,7 @@ package com.simonesestito.wallapp.utils
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
@@ -329,3 +330,17 @@ inline fun View.setOnApplyWindowInsetsListenerOnce(crossinline listener: (View, 
         return@setOnApplyWindowInsetsListener insets
     }
 }
+
+/**
+ * Detect if the current device is running MIUI
+ */
+fun Context.isPlatformMIUI() = arrayOf(
+        Intent("miui.intent.action.OP_AUTO_START")
+                .addCategory(Intent.CATEGORY_DEFAULT),
+        Intent()
+                .setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+        Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST")
+                .addCategory(Intent.CATEGORY_DEFAULT),
+        Intent()
+                .setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))
+).any { packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null }
