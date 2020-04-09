@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
 import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 
-@Database(entities = [SeenWallpapersCount::class], version = 1)
+@Database(entities = [SeenWallpapersCount::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun seenWallpapersCountDao(): SeenWallpapersCountDao
 }
