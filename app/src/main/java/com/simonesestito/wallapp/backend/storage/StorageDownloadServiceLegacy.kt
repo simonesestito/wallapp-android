@@ -8,6 +8,7 @@ package com.simonesestito.wallapp.backend.storage
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.ContentValues
+import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -30,7 +31,7 @@ class StorageDownloadServiceLegacy(private val downloadService: DownloadService)
     : IStorageDownloadService {
 
     @Throws(SecurityException::class)
-    override suspend fun downloadToStorage(url: String, filename: String, progress: (Int) -> Unit) {
+    override suspend fun downloadToStorage(context: Context, url: String, filename: String, progress: (Int) -> Unit) {
         val file = createStorageFile(filename)
         downloadService.downloadToFile(url, file, progress)
         if (coroutineContext.isActive)
