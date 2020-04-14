@@ -6,12 +6,12 @@
 package com.simonesestito.wallapp.ui.view
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Rect
+import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.use
 import androidx.core.view.children
@@ -25,34 +25,32 @@ import com.simonesestito.wallapp.R
 class ColoredCardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
-    private var currentWidth = 0
-    private var coverPalette: Palette? = null
-        set(value) {
-            field = value
-            invalidate()
-        }
+    @ColorInt
+    private val colorSurface: Int
 
-    private var coverImageHeight: Int = 0
-        set(value) {
-            field = value
-            invalidate()
-        }
-
+    // --- onDraw necessary objects
+    private val srcImageRect = Rect()
+    private val destImageRect = Rect()
+    private val fullViewRect = Rect()
+    private val coverGradientPaint = Paint()
     var coverImage: Bitmap? = null
         set(value) {
             field = value
-            calculateCoverPalette(value)
-            invalidate()
+            onCoverImageChanged(value)
         }
 
     init {
+        // Get styleable attributes
         context.theme
                 .obtainStyledAttributes(attrs, R.styleable.ColoredCardView, 0, 0)
                 .use {
-                    coverImageHeight = it.getDimensionPixelSize(
-                            R.styleable.ColoredCardView_coverImageHeight,
-                            0)
+                    destImageRect.bottom = it.getDimensionPixelSize(R.styleable.ColoredCardView_coverImageHeight, 0)
                 }
+
+        // Get theme attributes
+        val themeAttr = TypedValue()
+        context.theme.resolveAttribute(R.attr.colorSurface, themeAttr, true)
+        colorSurface = themeAttr.data
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -63,7 +61,7 @@ class ColoredCardView @JvmOverloads constructor(
 
         // Add image height to measured dimensions
         setMeasuredDimension(measuredWidth, View.resolveSize(
-                coverImageHeight + MeasureSpec.getSize(measuredHeight), heightMeasureSpec
+                destImageRect.height() + MeasureSpec.getSize(measuredHeight), heightMeasureSpec
         ))
     }
 
@@ -75,21 +73,34 @@ class ColoredCardView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        currentWidth = w
+        // Update rectangles
+        destImageRect.right = w
+        fullViewRect.right = w
+        fullViewRect.bottom = h
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (coverImage != null /* TODO && coverPalette != null */) {
+        if (coverImage != null && coverGradientPaint.shader != null) {
             // Draw background image first
-            drawBackgroundImage(coverImage!!, canvas)
-            // TODO drawGradientPalette(coverPalette!!, canvas)
+            canvas.drawBitmap(coverImage!!, srcImageRect, destImageRect, null)
+            canvas.drawRect(fullViewRect, coverGradientPaint)
         }
 
         // Continue drawing as usual
         super.onDraw(canvas)
     }
 
-    private fun drawBackgroundImage(bitmap: Bitmap, canvas: Canvas) {
+    private fun onCoverImageChanged(bitmap: Bitmap?) {
+        if (bitmap == null) {
+            invalidate()
+            return
+        }
+
+        updateSrcImageRect(bitmap)
+        updateCoverGradient(bitmap)
+    }
+
+    private fun updateSrcImageRect(bitmap: Bitmap) {
         // Get image dimensions
         val imageWidth = bitmap.width
         val imageHeight = bitmap.height
@@ -98,32 +109,51 @@ class ColoredCardView @JvmOverloads constructor(
         // Assume the image is horizontal as the layout
         // The width is the same as image width
         // Calculate the height with a simple proportion
-        // imageWidth : srcHeight = currentWidth : coverImageHeight
-        val srcHeight = imageWidth * coverImageHeight / currentWidth
+        // imageWidth : srcHeight = dest width : dest height
+        val srcHeight = imageWidth * destImageRect.height() / destImageRect.width()
 
         // Calculate the amount of pixels not drawn on each side (top and bottom)
         val imageBorder = (imageHeight - srcHeight) / 2
 
-        // Calculate the coordinates of the image rect to draw
-        val srcBottom = imageBorder + srcHeight
-        val srcRect = Rect(0, imageBorder, imageWidth, srcBottom)
-
-        // Determine where to draw the selected image area
-        val destRect = Rect(0, 0, currentWidth, coverImageHeight)
-
-        canvas.drawBitmap(bitmap, srcRect, destRect, null)
-    }
-
-    private fun calculateCoverPalette(bitmap: Bitmap?) {
-        if (bitmap == null) {
-            coverPalette = null
-            return
+        // Update src rect
+        srcImageRect.apply {
+            left = 0
+            top = imageBorder
+            right = imageWidth
+            bottom = imageBorder + srcHeight
         }
-
-        // TODO
     }
 
-    private fun drawGradientPalette(palette: Palette, canvas: Canvas) {
-        // TODO
+    private fun updateCoverGradient(bitmap: Bitmap) {
+        coverGradientPaint.shader = null
+
+        Palette.from(bitmap).generate {
+            val primaryColor = it?.getDominantColor(colorSurface) ?: colorSurface
+
+            // TODO
+            //  Light/dark color check
+            //  If color is light and theme is dark, or viceversa,
+            //  change color brightness
+
+            val child = children.first()
+            val childHeight = if (child.height > 0) child.height else child.measuredHeight
+
+            val fadeHeight = childHeight * 0.75f
+            val halfFadeHeight = fadeHeight / 2
+            val transparentHeight = destImageRect.height() - halfFadeHeight
+            val startSolid = transparentHeight + fadeHeight
+
+            val coverGradient = LinearGradient(
+                    0f, 0f, 0f, destImageRect.height().toFloat(),
+                    intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, primaryColor, primaryColor),
+                    floatArrayOf(0f, 0f, transparentHeight, startSolid),
+                    Shader.TileMode.CLAMP
+            )
+
+            coverGradientPaint.isDither = true
+            coverGradientPaint.shader = coverGradient
+
+            invalidate()
+        }
     }
 }
