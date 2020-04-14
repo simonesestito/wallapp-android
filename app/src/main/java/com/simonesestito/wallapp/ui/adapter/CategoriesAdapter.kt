@@ -14,6 +14,8 @@ import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.ui.view.ColoredCardView
+import com.simonesestito.wallapp.utils.localized
+import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -34,27 +36,26 @@ class CategoriesAdapter @Inject constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesVH {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.categories_recycler_item, parent, false)
-        return CategoriesVH(view)
+        return CategoriesVH(view as ColoredCardView)
     }
 
     override fun onBindViewHolder(holder: CategoriesVH, position: Int) {
         val category = data[position]
 
         holder.apply {
-            //val resources = itemView.resources
-//
-            //nameView.text = category.data.displayName.localized
-            //descriptionView.text = category.data.description.localized
-//
-            //wallpapersCount.text = resources.getString(
-            //        R.string.category_wallpapers_count_prefix,
-            //        category.data.wallpapersCount)
-            //setUnseenCount(category.unseenCount)
-//
+            val resources = itemView.resources
+            nameView.text = category.data.displayName.localized
+            descriptionView.text = category.data.description.localized
+
+            wallpapersCount.text = resources.getString(
+                    R.string.category_wallpapers_count_prefix,
+                    category.data.wallpapersCount)
+            setUnseenCount(category.unseenCount)
+
             coroutineScope.launch {
                 try {
                     val bitmap = categoryRepository.loadCover(category, holder.itemView)
-                    (holder.itemView as ColoredCardView).coverImage = bitmap
+                    holder.cardItem.coverImage = bitmap
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -73,20 +74,19 @@ class CategoriesAdapter @Inject constructor(
     }
 }
 
-class CategoriesVH(item: View) : RecyclerView.ViewHolder(item) {
-    //val nameView = itemView.categoryItemName!!
-    //val descriptionView = itemView.categoryItemDescription!!
-    //val wallpapersCount = itemView.categoryItemWallpapersCount!!
-    //val coverView = itemView.categoryItemCoverImage!!
-//
-    //fun setUnseenCount(count: Int) {
-    //    if (count <= 0) {
-    //        itemView.unseenCount.visibility = View.INVISIBLE
-    //    } else {
-    //        itemView.unseenCount.apply {
-    //            visibility = View.VISIBLE
-    //            text = count.toString()
-    //        }
-    //    }
-    //}
+class CategoriesVH(val cardItem: ColoredCardView) : RecyclerView.ViewHolder(cardItem) {
+    val nameView = itemView.categoryItemName!!
+    val descriptionView = itemView.categoryItemDescription!!
+    val wallpapersCount = itemView.categoryItemWallpapersCount!!
+
+    fun setUnseenCount(count: Int) {
+        if (count <= 0) {
+            itemView.unseenCount.visibility = View.INVISIBLE
+        } else {
+            itemView.unseenCount.apply {
+                visibility = View.VISIBLE
+                text = count.toString()
+            }
+        }
+    }
 }
