@@ -21,6 +21,4 @@
     <dimen name="wallpaper_list_horizontal_padding">@dimen/margin_separator_small</dimen>
     <dimen name="horizontal_progress_bar_width">160dp</dimen>
     <dimen name="app_bar_height">56dp</dimen>
-    <dimen name="category_card_item_height">100dp</dimen>
-    <dimen name="category_card_image_bottom_padding">60dp</dimen> <!-- 25% -->
 </resources>

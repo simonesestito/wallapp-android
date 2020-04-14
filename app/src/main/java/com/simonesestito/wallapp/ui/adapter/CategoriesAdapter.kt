@@ -53,9 +53,7 @@ class CategoriesAdapter @Inject constructor(
 //
             coroutineScope.launch {
                 try {
-                    Log.e("Adapter", "Bitmap loading")
                     val bitmap = categoryRepository.loadCover(category, holder.itemView)
-                    Log.e("Adapter", "Bitmap loaded")
                     (holder.itemView as ColoredCardView).coverImage = bitmap
                 } catch (e: Exception) {
                     e.printStackTrace()

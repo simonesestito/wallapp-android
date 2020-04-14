@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import androidx.cardview.widget.CardView
+import androidx.core.content.res.use
 import androidx.core.view.children
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.R
@@ -24,19 +25,34 @@ import com.simonesestito.wallapp.R
 class ColoredCardView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
-    private val coverImageHeight: Int
     private var currentWidth = 0
     private var coverPalette: Palette? = null
-
-    var coverImage: Bitmap? = null
         set(value) {
             field = value
             invalidate()
         }
 
+    private var coverImageHeight: Int = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    var coverImage: Bitmap? = null
+        set(value) {
+            field = value
+            calculateCoverPalette(value)
+            invalidate()
+        }
+
     init {
-        // TODO: use view attributes
-        coverImageHeight = context.resources.getDimensionPixelSize(R.dimen.category_card_item_height)
+        context.theme
+                .obtainStyledAttributes(attrs, R.styleable.ColoredCardView, 0, 0)
+                .use {
+                    coverImageHeight = it.getDimensionPixelSize(
+                            R.styleable.ColoredCardView_coverImageHeight,
+                            0)
+                }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -63,10 +79,10 @@ class ColoredCardView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (coverImage != null /* && coverPalette != null */) {
+        if (coverImage != null /* TODO && coverPalette != null */) {
             // Draw background image first
             drawBackgroundImage(coverImage!!, canvas)
-            //drawGradientPalette(coverPalette!!, canvas)
+            // TODO drawGradientPalette(coverPalette!!, canvas)
         }
 
         // Continue drawing as usual
@@ -96,6 +112,15 @@ class ColoredCardView @JvmOverloads constructor(
         val destRect = Rect(0, 0, currentWidth, coverImageHeight)
 
         canvas.drawBitmap(bitmap, srcRect, destRect, null)
+    }
+
+    private fun calculateCoverPalette(bitmap: Bitmap?) {
+        if (bitmap == null) {
+            coverPalette = null
+            return
+        }
+
+        // TODO
     }
 
     private fun drawGradientPalette(palette: Palette, canvas: Canvas) {

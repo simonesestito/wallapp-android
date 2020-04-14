@@ -9,20 +9,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Wrap ImageView inside FrameLayout to call setForeground() on API < 23 -->
-    <FrameLayout
-        android:id="@+id/categoryItemCoverImageContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/categoryItemCoverImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/category_card_image_bottom_padding"
-            android:scaleType="centerCrop" />
-    </FrameLayout>
-
     <TextView
         android:id="@+id/categoryItemName"
         android:layout_width="match_parent"
