@@ -9,12 +9,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.ui.view.ColoredCardView
 import com.simonesestito.wallapp.utils.localized
+import com.simonesestito.wallapp.utils.suspendGenerate
 import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +31,8 @@ import javax.inject.Inject
  * List of categories is always given by the fragment using this Adapter
  */
 class CategoriesAdapter @Inject constructor(
-        private val categoryRepository: CategoryRepository
+        private val categoryRepository: CategoryRepository,
+        private val paletteCache: PaletteCache
 ) : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -55,7 +59,11 @@ class CategoriesAdapter @Inject constructor(
             coroutineScope.launch {
                 try {
                     val bitmap = categoryRepository.loadCover(category, holder.itemView)
-                    holder.cardItem.coverImage = bitmap
+                    val palette = paletteCache[category] ?: Palette.from(bitmap)
+                            .suspendGenerate()
+                            .also { paletteCache[category] = it }
+                    val color = palette.getDominantColor(0)
+                    holder.cardItem.updateCoverImage(bitmap, color)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

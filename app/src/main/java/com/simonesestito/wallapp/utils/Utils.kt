@@ -31,6 +31,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
@@ -42,6 +43,8 @@ import com.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 typealias LocalizedString = Map<String, Any>
 
@@ -344,3 +347,10 @@ fun Context.isPlatformMIUI() = arrayOf(
         Intent()
                 .setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))
 ).any { packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null }
+
+/**
+ * Generate a palette in a suspend function
+ */
+suspend fun Palette.Builder.suspendGenerate(): Palette = suspendCoroutine {
+    this.generate { palette -> it.resume(palette!!) }
+}

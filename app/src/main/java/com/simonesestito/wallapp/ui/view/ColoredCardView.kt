@@ -11,11 +11,12 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Transformation
 import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.use
 import androidx.core.view.children
-import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.R
 
 /**
@@ -28,16 +29,33 @@ class ColoredCardView @JvmOverloads constructor(
     @ColorInt
     private val colorSurface: Int
 
+    @ColorInt
+    private var imageColor: Int = Color.BLUE
+
     // --- onDraw necessary objects
+    // Image rectangles
     private val srcImageRect = Rect()
     private val destImageRect = Rect()
+
+    // Entire view rectangle
     private val fullViewRect = Rect()
+
+    // Gradient rectangles
+    private val coverGradientRect = RectF()
+    private val solidBackgroundRect = RectF()
+
+    // Gradient Paint objects
     private val coverGradientPaint = Paint()
-    var coverImage: Bitmap? = null
-        set(value) {
-            field = value
-            onCoverImageChanged(value)
-        }
+    private val solidBackgroundPaint = Paint()
+
+    // Fade animation objects
+    private val fadeAnimationDuration: Int
+    private val fadeTransformation = Transformation()
+    private val fadeAnimation = AlphaAnimation(0f, 1f)
+
+    // Cover image
+    private var coverImage: Bitmap? = null
+    private val coverImagePaint = Paint()
 
     init {
         // Get styleable attributes
@@ -51,6 +69,12 @@ class ColoredCardView @JvmOverloads constructor(
         val themeAttr = TypedValue()
         context.theme.resolveAttribute(R.attr.colorSurface, themeAttr, true)
         colorSurface = themeAttr.data
+
+        // Get other resources
+        fadeAnimationDuration = context.resources.getInteger(android.R.integer.config_shortAnimTime)
+
+        // Init animation objects
+        fadeAnimation.duration = fadeAnimationDuration.toLong()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -74,33 +98,56 @@ class ColoredCardView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         // Update rectangles
-        destImageRect.right = w
         fullViewRect.right = w
         fullViewRect.bottom = h
+
+        // Recalculate dimensions
+        updateCoverImage(coverImage, imageColor)
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (coverImage != null && coverGradientPaint.shader != null) {
+        if (coverImage != null && imageColor != 0) {
+            // Apply fade animation
+            fadeAnimation.getTransformation(System.currentTimeMillis(), fadeTransformation)
+            coverImagePaint.alpha = (fadeTransformation.alpha * 255).toInt()
+
+            if (alpha < 255) {
+                postInvalidateDelayed(16)
+            }
+
             // Draw background image first
-            canvas.drawBitmap(coverImage!!, srcImageRect, destImageRect, null)
-            canvas.drawRect(fullViewRect, coverGradientPaint)
+            canvas.drawBitmap(coverImage!!, srcImageRect, destImageRect, coverImagePaint)
+            canvas.drawRect(coverGradientRect, coverGradientPaint)
+            canvas.drawRect(solidBackgroundRect, solidBackgroundPaint)
         }
 
         // Continue drawing as usual
         super.onDraw(canvas)
     }
 
-    private fun onCoverImageChanged(bitmap: Bitmap?) {
-        if (bitmap == null) {
-            invalidate()
-            return
+    fun updateCoverImage(bitmap: Bitmap?, @ColorInt color: Int) {
+        if (this.coverImage == null && bitmap != null) {
+            // Start fade in animation
+            fadeAnimation.start()
+            fadeAnimation.startTime = System.currentTimeMillis()
         }
 
-        updateSrcImageRect(bitmap)
-        updateCoverGradient(bitmap)
+        this.coverImage = bitmap
+
+        if (bitmap != null) {
+            updateSrcImageRect(bitmap)
+            updateCoverGradient(color)
+        }
+
+        invalidate()
     }
 
     private fun updateSrcImageRect(bitmap: Bitmap) {
+        destImageRect.right = fullViewRect.right
+
+        if (destImageRect.right == 0)
+            return
+
         // Get image dimensions
         val imageWidth = bitmap.width
         val imageHeight = bitmap.height
@@ -124,36 +171,49 @@ class ColoredCardView @JvmOverloads constructor(
         }
     }
 
-    private fun updateCoverGradient(bitmap: Bitmap) {
+    private fun updateCoverGradient(@ColorInt imageColor: Int) {
+        this.imageColor =
+                if (imageColor != Color.TRANSPARENT)
+                    imageColor
+                else
+                    colorSurface
+
+        // Update rectangles
+        val viewWidth = fullViewRect.right.toFloat()
+        val viewHeight = fullViewRect.bottom.toFloat()
+
+        val gradientEnd = destImageRect.bottom.toFloat()
+        val gradientStart = gradientEnd * 0.8f
+
+        coverGradientRect.apply {
+            top = gradientStart
+            bottom = gradientEnd
+            left = 0f
+            right = viewWidth
+        }
+
+        solidBackgroundRect.apply {
+            top = gradientEnd
+            bottom = viewHeight
+            left = 0f
+            right = viewWidth
+        }
+
+        // Remove existing shader
         coverGradientPaint.shader = null
 
-        Palette.from(bitmap).generate {
-            val primaryColor = it?.getDominantColor(colorSurface) ?: colorSurface
+        // Update paint objects
+        coverGradientPaint.apply {
+            isDither = true
+            shader = LinearGradient(
+                    0f, gradientStart, 0f, gradientEnd,
+                    Color.TRANSPARENT, imageColor,
+                    Shader.TileMode.CLAMP)
+        }
 
-            // TODO
-            //  Light/dark color check
-            //  If color is light and theme is dark, or viceversa,
-            //  change color brightness
-
-            val child = children.first()
-            val childHeight = if (child.height > 0) child.height else child.measuredHeight
-
-            val fadeHeight = childHeight * 0.75f
-            val halfFadeHeight = fadeHeight / 2
-            val transparentHeight = destImageRect.height() - halfFadeHeight
-            val startSolid = transparentHeight + fadeHeight
-
-            val coverGradient = LinearGradient(
-                    0f, 0f, 0f, destImageRect.height().toFloat(),
-                    intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, primaryColor, primaryColor),
-                    floatArrayOf(0f, 0f, transparentHeight, startSolid),
-                    Shader.TileMode.CLAMP
-            )
-
-            coverGradientPaint.isDither = true
-            coverGradientPaint.shader = coverGradient
-
-            invalidate()
+        solidBackgroundPaint.apply {
+            style = Paint.Style.FILL
+            color = imageColor
         }
     }
 }
