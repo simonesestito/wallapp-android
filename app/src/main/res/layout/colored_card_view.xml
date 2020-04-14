@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of WallApp for Android.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Wrap ImageView inside FrameLayout to call setForeground() on API < 23 -->
+    <FrameLayout
+        android:id="@+id/categoryItemCoverImageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/categoryItemCoverImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/category_card_image_bottom_padding"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/categoryItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_separator_small"
+        android:maxLines="1"
+        android:textAppearance="@style/AppTheme.Text.Title"
+        app:layout_constraintBottom_toTopOf="@id/categoryItemDescription"
+        tools:layout_editor_absoluteX="8dp"
+        tools:text="Best wallpapers" />
+
+    <TextView
+        android:id="@+id/categoryItemDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_separator_small"
+        android:maxLines="2"
+        android:textAppearance="@style/AppTheme.Text.Standard"
+        app:layout_constraintBottom_toTopOf="@+id/unseenCount"
+        tools:layout_editor_absoluteX="8dp"
+        tools:text="Here you can find only the best wallpapers ever!" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/categoryItemWallpapersCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_separator_small"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:textAllCaps="true"
+        android:textAppearance="@style/AppTheme.Text.Standard"
+        android:textColor="?colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categoryItemDescription"
+        tools:text="5 wallpapers" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/unseenCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_separator_small"
+        android:background="@drawable/circle"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="2"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

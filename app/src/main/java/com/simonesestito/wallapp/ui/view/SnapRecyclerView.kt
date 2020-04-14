@@ -1,9 +1,9 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
-package com.simonesestito.wallapp.ui
+package com.simonesestito.wallapp.ui.view
 
 import android.content.Context
 import android.util.AttributeSet

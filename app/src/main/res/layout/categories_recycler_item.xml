@@ -3,77 +3,16 @@
   ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.simonesestito.wallapp.ui.view.ColoredCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginBottom="@dimen/activity_content_margin">
+    android:layout_marginVertical="@dimen/margin_separator_small">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/dark_gray"
+        android:padding="8dp"
+        android:text="Example text" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/categoryItemCoverImage"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Block with card content padding -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/card_content_padding">
-
-            <TextView
-                android:id="@+id/categoryItemName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textAppearance="@style/AppTheme.Text.Title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/categoryItemDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:paddingBottom="8dp"
-                android:textAppearance="@style/AppTheme.Text.Standard"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/categoryItemName" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/categoryItemWallpapersCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                tools:text="5 wallpapers"
-                android:textAppearance="@style/AppTheme.Text.Standard"
-                android:textColor="?colorAccent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/categoryItemDescription" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/unseenCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_separator_normal"
-                android:background="@drawable/circle"
-                android:gravity="center"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@id/categoryItemWallpapersCount"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/categoryItemWallpapersCount" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.cardview.widget.CardView>
+</com.simonesestito.wallapp.ui.view.ColoredCardView>
