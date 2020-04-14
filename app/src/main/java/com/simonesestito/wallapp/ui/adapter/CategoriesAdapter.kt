@@ -62,8 +62,7 @@ class CategoriesAdapter @Inject constructor(
                     val palette = paletteCache[category] ?: Palette.from(bitmap)
                             .suspendGenerate()
                             .also { paletteCache[category] = it }
-                    val color = palette.getDominantColor(0)
-                    holder.cardItem.updateCoverImage(bitmap, color)
+                    holder.cardItem.updateCoverImage(bitmap, palette)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

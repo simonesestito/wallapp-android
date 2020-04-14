@@ -9,6 +9,7 @@ import android.app.Activity
 import android.app.WallpaperManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
@@ -18,6 +19,7 @@ import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -354,3 +356,8 @@ fun Context.isPlatformMIUI() = arrayOf(
 suspend fun Palette.Builder.suspendGenerate(): Palette = suspendCoroutine {
     this.generate { palette -> it.resume(palette!!) }
 }
+
+fun Context.isDarkTheme() = resources
+        .configuration
+        .uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES ||
+        AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES

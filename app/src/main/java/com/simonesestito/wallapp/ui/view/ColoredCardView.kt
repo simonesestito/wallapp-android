@@ -16,8 +16,12 @@ import android.view.animation.Transformation
 import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.use
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.children
+import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.utils.isDarkTheme
+import com.simonesestito.wallapp.utils.isLightColor
 
 /**
  * A [androidx.cardview.widget.CardView] with a background image.
@@ -125,7 +129,38 @@ class ColoredCardView @JvmOverloads constructor(
         super.onDraw(canvas)
     }
 
-    fun updateCoverImage(bitmap: Bitmap?, @ColorInt color: Int) {
+    fun updateCoverImage(bitmap: Bitmap?, palette: Palette?) {
+        if (palette == null)
+            return updateCoverImage(bitmap)
+
+        val isDarkTheme = context.isDarkTheme()
+        val dominantColor = palette.getDominantColor(0)
+        val lightDarkMutedColor = if (isDarkTheme) {
+            palette.getDarkMutedColor(0)
+        } else {
+            palette.getLightMutedColor(0)
+        }
+
+        if (dominantColor.isLightColor() != isDarkTheme) {
+            // Best color!
+            return updateCoverImage(bitmap, dominantColor)
+        }
+
+        // Try muted color
+        if (lightDarkMutedColor != 0) {
+            return updateCoverImage(bitmap, lightDarkMutedColor)
+        }
+
+        // Try dominant color anyway
+        if (dominantColor != 0) {
+            return updateCoverImage(bitmap, dominantColor)
+        }
+
+        // No color found
+        updateCoverImage(bitmap)
+    }
+
+    private fun updateCoverImage(bitmap: Bitmap?, @ColorInt color: Int = colorSurface) {
         if (this.coverImage == null && bitmap != null) {
             // Start fade in animation
             fadeAnimation.start()
@@ -171,12 +206,8 @@ class ColoredCardView @JvmOverloads constructor(
         }
     }
 
-    private fun updateCoverGradient(@ColorInt imageColor: Int) {
-        this.imageColor =
-                if (imageColor != Color.TRANSPARENT)
-                    imageColor
-                else
-                    colorSurface
+    private fun updateCoverGradient(@ColorInt givenColor: Int) {
+        this.imageColor = adjustImageColor(givenColor)
 
         // Update rectangles
         val viewWidth = fullViewRect.right.toFloat()
@@ -215,5 +246,22 @@ class ColoredCardView @JvmOverloads constructor(
             style = Paint.Style.FILL
             color = imageColor
         }
+    }
+
+    @ColorInt
+    private fun adjustImageColor(@ColorInt color: Int): Int {
+        // Fix white percentage according to the current theme
+        val hslColor = floatArrayOf(0f, 0f, 0f)
+        ColorUtils.colorToHSL(color, hslColor)
+        val isDarkTheme = context.isDarkTheme()
+        if (isDarkTheme == hslColor[2] >= 0.4) {
+            hslColor[1] *= 0.7f
+            if (isDarkTheme) {
+                hslColor[2] *= 0.7f
+            } else {
+                hslColor[2] *= 1.2f
+            }
+        }
+        return ColorUtils.HSLToColor(hslColor)
     }
 }
