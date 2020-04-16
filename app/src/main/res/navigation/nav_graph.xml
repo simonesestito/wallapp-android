@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.simonesestito.wallapp.ui.fragment.CategoriesListFragment"
+        android:name="com.simonesestito.wallapp.ui.fragment.CategoriesFragment"
         android:label="@string/app_name"
         tools:layout="@layout/categories_fragment">
         <action

@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
 import javax.inject.Inject
 
-class CategoriesListFragment : AbstractAppFragment() {
+class CategoriesFragment : AbstractAppFragment() {
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     @Inject
