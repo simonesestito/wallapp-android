@@ -7,8 +7,10 @@ package com.simonesestito.wallapp.backend.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.simonesestito.wallapp.Identifiable
 
+@Keep
 data class Category(
         val data: FirebaseCategory,
         val unseenCount: Int
