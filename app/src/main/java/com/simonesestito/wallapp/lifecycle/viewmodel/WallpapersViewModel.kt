@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.backend.repository.WallpaperRepository
+import com.simonesestito.wallapp.enums.CategoryGroup
+import com.simonesestito.wallapp.utils.map
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -18,8 +20,13 @@ import javax.inject.Inject
 class WallpapersViewModel @Inject constructor(private val categoryRepository: CategoryRepository,
                                               private val wallpaperRepository: WallpaperRepository)
     : ViewModel() {
-    val allCategories by lazy { categoryRepository.getCategories() }
+    private val allCategories by lazy { categoryRepository.getCategories() }
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    fun getCategoriesByGroup(@CategoryGroup group: String) =
+            allCategories.map { list ->
+                list.filter { category -> category.data.group == group }
+            }
 
     fun getWallpapersByCategoryId(categoryId: String) =
             wallpaperRepository.getWallpapersByCategoryId(categoryId)

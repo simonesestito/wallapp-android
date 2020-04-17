@@ -9,7 +9,7 @@ import com.simonesestito.wallapp.WallappApplication
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.di.module.*
 import com.simonesestito.wallapp.ui.dialog.AbstractWallpaperBottomSheet
-import com.simonesestito.wallapp.ui.fragment.CategoriesListFragment
+import com.simonesestito.wallapp.ui.fragment.ChildCategoriesFragment
 import com.simonesestito.wallapp.ui.fragment.SingleCategoryFragment
 import com.simonesestito.wallapp.ui.fragment.WallpaperFragment
 import dagger.Component
@@ -38,7 +38,7 @@ interface AppInjector {
         }
     }
 
-    fun inject(categoriesListFragment: CategoriesListFragment)
+    fun inject(categoriesFragment: ChildCategoriesFragment)
     fun inject(wallpaperFragment: WallpaperFragment)
     fun inject(singleCategoryFragment: SingleCategoryFragment)
     fun inject(bottomSheet: AbstractWallpaperBottomSheet)

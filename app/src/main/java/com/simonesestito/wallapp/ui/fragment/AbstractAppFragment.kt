@@ -15,37 +15,9 @@ private const val KEY_FRAGMENT_HIDDEN_APPBAR = "have_hidden_appbar"
 abstract class AbstractAppFragment : Fragment() {
     private var haveHiddenAppbar = false
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        hideAppbarElevation()
-        showAppbar()
-    }
-
-    protected fun adjustElevation(y: Int) {
-        if (y > 0) {
-            showAppbarElevation()
-        } else {
-            hideAppbarElevation()
-        }
-    }
-
-    protected fun hideAppbarElevation() {
-        val mainActivity = activity
-        if (mainActivity is ElevatingAppbar) {
-            mainActivity.hideAppbarElevation()
-        }
-    }
-
-    protected fun showAppbarElevation() {
-        val mainActivity = activity
-        if (mainActivity is ElevatingAppbar) {
-            mainActivity.showAppbarElevation()
-        }
-    }
-
-    protected fun hideAppbar() {
-        haveHiddenAppbar = true
-        (activity as AppCompatActivity?)?.supportActionBar?.hide()
+    override fun onStart() {
+        super.onStart()
+        findElevatingAppbar()?.hideAppbarElevation()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -62,10 +34,38 @@ abstract class AbstractAppFragment : Fragment() {
     /**
      * Show the appbar only if it has been hidden by this fragment, not another instance
      */
-    protected fun showAppbar() {
+    private fun showAppbar() {
         if (haveHiddenAppbar) {
             (activity as AppCompatActivity?)?.supportActionBar?.show()
             haveHiddenAppbar = false
         }
+    }
+
+    protected fun adjustElevation(y: Int) {
+        if (y > 0) {
+            findElevatingAppbar()?.showAppbarElevation()
+        } else {
+            findElevatingAppbar()?.hideAppbarElevation()
+        }
+    }
+
+    protected fun findElevatingAppbar(): ElevatingAppbar? {
+        var parent = parentFragment
+        while (parent != null) {
+            if (parent is ElevatingAppbar)
+                return parent
+            parent = parent.parentFragment
+        }
+
+        if (activity is ElevatingAppbar) {
+            return activity as ElevatingAppbar
+        }
+
+        return null
+    }
+
+    protected fun hideAppbar() {
+        haveHiddenAppbar = true
+        (activity as AppCompatActivity?)?.supportActionBar?.hide()
     }
 }

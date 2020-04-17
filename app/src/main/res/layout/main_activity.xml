@@ -9,6 +9,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     android:fitsSystemWindows="false"
     tools:context=".ui.activity.MainActivity">
 
@@ -22,17 +23,19 @@
         tools:ignore="FragmentTagUsage" />
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?colorSurface"
+        android:elevation="@dimen/scroll_appbar_elevation"
         android:fitsSystemWindows="true"
-        android:id="@+id/appBarLayout"
         app:layout_anchorGravity="top|center">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/appToolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/app_bar_height"
-            app:elevation="0dp" />
+            android:background="?colorSurface" />
     </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

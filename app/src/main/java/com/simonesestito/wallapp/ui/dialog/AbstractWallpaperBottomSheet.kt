@@ -156,8 +156,6 @@ abstract class AbstractWallpaperBottomSheet : BottomSheetDialogFragment(),
     }
 
     protected fun hideSetupLayout() {
-        hideDownloadLayout()
-        
         if (wallpaperSetup?.visibility != View.VISIBLE)
             return
 

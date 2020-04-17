@@ -51,7 +51,6 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@android:color/transparent"
-        android:tint="@android:color/white"
         android:layout_marginTop="16dp"
         app:layout_anchor="@+id/fake_content"
         app:layout_anchorGravity="left|top"

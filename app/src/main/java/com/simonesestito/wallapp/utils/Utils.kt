@@ -9,6 +9,7 @@ import android.app.Activity
 import android.app.WallpaperManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
@@ -18,6 +19,7 @@ import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -25,15 +27,20 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.simonesestito.wallapp.CHROME_PACKAGE_NAME
 import com.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import com.simonesestito.wallapp.R
@@ -42,6 +49,8 @@ import com.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 typealias LocalizedString = Map<String, Any>
 
@@ -344,3 +353,30 @@ fun Context.isPlatformMIUI() = arrayOf(
         Intent()
                 .setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))
 ).any { packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null }
+
+/**
+ * Generate a palette in a suspend function
+ */
+suspend fun Palette.Builder.suspendGenerate(): Palette = suspendCoroutine {
+    this.generate { palette -> it.resume(palette!!) }
+}
+
+fun Context.isDarkTheme() = resources
+        .configuration
+        .uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES ||
+        AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+
+fun TabLayout.setupWithViewPager(viewPager: ViewPager2, tabTitles: Array<String>) {
+    TabLayoutMediator(this, viewPager) { tab, position ->
+        tab.text = tabTitles[position]
+    }.attach()
+}
+
+fun View.addTopWindowInsetPadding() {
+    setOnApplyWindowInsetsListenerOnce { root, insets ->
+        root.updatePadding(
+                top = insets.systemWindowInsetTop + root.paddingTop,
+                bottom = insets.systemWindowInsetBottom
+        )
+    }
+}
