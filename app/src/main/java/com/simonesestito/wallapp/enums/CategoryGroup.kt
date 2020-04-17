@@ -16,3 +16,5 @@ annotation class CategoryGroup
 
 const val CATEGORY_GROUP_ORIGINAL = "original"
 const val CATEGORY_GROUP_COMMUNITY = "community"
+
+val ALL_CATEGORY_GROUPS = arrayOf(CATEGORY_GROUP_ORIGINAL, CATEGORY_GROUP_COMMUNITY)

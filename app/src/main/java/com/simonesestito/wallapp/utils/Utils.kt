@@ -27,6 +27,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -37,6 +38,9 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.simonesestito.wallapp.CHROME_PACKAGE_NAME
 import com.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import com.simonesestito.wallapp.R
@@ -361,3 +365,18 @@ fun Context.isDarkTheme() = resources
         .configuration
         .uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES ||
         AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+
+fun TabLayout.setupWithViewPager(viewPager: ViewPager2, tabTitles: Array<String>) {
+    TabLayoutMediator(this, viewPager) { tab, position ->
+        tab.text = tabTitles[position]
+    }.attach()
+}
+
+fun View.addTopWindowInsetPadding() {
+    setOnApplyWindowInsetsListenerOnce { root, insets ->
+        root.updatePadding(
+                top = insets.systemWindowInsetTop + root.paddingTop,
+                bottom = insets.systemWindowInsetBottom
+        )
+    }
+}

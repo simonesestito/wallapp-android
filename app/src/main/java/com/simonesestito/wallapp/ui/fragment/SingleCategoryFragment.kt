@@ -79,8 +79,8 @@ class SingleCategoryFragment : SharedElementsDestination() {
         setHasOptionsMenu(true)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         requireActivity().title = args.category.data.displayName.localized
     }
 

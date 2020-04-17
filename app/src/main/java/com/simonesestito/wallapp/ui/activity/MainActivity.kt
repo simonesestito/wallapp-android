@@ -23,16 +23,10 @@ import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
+import com.simonesestito.wallapp.utils.isDarkTheme
 
 
 class MainActivity : AppCompatActivity(), ElevatingAppbar {
-    private val defaultAppbarElevation by lazy {
-        resources.getDimension(R.dimen.default_appbar_elevation)
-    }
-    private val scrollAppbarElevation by lazy {
-        resources.getDimension(R.dimen.scroll_appbar_elevation)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -116,13 +110,21 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         supportActionBar?.title = title
     }
 
-    override fun showAppbarElevation() {
-        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = scrollAppbarElevation
-        findViewById<MaterialToolbar>(R.id.appToolbar)!!.elevation = scrollAppbarElevation
-    }
+    override fun showAppbarElevation() =
+            updateElevation(resources.getDimension(R.dimen.scroll_appbar_elevation))
 
-    override fun hideAppbarElevation() {
-        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = defaultAppbarElevation
-        findViewById<MaterialToolbar>(R.id.appToolbar)!!.elevation = defaultAppbarElevation
+    override fun hideAppbarElevation() =
+            updateElevation(resources.getDimension(R.dimen.default_appbar_elevation))
+
+    private fun updateElevation(elevation: Float) {
+        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = elevation
+        // Different behaviour based on the current theme
+        // In dark theme, elevation is made with different background color
+        // while in light theme, elevation uses the well-known Material shadows
+        //
+        // Applying a shadow on Toolbar in light theme would result in a duplicated shadow
+        if (isDarkTheme()) {
+            findViewById<MaterialToolbar>(R.id.appToolbar)!!.elevation = elevation
+        }
     }
 }

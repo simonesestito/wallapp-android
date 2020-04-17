@@ -9,108 +9,45 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.updatePadding
-import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
-import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
-import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
-import com.simonesestito.wallapp.utils.findNavController
-import com.simonesestito.wallapp.utils.getViewModel
-import com.simonesestito.wallapp.utils.onScrollListener
-import com.simonesestito.wallapp.utils.setOnApplyWindowInsetsListenerOnce
+import com.simonesestito.wallapp.enums.ALL_CATEGORY_GROUPS
+import com.simonesestito.wallapp.ui.ElevatingAppbar
+import com.simonesestito.wallapp.ui.adapter.ChildCategoriesFragmentAdapter
+import com.simonesestito.wallapp.utils.addTopWindowInsetPadding
+import com.simonesestito.wallapp.utils.isDarkTheme
+import com.simonesestito.wallapp.utils.setupWithViewPager
 import kotlinx.android.synthetic.main.categories_fragment.*
 import kotlinx.android.synthetic.main.categories_fragment.view.*
-import javax.inject.Inject
 
-class CategoriesFragment : AbstractAppFragment() {
-    @Inject
-    lateinit var viewModelFactory: AppViewModelFactory
-    @Inject
-    lateinit var categoriesAdapter: CategoriesAdapter
-
-    private val viewModel: WallpapersViewModel by lazy {
-        getViewModel<WallpapersViewModel>(viewModelFactory)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AppInjector.getInstance().inject(this)
-    }
-
+class CategoriesFragment : AbstractAppFragment(), ElevatingAppbar {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.categories_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Show loading spinner
-        view.categoriesLoadingBar.show()
-
-        // Set initial RecyclerView status, without any data
-        view.categoriesRecyclerView.adapter = categoriesAdapter
-        view.categoriesRecyclerView.layoutManager = LinearLayoutManager(context)
-        view.categoriesRecyclerView.setHasFixedSize(true)
-
-        categoriesAdapter.onItemClickListener = {
-            val direction = CategoriesListFragmentDirections.toCategory(it)
-            findNavController().navigate(direction)
-        }
-
-        view.categoriesRecyclerView.setOnApplyWindowInsetsListenerOnce { recyclerView, insets ->
-            recyclerView.updatePadding(
-                    bottom = insets.systemWindowInsets.bottom,
-                    top = insets.systemWindowInsetTop + recyclerView.paddingTop
-            )
-        }
-
-        view.categoriesRecyclerView.onScrollListener { recyclerView ->
-            val layoutManager = recyclerView.layoutManager
-            if (layoutManager == null || layoutManager !is LinearLayoutManager)
-                return@onScrollListener
-
-            // Find the first completely visible item
-            // If it's the first one, hide the elevation
-            // Else show it
-            // Show the elevation only if the RecyclerView is scrolled
-            val firstIndex = layoutManager.findFirstCompletelyVisibleItemPosition()
-            adjustElevation(firstIndex)
-        }
-
-        hideAppbarElevation()
+        view.categoriesFragmentRoot.addTopWindowInsetPadding()
+        view.categoriesGroupViewPager.adapter = ChildCategoriesFragmentAdapter(this)
+        view.categoriesTabLayout.setupWithViewPager(view.categoriesGroupViewPager, ALL_CATEGORY_GROUPS)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        loadCategoriesList()
+    override fun showAppbarElevation() {
+        // Different behaviour based on the current theme
+        // In dark theme, elevation is made with different background color
+        // while in light theme, elevation uses the well-known Material shadows
+        //
+        // Applying a shadow on Activity appbar in light theme would result in a duplicated shadow
+        if (requireContext().isDarkTheme()) {
+            findElevatingAppbar()?.showAppbarElevation()
+        } else {
+            findElevatingAppbar()?.hideAppbarElevation()
+        }
+
+        categoriesTabLayout.elevation = resources.getDimension(R.dimen.scroll_appbar_elevation)
     }
 
-    /**
-     * Load categories according to the current category group
-     */
-    private fun loadCategoriesList() {
-        viewModel.allCategories.observe(this) { list ->
-            // Hide loading spinner
-            categoriesLoadingBar.hide()
-
-            if (list.isNotEmpty()) {
-                // Update Adapter dataset
-                categoriesAdapter.updateDataSet(list)
-
-                // Hide Empty View
-                categoriesEmptyView.visibility = View.GONE
-
-                // Show RecyclerView
-                categoriesRecyclerView.visibility = View.VISIBLE
-            } else {
-                // Hide RecyclerView
-                categoriesRecyclerView.visibility = View.GONE
-
-                // Show Empty View
-                categoriesEmptyView.visibility = View.VISIBLE
-            }
-        }
+    override fun hideAppbarElevation() {
+        findElevatingAppbar()?.hideAppbarElevation()
+        categoriesTabLayout.elevation = resources.getDimension(R.dimen.default_appbar_elevation)
     }
 }
