@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,5 +14,11 @@
         android:id="@+id/wallpaperShare"
         android:icon="@drawable/ic_share_black_24dp"
         android:title="@string/wallpaper_action_share"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/wallpaperAuthorInfo"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/wallpaper_author_info"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

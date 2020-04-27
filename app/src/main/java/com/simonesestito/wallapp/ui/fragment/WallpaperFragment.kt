@@ -29,13 +29,15 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
 import androidx.core.view.updatePadding
+import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.model.Wallpaper
-import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
+import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
+import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
+import com.simonesestito.wallapp.ui.dialog.WallpaperInfoBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import com.simonesestito.wallapp.utils.*
@@ -48,41 +50,26 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperFragmentArgs.fromBundle(arguments ?: bundleOf())
     }
 
-    private val wallpaper: Wallpaper by lazy {
-        Wallpaper(args.wallpaperId, args.categoryId)
-    }
+    private lateinit var wallpaper: Wallpaper
 
     @Inject
-    lateinit var wallpaperRepository: WallpaperRepository
+    lateinit var viewModelFactory: AppViewModelFactory
+    private val viewModel by lazy {
+        getViewModel<WallpapersViewModel>(viewModelFactory)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AppInjector.getInstance().inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.wallpaper_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        wallpaperRepository.loadWallpaper(
-                wallpaper,
-                FORMAT_PREVIEW,
-                imageView = wallpaperImage,
-                useExactFormatSize = true,
-                onPaletteReady = { applyLayoutColor(it) }
-        )
-
         view.backButton.setOnClickListener {
             activity?.onBackPressed()
-        }
-
-        view.downloadFab.setOnClickListener {
-            openSetupBottomSheet()
-        }
-
-        view.bottomAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.wallpaperShare -> doShare()
-                R.id.wallpaperPreview -> doPreview()
-                else -> return@setOnMenuItemClickListener false
-            }
-            return@setOnMenuItemClickListener true
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
@@ -93,9 +80,42 @@ class WallpaperFragment : SharedElementsDestination() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AppInjector.getInstance().inject(this)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.getWallpaperById(args.categoryId, args.wallpaperId)
+                .observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        onWallpaperReady(it)
+                    }
+                }
+    }
+
+    private fun onWallpaperReady(wallpaper: Wallpaper) {
+        this.wallpaper = wallpaper
+
+        viewModel.loadWallpaperOn(wallpaper, wallpaperImage) {
+            applyLayoutColor(it)
+        }
+
+        downloadFab.setOnClickListener {
+            openSetupBottomSheet()
+        }
+
+        bottomAppBar.menu.findItem(R.id.wallpaperAuthorInfo).isVisible = arrayOf(
+                wallpaper.authorBio,
+                wallpaper.authorSocial,
+                wallpaper.authorName
+        ).any { it != null }
+
+        bottomAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.wallpaperShare -> doShare()
+                R.id.wallpaperPreview -> doPreview()
+                R.id.wallpaperAuthorInfo -> showAuthorInfo()
+                else -> return@setOnMenuItemClickListener false
+            }
+            return@setOnMenuItemClickListener true
+        }
     }
 
     override fun onStart() {
@@ -111,10 +131,6 @@ class WallpaperFragment : SharedElementsDestination() {
 
             // Show FAB manually since it won't be shown with animation
             downloadFab?.show()
-
-            // This fragment could be launched from URL
-            // Handle non existing wallpapers or wrong URL here
-            checkWallpaperExistence()
         }
     }
 
@@ -134,27 +150,11 @@ class WallpaperFragment : SharedElementsDestination() {
         }
     }
 
-    private fun checkWallpaperExistence() {
-        wallpaperRepository.getWallpaper(wallpaper.categoryId, wallpaper.id)
-                .observeOnce(this) {
-                    if (it == null) {
-                        // Error, this wallpaper doesn't exist
-                        handleNonExistingWallpaper()
-                    }
-                }
-    }
-
-    private fun handleNonExistingWallpaper() {
-        // Generate link from wallpaper details
-        val url = "$BASE_WEBAPP_URL/${wallpaper.categoryId}/${wallpaper.id}"
-        requireContext().openUrl(url, forceChrome = true)
-    }
-
     private fun openSetupBottomSheet() {
         WallpaperSetupBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
+                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
@@ -181,7 +181,7 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperPreviewBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
+                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
@@ -207,7 +207,7 @@ class WallpaperFragment : SharedElementsDestination() {
                 if (isVibrantLight) Color.DKGRAY else Color.WHITE
         )
 
-        // Set bottombar icons as vibrant (if dark) or dark gray
+        // Set bottom bar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
         bottomAppBar.menu?.forEach { it.icon.setColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP) }
     }
@@ -262,6 +262,12 @@ class WallpaperFragment : SharedElementsDestination() {
         }
 
         openPreviewBottomSheet()
+    }
+
+    private fun showAuthorInfo() {
+        WallpaperInfoBottomSheet().apply {
+            arguments = bundleOf(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper)
+        }.show(childFragmentManager, null)
     }
 
     //region SharedElements methods
