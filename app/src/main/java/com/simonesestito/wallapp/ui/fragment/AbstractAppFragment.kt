@@ -17,6 +17,7 @@ abstract class AbstractAppFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        showAppbar()
         findElevatingAppbar()?.hideAppbarElevation()
     }
 
@@ -29,16 +30,20 @@ abstract class AbstractAppFragment : Fragment() {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState ?: return
         haveHiddenAppbar = savedInstanceState.getInt(KEY_FRAGMENT_HIDDEN_APPBAR) == 1
+        if (haveHiddenAppbar)
+            hideAppbar()
+        else
+            showAppbar()
     }
 
-    /**
-     * Show the appbar only if it has been hidden by this fragment, not another instance
-     */
     private fun showAppbar() {
-        if (haveHiddenAppbar) {
-            (activity as AppCompatActivity?)?.supportActionBar?.show()
-            haveHiddenAppbar = false
-        }
+        (activity as? AppCompatActivity)?.supportActionBar?.show()
+        haveHiddenAppbar = false
+    }
+
+    protected fun hideAppbar() {
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+        haveHiddenAppbar = true
     }
 
     protected fun adjustElevation(y: Int) {
@@ -62,10 +67,5 @@ abstract class AbstractAppFragment : Fragment() {
         }
 
         return null
-    }
-
-    protected fun hideAppbar() {
-        haveHiddenAppbar = true
-        (activity as AppCompatActivity?)?.supportActionBar?.hide()
     }
 }
