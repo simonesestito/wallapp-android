@@ -37,6 +37,7 @@ import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
+import com.simonesestito.wallapp.ui.dialog.WallpaperInfoBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import com.simonesestito.wallapp.utils.*
@@ -100,10 +101,17 @@ class WallpaperFragment : SharedElementsDestination() {
             openSetupBottomSheet()
         }
 
+        bottomAppBar.menu.findItem(R.id.wallpaperAuthorInfo).isVisible = arrayOf(
+                wallpaper.authorBio,
+                wallpaper.authorSocial,
+                wallpaper.authorName
+        ).any { it != null }
+
         bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.wallpaperShare -> doShare()
                 R.id.wallpaperPreview -> doPreview()
+                R.id.wallpaperAuthorInfo -> showAuthorInfo()
                 else -> return@setOnMenuItemClickListener false
             }
             return@setOnMenuItemClickListener true
@@ -146,7 +154,7 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperSetupBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
+                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
@@ -173,7 +181,7 @@ class WallpaperFragment : SharedElementsDestination() {
         WallpaperPreviewBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
+                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
@@ -254,6 +262,12 @@ class WallpaperFragment : SharedElementsDestination() {
         }
 
         openPreviewBottomSheet()
+    }
+
+    private fun showAuthorInfo() {
+        WallpaperInfoBottomSheet().apply {
+            arguments = bundleOf(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper)
+        }.show(childFragmentManager, null)
     }
 
     //region SharedElements methods

@@ -18,6 +18,9 @@ const val KEY_DISPLAY_NAME = "displayName"
 const val KEY_DESCRIPTION = "description"
 const val KEY_CATEGORY_ITEMS_COUNT = "count"
 const val KEY_CATEGORY_GROUP = "group"
+const val KEY_WALL_AUTHOR_BIO = "authorBio"
+const val KEY_WALL_AUTHOR_SOCIAL = "authorSocial"
+const val KEY_WALL_AUTHOR_NAME = "authorName"
 const val FIRESTORE_LOCALIZED_DEFAULT = "default"
 
 const val SCALEWAY_BUCKET_URL = "https://wallapp-bucket.s3.fr-par.scw.cloud"
@@ -38,7 +41,7 @@ const val PREVIEW_SERVICE_NOTIFICATION_ID = 1
 const val PREVIEW_SERVICE_PENDING_INTENT_ID = 1
 const val PREVIEW_SERVICE_NOTIFICATION_CHANNEL = "preview_service"
 
-const val EXTRA_WALLPAPER_SETUP_PARCELABLE = "wallpaper_extra"
+const val EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE = "wallpaper_extra"
 const val EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE = "wallpaper_preview"
 const val EXTRA_WALLPAPER_PREVIEW_RESULT = "preview_result_extra"
 

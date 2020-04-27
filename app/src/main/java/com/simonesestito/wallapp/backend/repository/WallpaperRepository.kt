@@ -40,7 +40,13 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
                 .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
 
         return FirestoreLiveCollection(ref).mapList {
-            Wallpaper(it.id, categoryId)
+            Wallpaper(
+                    it.id,
+                    categoryId,
+                    it.get(KEY_WALL_AUTHOR_BIO)?.toString(),
+                    it.get(KEY_WALL_AUTHOR_NAME)?.toString(),
+                    it.get(KEY_WALL_AUTHOR_SOCIAL)?.toString()
+            )
         }
     }
 
@@ -50,7 +56,13 @@ class WallpaperRepository @Inject constructor(private val paletteCache: PaletteC
 
         return FirestoreLiveDocument(ref).map {
             if (it.exists())
-                Wallpaper(it.id, categoryId)
+                Wallpaper(
+                        it.id,
+                        categoryId,
+                        it.get(KEY_WALL_AUTHOR_BIO)?.toString(),
+                        it.get(KEY_WALL_AUTHOR_NAME)?.toString(),
+                        it.get(KEY_WALL_AUTHOR_SOCIAL)?.toString()
+                )
             else
                 null
         }
