@@ -88,14 +88,15 @@ class WallpaperFragment : SharedElementsDestination() {
                         onWallpaperReady(it)
                     }
                 }
+
+        val partialWallpaper = Wallpaper(args.wallpaperId, args.categoryId, null, null, null)
+        viewModel.loadWallpaperOn(partialWallpaper, wallpaperImage) {
+            applyLayoutColor(it)
+        }
     }
 
     private fun onWallpaperReady(wallpaper: Wallpaper) {
         this.wallpaper = wallpaper
-
-        viewModel.loadWallpaperOn(wallpaper, wallpaperImage) {
-            applyLayoutColor(it)
-        }
 
         downloadFab.setOnClickListener {
             openSetupBottomSheet()
