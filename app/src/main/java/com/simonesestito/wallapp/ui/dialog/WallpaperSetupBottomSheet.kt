@@ -1,63 +1,50 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.dialog
 
-import android.content.DialogInterface
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.os.postDelayed
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.simonesestito.wallapp.BOTTOMSHEET_AUTO_DISMISS_DELAY
-import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
-import com.simonesestito.wallapp.EXTRA_WALLPAPER_SETUP_PARCELABLE
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.backend.model.Wallpaper
-import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.enums.*
-import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
-import com.simonesestito.wallapp.utils.getSuggestedWallpaperFormat
-import com.simonesestito.wallapp.utils.getViewModel
-import com.simonesestito.wallapp.utils.tryDismiss
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet.*
+import com.simonesestito.wallapp.REQUEST_WRITE_STORAGE_PERMISSION
+import com.simonesestito.wallapp.backend.model.DownloadStatus
+import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
+import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
+import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_LOCK
+import com.simonesestito.wallapp.enums.WallpaperLocation
+import com.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-class WallpaperSetupBottomSheet : ThemedBottomSheet() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by lazy {
-        getViewModel<WallpaperSetupViewModel>(viewModelFactory)
-    }
-
-    private val wallpaperArg: Wallpaper by lazy {
-        arguments!!.getParcelable<Wallpaper>(EXTRA_WALLPAPER_SETUP_PARCELABLE)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AppInjector.getInstance().inject(this)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.wallpaper_bottomsheet, container, false)
-
+class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Apply default selection
         view.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
-        view.wallpaperLocationChipGroup.setOnCheckedChangeListener { _, _ ->
+
+        // Necessary in the following listener
+        var lastChecked = view.wallpaperLocationChipGroup.checkedChipId
+
+        view.wallpaperLocationChipGroup.setOnCheckedChangeListener { group, checkedId ->
+            // Always require a selection
+            // NOTE: this block of code will no longer be necessary since material library 1.2.0
+            if (checkedId == View.NO_ID)
+                group.check(lastChecked)
+            else
+                lastChecked = checkedId
+
+
             try {
                 viewModel.currentWallpaperLocation = getSelectedLocation()
             } catch (_: IllegalArgumentException) {
@@ -65,37 +52,73 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
             }
         }
 
-        view.wallpaperApplyButton.setOnClickListener { _ ->
-            viewModel.applyWallpaper(
-                    requireContext(),
-                    wallpaperArg,
-                    getSuggestedWallpaperFormat(resources.displayMetrics),
-                    // Use saved location in ViewModel instead of getting it now
-                    // It can lead to crash in case of bad selection
-                    viewModel.currentWallpaperLocation
-            )
+        view.wallpaperApplyButton.setOnClickListener {
+            CoroutineScope(coroutineContext).launch {
+                viewModel.applyWallpaper(
+                        requireContext(),
+                        wallpaperArg,
+                        getSuggestedWallpaperFormat(resources.displayMetrics),
+                        // Use saved location in ViewModel instead of getting it now
+                        // It can lead to crash in case of bad selection
+                        viewModel.currentWallpaperLocation
+                )
+            }
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        view.wallpaperDownloadButton.setOnClickListener { saveToGallery() }
+
+        // -- API < 24 and MIUI fallback
+        val isMIUI = requireContext().isPlatformMIUI()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || isMIUI) {
             // Hide wallpaper location selection
             // It isn't supported before 7.0 (API 24)
+            // On MIUI apps can't overwrite lockscreen wallpaper
             view.wallpaperLocationTitle?.visibility = View.GONE
             view.wallpaperLocationChipGroup?.visibility = View.GONE
             viewModel.currentWallpaperLocation = WALLPAPER_LOCATION_BOTH
+
+            if (isMIUI) {
+                // Display MIUI warning
+                view.wallpaperMiuiWarning?.visibility = View.VISIBLE
+            }
         }
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.getDownloadStatus().observe(this, Observer { status ->
+            Log.d(TAG, status.toString())
             when (status) {
-                STATUS_DOWNLOADING -> onDownloadStarted()
-                STATUS_FINALIZING -> onDownloadFinalizing()
-                STATUS_SUCCESS -> onDownloadResult(true)
-                STATUS_ERROR -> onDownloadResult(false)
-                // Ignore STATUS_NOTHING
+                is DownloadStatus.Progressing -> onDownloadStarted(status.progress)
+                DownloadStatus.Finalizing -> onDownloadFinalizing()
+                DownloadStatus.Success -> onDownloadResult(true)
+                DownloadStatus.Error -> onDownloadResult(false)
             }
         })
+    }
+
+    /**
+     * Save current wallpaper to gallery
+     */
+    private fun saveToGallery() {
+        // Check required permissions
+        val permissions = viewModel.storagePermissions
+        if (permissions.isNotEmpty() && !requireContext().checkSelfPermissions(*permissions)) {
+            // Missing permissions
+            requestPermissionsRationale(
+                    R.string.permission_write_storage_request_message,
+                    REQUEST_WRITE_STORAGE_PERMISSION,
+                    *permissions
+            )
+            return
+        }
+
+        // Start downloading the wallpaper
+        CoroutineScope(coroutineContext).launch {
+            viewModel.downloadToGallery(requireContext(), wallpaperArg, getSuggestedWallpaperFormat(
+                    requireContext().resources.displayMetrics
+            ))
+        }
     }
 
     /**
@@ -112,79 +135,47 @@ class WallpaperSetupBottomSheet : ThemedBottomSheet() {
                 else -> throw IllegalArgumentException("Unknown chip selection")
             }
 
-    private fun onDownloadStarted() {
-        // Fade out setup
-        wallpaperSetup.animate()
-                .alpha(0f)
-                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .withEndAction {
-                    // Use INVISIBLE instead of GONE to preserve its space in layout
-                    wallpaperSetup?.visibility = View.INVISIBLE
-                }.start()
-
-        wallpaperDownloading.animate()
-                .alpha(1f)
-                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .withStartAction {
-                    // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
-                    wallpaperDownloading.alpha = 0f
-                    wallpaperDownloading.visibility = View.VISIBLE
-                }
-                .start()
-
-        wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+    private fun onDownloadStarted(progress: Int) {
+        if (progress == 0) {
+            hideSetupLayout()
+        }
+        updateProgress(progress)
     }
 
     private fun onDownloadFinalizing() {
         wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
+        updateProgress(PROGRESS_INDETERMINATE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_WRITE_STORAGE_PERMISSION && resultCode == Activity.RESULT_OK) {
+            // Rationale dialog shown
+            // User accepted, ask for permissions again
+            requestPermissions(viewModel.storagePermissions, REQUEST_WRITE_STORAGE_PERMISSION)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.any { it != PackageManager.PERMISSION_GRANTED }) {
+            // Permissions denied
+            return
+        }
+
+        if (requestCode == REQUEST_WRITE_STORAGE_PERMISSION) {
+            // Storage permission granted
+            return saveToGallery()
+        }
     }
 
     private fun onDownloadResult(success: Boolean) {
+        hideSetupLayout()
+
         if (success) {
-            wallpaperFeedbackImage
-                    ?.setImageResource(R.drawable.ic_sentiment_very_satisfied_green_24dp)
-            wallpaperFeedbackText?.setText(R.string.wallpaper_setup_status_success)
+            showSuccessResult()
         } else {
-            wallpaperFeedbackImage
-                    ?.setImageResource(R.drawable.ic_sentiment_very_dissatisfied_red_24dp)
-            wallpaperFeedbackText?.setText(R.string.wallpaper_setup_status_failed)
+            showFailedResult()
         }
-
-        // Switch the view
-        wallpaperDownloading?.apply {
-            animate()
-                    .alpha(0f)
-                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .withEndAction {
-                        wallpaperDownloading?.visibility = View.GONE
-                    }.start()
-        }
-
-        wallpaperFeedback?.apply {
-            animate()
-                    .alpha(1f)
-                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .withStartAction {
-                        wallpaperFeedback?.alpha = 0f
-                        wallpaperFeedback?.visibility = View.VISIBLE
-                    }.start()
-        }
-
-        // Auto dismiss after some time
-        Handler(Looper.myLooper()).postDelayed(BOTTOMSHEET_AUTO_DISMISS_DELAY) {
-            tryDismiss()
-        }
-    }
-
-    override fun onDismiss(dialog: DialogInterface?) {
-        super.onDismiss(dialog)
-        viewModel.stopDownloadTask()
-    }
-
-    override fun onCancel(dialog: DialogInterface?) {
-        super.onCancel(dialog)
-        viewModel.stopDownloadTask()
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <resources>
@@ -18,7 +18,7 @@
     <string name="wallpaper_setup_location_both">Both</string>
     <string name="wallpaper_setup_apply_button">Apply</string>
     <string name="wallpaper_setup_status_downloading">Downloading chosen wallpaper…</string>
-    <string name="wallpaper_setup_status_success">Wallpaper applied! Enjoy</string>
+    <string name="wallpaper_setup_status_success">Wallpaper downloaded! Enjoy</string>
     <string name="wallpaper_setup_status_failed">An error has occurred, please retry</string>
     <string name="wallpaper_setup_status_finalizing">Applying your wallpaper…</string>
     <string name="preview_mode_title">Preview Mode</string>
@@ -53,7 +53,6 @@
     <string name="intro_slide_no_ads_description">Ads while enjoying your wallpapers? Just NO</string>
     <string name="intro_slide_no_subs_title">It\'s yours. Forever.</string>
     <string name="intro_slide_no_subs_description">No more purchases or subscriptions. A clean app only to provide you amazing wallpapers.</string>
-    <string name="about_feedback_social">Follow us on social</string>
     <string name="about_feedback_bug_report">Report a bug</string>
     <string name="policy_checker_failed_message">This app is not licensed by Google Play. Please buy this app</string>
     <string name="policy_checker_failed_title">Pirated app!</string>
@@ -61,4 +60,14 @@
     <string name="policy_checker_offline_title">License verification failed</string>
     <string name="policy_checker_offline_message">App purchase can\'t be verified. Please check your Internet connection</string>
     <string name="singleCategoryLayoutRowSwitch">Switch layout</string>
+    <string name="category_group_original">WallApp Originals</string>
+    <string name="category_group_community">Community</string>
+    <string name="preview_service_notification_title">Preview Mode is running</string>
+    <string name="preview_service_notification_text">Click to stop Preview Mode</string>
+    <string name="overlay_permission_request">Preview Mode requires this permission to be used.</string>
+    <string name="permission_write_storage_request_message">To allow the app to save this wallpaper into your gallery, please grant this permission</string>
+    <string name="wallpaper_setup_download_button">Download</string>
+    <string name="wallpaper_location_miui_warning">This wallpaper will be set on homescreen only. To apply on lockscreen, download it and apply it manually from system settings.</string>
+    <string name="wallpaper_author_info">Author info</string>
+    <string name="wallpaper_author_social">More info</string>
 </resources>

@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.utils
@@ -8,27 +8,39 @@ package com.simonesestito.wallapp.utils
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.*
+import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.simonesestito.wallapp.CHROME_PACKAGE_NAME
 import com.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import com.simonesestito.wallapp.R
@@ -37,6 +49,8 @@ import com.simonesestito.wallapp.lifecycle.LifecycleExecutor
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 typealias LocalizedString = Map<String, Any>
 
@@ -61,14 +75,23 @@ fun @receiver:ColorInt Int.isLightColor() =
 /**
  * Map [LiveData] value
  */
-fun <X, Y> LiveData<X>.map(converter: (X) -> Y): LiveData<Y> {
+fun <T, R> LiveData<T>.map(converter: (T) -> R): LiveData<R> {
     return Transformations.map(this, converter)
 }
 
 /**
- * Map all items in a list contained in a [LiveData]
+ * Filter items from a list wrapped inside a [LiveData]
  */
-inline fun <L : List<I>, I, T> LiveData<L>.mapList(crossinline converter: (I) -> T): LiveData<List<T>> {
+inline fun <T> LiveData<List<T>>.filter(crossinline predicate: (T) -> Boolean): LiveData<List<T>> {
+    return Transformations.map(this) { list ->
+        list.filter(predicate)
+    }
+}
+
+/**
+ * Map all items in a list wrapped in a [LiveData]
+ */
+inline fun <T, R> LiveData<List<T>>.mapList(crossinline converter: (T) -> R): LiveData<List<R>> {
     return Transformations.map(this) { list ->
         list.map(converter)
     }
@@ -115,25 +138,6 @@ fun Activity.setLightStatusBar(light: Boolean) {
         // Set dark system bars (light icons)
         decorView.systemUiVisibility = decorView.systemUiVisibility and
                 View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-    }
-}
-
-/**
- * Set light navigation bar altering [View.setSystemUiVisibility] flags
- */
-@RequiresApi(Build.VERSION_CODES.O)
-fun Activity.setLightNavBar(light: Boolean) {
-    val decorView = window?.decorView
-    decorView ?: return
-
-    if (light) {
-        // Set light system bars (black icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility or
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-    } else {
-        // Set dark system bars (light icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility and
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
     }
 }
 
@@ -308,6 +312,71 @@ fun Context.openUrl(url: String, forceChrome: Boolean = false, useCustomTab: Boo
  * Warning: always use .apply()
  */
 val Context.sharedPreferences: SharedPreferences by thisLazy {
-    Log.e("SharedPreferences", "Initializing SharedPreferences")
     getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE)
+}
+
+val Fragment.sharedPreferences
+    get() = requireContext().sharedPreferences
+
+fun Resources.Theme.resolveIntAttribute(id: Int): Int {
+    val typedValue = TypedValue()
+    resolveAttribute(id, typedValue, true)
+    return typedValue.data
+}
+
+/**
+ * Call [View.setOnApplyWindowInsetsListener], ensuring the listener is called only once
+ */
+inline fun View.setOnApplyWindowInsetsListenerOnce(crossinline listener: (View, WindowInsetsCompat) -> Unit) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        // Remove the listener
+        ViewCompat.setOnApplyWindowInsetsListener(view, null)
+
+        // Call the given listener
+        listener(view, insets)
+
+        // Return the same insets
+        return@setOnApplyWindowInsetsListener insets
+    }
+}
+
+/**
+ * Detect if the current device is running MIUI
+ */
+fun Context.isPlatformMIUI() = arrayOf(
+        Intent("miui.intent.action.OP_AUTO_START")
+                .addCategory(Intent.CATEGORY_DEFAULT),
+        Intent()
+                .setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+        Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST")
+                .addCategory(Intent.CATEGORY_DEFAULT),
+        Intent()
+                .setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))
+).any { packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null }
+
+/**
+ * Generate a palette in a suspend function
+ */
+suspend fun Palette.Builder.suspendGenerate(): Palette = suspendCoroutine {
+    this.generate { palette -> it.resume(palette!!) }
+}
+
+fun Context.isDarkTheme() = resources
+        .configuration
+        .uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES ||
+        AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+
+fun TabLayout.setupWithViewPager(viewPager: ViewPager2, tabTitles: Array<String>) {
+    TabLayoutMediator(this, viewPager) { tab, position ->
+        tab.text = tabTitles[position]
+    }.attach()
+}
+
+fun View.addTopWindowInsetPadding() {
+    setOnApplyWindowInsetsListenerOnce { root, insets ->
+        root.updatePadding(
+                top = insets.systemWindowInsetTop + root.paddingTop,
+                bottom = insets.systemWindowInsetBottom
+        )
+    }
 }

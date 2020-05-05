@@ -1,91 +1,122 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
+import androidx.core.view.updatePadding
+import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.model.Wallpaper
-import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import com.simonesestito.wallapp.di.component.AppInjector
-import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
-import com.simonesestito.wallapp.ui.activity.MainActivity
+import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
+import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
+import com.simonesestito.wallapp.ui.dialog.WallpaperInfoBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import com.simonesestito.wallapp.utils.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.*
 import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import javax.inject.Inject
-import com.bumptech.glide.request.transition.Transition as GlideTransition
 
 class WallpaperFragment : SharedElementsDestination() {
-    override val title = ""
-
     private val args by lazy {
-        WallpaperFragmentArgs.fromBundle(arguments)
+        WallpaperFragmentArgs.fromBundle(arguments ?: bundleOf())
     }
 
-    private val wallpaper: Wallpaper by lazy {
-        Wallpaper(args.wallpaperId, args.categoryId)
+    private lateinit var wallpaper: Wallpaper
+
+    @Inject
+    lateinit var viewModelFactory: AppViewModelFactory
+    private val viewModel by lazy {
+        getViewModel<WallpapersViewModel>(viewModelFactory)
     }
 
-    @Inject lateinit var wallpaperRepository: WallpaperRepository
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AppInjector.getInstance().inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.wallpaper_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        wallpaperRepository.loadWallpaper(
-                wallpaper,
-                FORMAT_PREVIEW, //getSuggestedWallpaperFormat(resources.displayMetrics),
-                imageView = wallpaperImage,
-                useExactFormatSize = true,
-                onPaletteReady = { applyLayoutColor(it) }
-        )
-
         view.backButton.setOnClickListener {
             activity?.onBackPressed()
         }
 
-        view.downloadFab.setOnClickListener {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            view.bottomAppBar.updatePadding(bottom = insets.systemWindowInsets.bottom)
+            view.backButton.updatePadding(top = insets.systemWindowInsets.top)
+
+            return@setOnApplyWindowInsetsListener insets
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.getWallpaperById(args.categoryId, args.wallpaperId)
+                .observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        onWallpaperReady(it)
+                    }
+                }
+
+        val partialWallpaper = Wallpaper(args.wallpaperId, args.categoryId, null, null, null)
+        viewModel.loadWallpaperOn(partialWallpaper, wallpaperImage) {
+            applyLayoutColor(it)
+        }
+    }
+
+    private fun onWallpaperReady(wallpaper: Wallpaper) {
+        this.wallpaper = wallpaper
+
+        downloadFab.setOnClickListener {
             openSetupBottomSheet()
         }
 
-        view.bottomAppBar.setOnMenuItemClickListener { menuItem ->
+        bottomAppBar.menu.findItem(R.id.wallpaperAuthorInfo).isVisible = arrayOf(
+                wallpaper.authorBio,
+                wallpaper.authorSocial,
+                wallpaper.authorName
+        ).any { it != null }
+
+        bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.wallpaperShare -> doShare()
                 R.id.wallpaperPreview -> doPreview()
+                R.id.wallpaperAuthorInfo -> showAuthorInfo()
                 else -> return@setOnMenuItemClickListener false
             }
             return@setOnMenuItemClickListener true
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AppInjector.getInstance().inject(this)
     }
 
     override fun onStart() {
@@ -101,10 +132,6 @@ class WallpaperFragment : SharedElementsDestination() {
 
             // Show FAB manually since it won't be shown with animation
             downloadFab?.show()
-
-            // This fragment could be launched from URL
-            // Handle non existing wallpapers or wrong URL here
-            checkWallpaperExistence()
         }
     }
 
@@ -124,41 +151,22 @@ class WallpaperFragment : SharedElementsDestination() {
         }
     }
 
-    private fun checkWallpaperExistence() {
-        wallpaperRepository.getWallpaper(wallpaper.categoryId, wallpaper.id)
-                .observeOnce(this) {
-                    if (it == null) {
-                        // Error, this wallpaper doesn't exist
-                        handleNonExistingWallpaper()
-                    }
-                }
-    }
-
-    private fun handleNonExistingWallpaper() {
-        // Generate link from wallpaper details
-        val url = "$BASE_WEBAPP_URL/${wallpaper.categoryId}/${wallpaper.id}"
-        requireContext().openUrl(url, forceChrome = true)
-    }
-
     private fun openSetupBottomSheet() {
         WallpaperSetupBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
+                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
     }
 
     private fun openPreviewBottomSheet() {
+        // Register receiver to be updated about user decision from PreviewService
         LocalBroadcastManager.getInstance(requireContext())
-                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, receiverContext ->
-                    // Resume current Activity
-                    receiverContext.startActivity(
-                            Intent(receiverContext, MainActivity::class.java).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                    )
+                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, _ ->
+                    // This activity is resumed in the foreground by PreviewService
+                    // This block handles data received from PreviewService
 
                     // Handle received result
                     val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
@@ -168,13 +176,13 @@ class WallpaperFragment : SharedElementsDestination() {
                             openSetupBottomSheet()
                         }
                     }
-                    return@registerReceiver true
+                    return@registerReceiver true // Unregister automatically
                 }
 
         WallpaperPreviewBottomSheet()
                 .apply {
                     arguments = bundleOf(
-                            EXTRA_WALLPAPER_SETUP_PARCELABLE to wallpaper
+                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
                     )
                 }
                 .show(childFragmentManager, null)
@@ -186,9 +194,6 @@ class WallpaperFragment : SharedElementsDestination() {
         val isPrimaryLight = primary.isLightColor()
         val vibrant = palette.getVibrantColor(defaultColor)
         val isVibrantLight = vibrant.isLightColor()
-
-        // Status bar as primary color
-        statusBarColor = primary
 
         // Download FAB background as vibrant
         downloadFab.backgroundTintList = ColorStateList.valueOf(vibrant)
@@ -203,7 +208,7 @@ class WallpaperFragment : SharedElementsDestination() {
                 if (isVibrantLight) Color.DKGRAY else Color.WHITE
         )
 
-        // Set bottombar icons as vibrant (if dark) or dark gray
+        // Set bottom bar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
         bottomAppBar.menu?.forEach { it.icon.setColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP) }
     }
@@ -216,16 +221,34 @@ class WallpaperFragment : SharedElementsDestination() {
         startActivity(Intent.createChooser(i, getString(R.string.wallpaper_share_chooser_title)))
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun requestOverlayPermission() {
+        startActivityForResult(
+                Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        "package:${BuildConfig.APPLICATION_ID}".toUri()
+                ),
+                REQUEST_PREVIEW_OVERLAY_PERMISSION
+        )
+
+        Toast.makeText(requireContext(), R.string.overlay_permission_request, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_PREVIEW_OVERLAY_PERMISSION && requireContext().canDrawOverlays()) {
+            // Overlay permission granted
+            doPreview()
+        } else if (requestCode == REQUEST_READ_STORAGE_PERMISSION && resultCode == Activity.RESULT_OK) {
+            // User wants to grant storage permission
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_STORAGE_PERMISSION)
+        }
+    }
+
     private fun doPreview() {
         // Check Overlay permission
         if (!requireContext().canDrawOverlays()) {
-            startActivityForResult(
-                    Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            "package:${BuildConfig.APPLICATION_ID}".toUri()
-                    ),
-                    REQUEST_PREVIEW_OVERLAY_PERMISSION
-            )
+            requestOverlayPermission()
             return
         }
 
@@ -240,6 +263,12 @@ class WallpaperFragment : SharedElementsDestination() {
         }
 
         openPreviewBottomSheet()
+    }
+
+    private fun showAuthorInfo() {
+        WallpaperInfoBottomSheet().apply {
+            arguments = bundleOf(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper)
+        }.show(childFragmentManager, null)
     }
 
     //region SharedElements methods
@@ -260,7 +289,7 @@ class WallpaperFragment : SharedElementsDestination() {
     }
 
     override fun onPrepareSharedElements(createdView: View) {
-        createdView.wallpaperImage.transitionName = args.transitionName
+        createdView.wallpaperImage.transitionName = args.wallpaperId
         bottomAppBar?.replaceMenu(R.menu.wallpaper_fragment_bottom_bar_menu)
     }
     //endregion

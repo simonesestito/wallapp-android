@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,7 +19,8 @@
 
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.simonesestito.wallapp.ui.fragment.CategoriesListFragment"
+        android:name="com.simonesestito.wallapp.ui.fragment.CategoriesFragment"
+        android:label="@string/app_name"
         tools:layout="@layout/categories_fragment">
         <action
             android:id="@+id/toCategory"
@@ -48,11 +49,6 @@
         <argument
             android:name="categoryId"
             app:argType="string" />
-        <argument
-            android:name="transitionName"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
         <deepLink
             android:autoVerify="true"
             app:uri="wallapp-b7805.firebaseapp.com/{categoryId}/{wallpaperId}"
@@ -64,6 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
+        android:label="@string/about_fragment_title"
         android:name="com.simonesestito.wallapp.ui.fragment.AboutFragment"
         tools:layout="@layout/about_fragment" />
 </navigation>

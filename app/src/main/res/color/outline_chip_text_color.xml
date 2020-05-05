@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="#1e88e5" android:state_selected="true" />
-    <item android:color="#424242" />
+    <item android:color="?colorAccent" android:state_selected="true" />
+    <item android:color="?colorOnSurface" />
 </selector>

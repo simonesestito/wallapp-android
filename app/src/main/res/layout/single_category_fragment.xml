@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,7 +28,7 @@
             android:gravity="center"
             android:textAppearance="@style/AppTheme.Text.Standard" />
 
-        <com.simonesestito.wallapp.ui.SnapRecyclerView
+        <com.simonesestito.wallapp.ui.view.SnapRecyclerView
             android:id="@+id/wallpapersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"

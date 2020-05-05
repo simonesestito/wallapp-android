@@ -1,53 +1,40 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.backend.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.firebase.firestore.DocumentSnapshot
+import androidx.annotation.Keep
 import com.simonesestito.wallapp.Identifiable
-import com.simonesestito.wallapp.KEY_COUNT
-import com.simonesestito.wallapp.KEY_DESCRIPTION
-import com.simonesestito.wallapp.KEY_DISPLAY_NAME
-import com.simonesestito.wallapp.utils.LocalizedString
 
+@Keep
 data class Category(
-        override val id: String,
-        val displayName: LocalizedString,
-        val description: LocalizedString,
-        val wallpapersCount: Long
+        val data: FirebaseCategory,
+        val unseenCount: Int
 ) : Identifiable<String>, Parcelable {
-    constructor(parcel: Parcel) : this(
-            parcel.readString()!!,
-            mutableMapOf<String, Any>().apply {
-                parcel.readMap(this, this.javaClass.classLoader)
-            },
-            mutableMapOf<String, Any>().apply {
-                parcel.readMap(this, this.javaClass.classLoader)
-            },
-            parcel.readLong())
+    override val id: String = data.id
 
-    @Suppress("UNCHECKED_CAST")
-    constructor(snap: DocumentSnapshot) : this(
-            id = snap.id,
-            displayName = snap.get(KEY_DISPLAY_NAME) as LocalizedString,
-            description = snap.get(KEY_DESCRIPTION) as LocalizedString,
-            wallpapersCount = snap.getLong(KEY_COUNT) ?: 0)
+    constructor(parcel: Parcel) : this(
+            parcel.readParcelable(FirebaseCategory::class.java.classLoader)!!,
+            parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeMap(displayName)
-        parcel.writeMap(description)
-        parcel.writeLong(wallpapersCount)
+        parcel.writeParcelable(data, flags)
+        parcel.writeInt(unseenCount)
     }
 
-    override fun describeContents() = hashCode()
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Category> {
-        override fun createFromParcel(parcel: Parcel) = Category(parcel)
-        override fun newArray(size: Int) = arrayOfNulls<Category?>(size)
+        override fun createFromParcel(parcel: Parcel): Category {
+            return Category(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Category?> {
+            return arrayOfNulls(size)
+        }
     }
 }

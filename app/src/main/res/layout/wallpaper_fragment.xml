@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,7 +51,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@android:color/transparent"
-        android:tint="@android:color/white"
+        android:layout_marginTop="16dp"
         app:layout_anchor="@+id/fake_content"
         app:layout_anchorGravity="left|top"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp" />

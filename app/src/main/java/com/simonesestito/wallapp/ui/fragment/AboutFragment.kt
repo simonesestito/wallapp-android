@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -15,19 +15,18 @@ import androidx.core.net.toUri
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
 import com.simonesestito.wallapp.*
+import com.simonesestito.wallapp.utils.addTopWindowInsetPadding
 import com.simonesestito.wallapp.utils.openUrl
 import kotlinx.android.synthetic.main.about_fragment.view.*
 
 
 class AboutFragment : AbstractAppFragment() {
-    override val title: CharSequence
-        get() = getString(R.string.about_fragment_title)
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.about_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.aboutScrollContentRoot.addTopWindowInsetPadding()
 
         view.aboutScrollContentRoot.setOnScrollChangeListener { _: NestedScrollView?, _: Int, y: Int, _: Int, _: Int ->
             adjustElevation(y)
@@ -56,10 +55,6 @@ class AboutFragment : AbstractAppFragment() {
 
             aboutFeedbackMailButton.setOnClickListener {
                 sendEmail(AUTHOR_1_MAIL)
-            }
-
-            aboutFeedbackSocialButton.setOnClickListener {
-                context?.openUrl(TWITTER_LINK)
             }
         }
     }

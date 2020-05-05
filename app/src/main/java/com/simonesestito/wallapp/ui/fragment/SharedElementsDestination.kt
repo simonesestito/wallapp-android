@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.fragment
@@ -19,6 +19,13 @@ import com.simonesestito.wallapp.utils.addListener
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 abstract class SharedElementsDestination : AbstractAppFragment() {
+    /**
+     * Determine if the postponed transition should be started
+     * automatically by this fragment.
+     * Set this attribute to false if the fragment has to do something async before
+     */
+    protected open var shouldStartTransition = true
+
     /**
      * Called when the fragment needs to create the Shared Elements transition
      * @return Shared Elements transition to apply
@@ -72,17 +79,17 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
     //region Fragment Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postponeEnterTransition()
-        enterTransition = null
-        returnTransition = null
         sharedElementEnterTransition = createSharedElementsEnterTransition()
         sharedElementReturnTransition = createSharedElementsReturnTransition()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
         onPrepareSharedElements(view)
-        startPostponedEnterTransition()
+
+        if (shouldStartTransition)
+            startPostponedEnterTransition()
     }
     //endregion
 }

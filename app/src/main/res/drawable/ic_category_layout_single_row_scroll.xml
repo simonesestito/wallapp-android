@@ -1,16 +1,18 @@
 <!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:width="34dp"
     android:height="28dp"
-    android:tint="#616161"
+    android:tint="?colorControlNormal"
     android:viewportWidth="34"
-    android:viewportHeight="28">
+    android:viewportHeight="28"
+    tools:ignore="VectorRaster">
     <path
-        android:fillColor="#00000000"
+        android:fillColor="#000"
         android:fillType="evenOdd"
         android:pathData="M11,4h12v20h-12z"
         android:strokeWidth="2"
@@ -18,7 +20,7 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:fillColor="#00000000"
+        android:fillColor="#000"
         android:fillType="evenOdd"
         android:pathData="M27,6h5v17h-5z"
         android:strokeWidth="2"
@@ -26,7 +28,7 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:fillColor="#00000000"
+        android:fillColor="#000"
         android:fillType="evenOdd"
         android:pathData="M2,6h5v17h-5z"
         android:strokeWidth="2"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ This file is part of WallApp for Android.
-  ~ Copyright © 2018 Simone Sestito. All rights reserved.
+  ~ Copyright © 2020 Simone Sestito. All rights reserved.
   -->
 
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,26 +12,42 @@
     android:padding="@dimen/activity_content_margin">
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/wallpaperSetupTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_separator_normal"
         android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/margin_separator_normal"
         android:text="@string/fab_wallpaper_action_download"
-        android:textAppearance="@style/AppTheme.Text.Title" />
+        android:textAppearance="@style/AppTheme.Text.Title"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/wallpaperLocationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_separator_small"
+        android:paddingBottom="@dimen/margin_separator_small"
         android:text="@string/wallpaper_setup_bottom_sheet_location"
-        android:textAppearance="@style/AppTheme.Text.Subtitle" />
+        android:textAppearance="@style/AppTheme.Text.Subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wallpaperSetupTitle" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/wallpaperMiuiWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/margin_separator_small"
+        android:text="@string/wallpaper_location_miui_warning"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperLocationTitle" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/wallpaperLocationChipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_separator_normal"
+        android:paddingBottom="@dimen/margin_separator_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperMiuiWarning"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
@@ -58,11 +74,26 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/wallpaperFormatsInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_separator_normal"
+        android:text="@string/wallpaper_setup_formats_info"
+        android:textAppearance="@style/AppTheme.Text.Standard"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperLocationChipGroup" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/wallpaperDownloadButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_separator_normal"
-        android:text="@string/wallpaper_setup_formats_info"
-        android:textAppearance="@style/AppTheme.Text.Standard" />
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="4dp"
+        android:text="@string/wallpaper_setup_download_button"
+        android:textColor="?colorOnSurface"
+        app:icon="@drawable/ic_file_download_black_24dp"
+        app:iconTint="?colorOnSurface"
+        app:layout_constraintEnd_toStartOf="@id/wallpaperApplyButton"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperFormatsInfo" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/wallpaperApplyButton"
@@ -70,8 +101,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_marginHorizontal="4dp"
         android:text="@string/wallpaper_setup_apply_button"
-        app:backgroundTint="@color/color_accent"
-        app:icon="@drawable/ic_check_black_24dp" />
+        android:textColor="?colorOnSecondary"
+        app:backgroundTint="?colorAccent"
+        app:icon="@drawable/ic_check_black_24dp"
+        app:iconTint="?colorOnSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperFormatsInfo" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 /*
  * This file is part of WallApp for Android.
- * Copyright © 2018 Simone Sestito. All rights reserved.
+ * Copyright © 2020 Simone Sestito. All rights reserved.
  */
 
 package com.simonesestito.wallapp.ui.activity
@@ -11,47 +11,43 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import com.simonesestito.wallapp.NavGraphDirections
-import com.simonesestito.wallapp.PREFS_IS_FIRST_LAUNCH_KEY
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.backend.service.PreviewService
+import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.utils.TAG
-import com.simonesestito.wallapp.utils.sharedPreferences
+import com.simonesestito.wallapp.utils.isDarkTheme
 
 
-class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
-    private val defaultAppbarElevation by lazy {
-        resources.getDimension(R.dimen.default_appbar_elevation)
-    }
-    private val scrollAppbarElevation by lazy {
-        resources.getDimension(R.dimen.scroll_appbar_elevation)
-    }
-
-    private val firebaseAuth by lazy {
-        FirebaseAuth.getInstance()
-    }
-
+class MainActivity : AppCompatActivity(), ElevatingAppbar {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        setContentView(R.layout.main_activity)
 
-        firebaseAuth.signInAnonymously().addOnCompleteListener {
-            Log.d("MainActivity", "Logging in anonymously, success: ${it.isSuccessful}")
-        }
+        // Set custom toolbar
+        setSupportActionBar(findViewById(R.id.appToolbar))
 
-        if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
+        // TODO: IntroActivity
+        //if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
             // Show first launch activity
             // It's responsibility of IntroActivity to set FIRST_LAUNCH to false
-            startActivity(Intent(this, IntroActivity::class.java))
-        }
+        //}
 
-        setContentView(R.layout.main_activity)
+        // Draw edge to edge
+        findViewById<View>(R.id.root).systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+
         findNavController(R.id.navHostFragment).let {
             setupActionBarWithNavController(this, it)
-            it.addOnNavigatedListener { _, _ ->
+            it.addOnDestinationChangedListener { _, _, _ ->
                 onDestinationChanged()
             }
         }
@@ -59,6 +55,7 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
 
     override fun onStart() {
         super.onStart()
+        // Be sure to stop PreviewService every time the user launches the main app
         stopService(Intent(this, PreviewService::class.java))
     }
 
@@ -66,7 +63,7 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_VIEW) {
             Log.d(TAG, "Received VIEW Intent with url: ${intent.data}")
-            findNavController(R.id.navHostFragment).onHandleDeepLink(intent)
+            findNavController(R.id.navHostFragment).handleDeepLink(intent)
         }
     }
 
@@ -87,8 +84,8 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
         invalidateOptionsMenu()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) =
-            when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
                 R.id.aboutMenuItem -> {
                     findNavController(R.id.navHostFragment).let {
                         if (it.currentDestination?.id != R.id.aboutFragment)
@@ -108,11 +105,26 @@ class MainActivity : LicenseCheckerActivity(), ElevatingAppbar {
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp()
 
-    override fun showAppbarElevation() {
-        supportActionBar?.elevation = scrollAppbarElevation
+    override fun setTitle(title: CharSequence?) {
+        super.setTitle(title)
+        supportActionBar?.title = title
     }
 
-    override fun hideAppbarElevation() {
-        supportActionBar?.elevation = defaultAppbarElevation
+    override fun showAppbarElevation() =
+            updateElevation(resources.getDimension(R.dimen.scroll_appbar_elevation))
+
+    override fun hideAppbarElevation() =
+            updateElevation(resources.getDimension(R.dimen.default_appbar_elevation))
+
+    private fun updateElevation(elevation: Float) {
+        findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = elevation
+        // Different behaviour based on the current theme
+        // In dark theme, elevation is made with different background color
+        // while in light theme, elevation uses the well-known Material shadows
+        //
+        // Applying a shadow on Toolbar in light theme would result in a duplicated shadow
+        if (isDarkTheme()) {
+            findViewById<MaterialToolbar>(R.id.appToolbar)!!.elevation = elevation
+        }
     }
 }
