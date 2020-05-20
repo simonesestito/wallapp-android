@@ -112,7 +112,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
         adjustRecyclerViewState()
 
         // If there was an old LiveData, unregister it
-        oldLiveData?.removeObservers(this)
+        oldLiveData?.removeObservers(viewLifecycleOwner)
 
         // Get wallpapers list from Firebase using LiveData,
         // updating the oldLiveData so we'll be able to dismiss it later
