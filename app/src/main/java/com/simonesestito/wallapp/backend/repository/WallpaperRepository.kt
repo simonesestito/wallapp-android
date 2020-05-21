@@ -10,7 +10,6 @@ package com.simonesestito.wallapp.backend.repository
 import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -25,47 +24,43 @@ import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.enums.WallpaperFormat
 import com.simonesestito.wallapp.enums.dimensions
-import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveCollection
-import com.simonesestito.wallapp.lifecycle.livedata.FirestoreLiveDocument
-import com.simonesestito.wallapp.utils.map
-import com.simonesestito.wallapp.utils.mapList
+import com.simonesestito.wallapp.utils.toSuspendDocument
+import com.simonesestito.wallapp.utils.toSuspendQuery
 import javax.inject.Inject
 
 class WallpaperRepository @Inject constructor(private val paletteCache: PaletteCache,
                                               private val firestore: FirebaseFirestore) {
-    fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>> {
-        val ref = firestore
+    suspend fun getWallpapersByCategoryId(categoryId: String): List<Wallpaper> {
+        return firestore
                 .collection("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS")
                 .whereEqualTo(KEY_PUBLISHED, true)
                 .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
-
-        return FirestoreLiveCollection(ref).mapList {
-            Wallpaper(
-                    it.id,
-                    categoryId,
-                    it.get(KEY_WALL_AUTHOR_BIO)?.toString(),
-                    it.get(KEY_WALL_AUTHOR_NAME)?.toString(),
-                    it.get(KEY_WALL_AUTHOR_SOCIAL)?.toString()
-            )
-        }
+                .toSuspendQuery()
+                .map {
+                    Wallpaper(
+                            it.id,
+                            categoryId,
+                            it.get(KEY_WALL_AUTHOR_BIO)?.toString(),
+                            it.get(KEY_WALL_AUTHOR_NAME)?.toString(),
+                            it.get(KEY_WALL_AUTHOR_SOCIAL)?.toString()
+                    )
+                }
     }
 
-    fun getWallpaper(categoryId: String, wallpaperId: String): LiveData<Wallpaper?> {
-        val ref = firestore
+    suspend fun getWallpaper(categoryId: String, wallpaperId: String): Wallpaper? {
+        val document = firestore
                 .document("$FIRESTORE_CATEGORIES/$categoryId/$FIRESTORE_WALLPAPERS/$wallpaperId")
+                .toSuspendDocument()
 
-        return FirestoreLiveDocument(ref).map {
-            if (it.exists())
-                Wallpaper(
-                        it.id,
-                        categoryId,
-                        it.get(KEY_WALL_AUTHOR_BIO)?.toString(),
-                        it.get(KEY_WALL_AUTHOR_NAME)?.toString(),
-                        it.get(KEY_WALL_AUTHOR_SOCIAL)?.toString()
-                )
-            else
-                null
-        }
+        return if (document.exists()) {
+            Wallpaper(
+                    document.id,
+                    categoryId,
+                    document.get(KEY_WALL_AUTHOR_BIO)?.toString(),
+                    document.get(KEY_WALL_AUTHOR_NAME)?.toString(),
+                    document.get(KEY_WALL_AUTHOR_SOCIAL)?.toString()
+            )
+        } else null
     }
 
     /**

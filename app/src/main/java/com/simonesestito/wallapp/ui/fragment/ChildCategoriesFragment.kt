@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
@@ -20,7 +21,6 @@ import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import com.simonesestito.wallapp.utils.findNavController
-import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.onScrollListener
 import kotlinx.android.synthetic.main.child_categories_fragment.*
 import kotlinx.android.synthetic.main.child_categories_fragment.view.*
@@ -45,9 +45,7 @@ class ChildCategoriesFragment : AbstractAppFragment() {
         }
     }
 
-    private val viewModel: WallpapersViewModel by lazy {
-        getViewModel<WallpapersViewModel>(viewModelFactory)
-    }
+    private val viewModel: WallpapersViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

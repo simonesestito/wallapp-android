@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.os.postDelayed
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.simonesestito.wallapp.BOTTOMSHEET_AUTO_DISMISS_DELAY
 import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
@@ -22,7 +23,6 @@ import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
-import com.simonesestito.wallapp.utils.getViewModel
 import com.simonesestito.wallapp.utils.tryDismiss
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet.*
 import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
@@ -50,11 +50,9 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    protected val viewModel by lazy {
-        getViewModel<WallpaperSetupViewModel>(viewModelFactory)
-    }
+    protected val viewModel: WallpaperSetupViewModel by viewModels { viewModelFactory }
 
-    protected val wallpaperArg: Wallpaper by lazy {
+    protected val wallpaperArg by lazy {
         arguments?.getParcelable<Wallpaper>(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE)!!
     }
 

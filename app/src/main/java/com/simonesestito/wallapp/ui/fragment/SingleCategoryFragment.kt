@@ -20,19 +20,21 @@ import androidx.core.os.postDelayed
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.PREFS_SINGLE_CATEGORY_LAYOUT_ROWS
 import com.simonesestito.wallapp.R
-import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.WallpapersAdapter
-import com.simonesestito.wallapp.utils.*
+import com.simonesestito.wallapp.utils.TAG
+import com.simonesestito.wallapp.utils.findNavController
+import com.simonesestito.wallapp.utils.localized
+import com.simonesestito.wallapp.utils.sharedPreferences
 import kotlinx.android.synthetic.main.single_category_fragment.*
 import kotlinx.android.synthetic.main.single_category_fragment.view.*
 import javax.inject.Inject
@@ -40,22 +42,15 @@ import javax.inject.Inject
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
 class SingleCategoryFragment : SharedElementsDestination() {
-    private val viewModel by lazy {
-        getViewModel<WallpapersViewModel>(viewModelFactory)
-    }
+    private val viewModel: WallpapersViewModel by viewModels { viewModelFactory }
 
     private val args by lazy {
         SingleCategoryFragmentArgs.fromBundle(arguments ?: bundleOf())
     }
 
-    /**
-     * Keep the current live data in memory
-     * In case of necessity, we can remove any observer
-     */
-    private var oldLiveData: LiveData<List<Wallpaper>>? = null
-
     @Inject
     lateinit var adapter: WallpapersAdapter
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -111,15 +106,11 @@ class SingleCategoryFragment : SharedElementsDestination() {
         wallpapersRecyclerView.layoutManager = GridLayoutManager(requireContext(), currentLayoutSpanCount, LinearLayoutManager.HORIZONTAL, false)
         adjustRecyclerViewState()
 
-        // If there was an old LiveData, unregister it
-        oldLiveData?.removeObservers(this)
-
-        // Get wallpapers list from Firebase using LiveData,
-        // updating the oldLiveData so we'll be able to dismiss it later
-        oldLiveData = viewModel.getWallpapersByCategoryId(args.category.id)
-
         // Finally, observe for updates
-        oldLiveData?.observe(viewLifecycleOwner, Observer { walls ->
+        viewModel.getWallpapersByCategoryId(args.category.id).observe(viewLifecycleOwner) { walls ->
+            if (walls == null)
+                return@observe
+
             val oldData = this.adapter.data
 
             // On wallpapers update, refresh the list
@@ -146,7 +137,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
             } else {
                 singleCategoryEmptyView.visibility = View.GONE
             }
-        })
+        }
 
         // Get layout span count from preferences
         val layoutRows = sharedPreferences.getInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, currentLayoutSpanCount)

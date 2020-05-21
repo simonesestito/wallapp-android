@@ -27,16 +27,19 @@ import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.ui.activity.MainActivity
 import com.simonesestito.wallapp.utils.TAG
-import com.simonesestito.wallapp.utils.ThreadUtils
 import com.simonesestito.wallapp.utils.isLightColor
 import com.simonesestito.wallapp.utils.restoreWallpaper
 import kotlinx.android.synthetic.main.preview_floating_window.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 class PreviewService : FloatingWindowService() {
+    private val ioCoroutine = CoroutineScope(Dispatchers.IO)
+    private val uiCoroutine = CoroutineScope(Dispatchers.Main)
     private lateinit var wallpaper: Wallpaper
-    @Inject lateinit var threads: ThreadUtils
     @Inject lateinit var paletteCache: PaletteCache
 
     override val isFloatingWindow: Boolean
@@ -140,13 +143,13 @@ class PreviewService : FloatingWindowService() {
         rootView.previewModeBannerTitle.setText(R.string.preview_mode_title_close_preview)
 
         // Restore wallpaper on IO Thread, it's a blocking operation
-        threads.runOnIoThread {
+        ioCoroutine.launch {
             if (!wallpaperConfirmed) {
-                restoreWallpaper(this)
+                restoreWallpaper(this@PreviewService)
             }
 
             // Continue on Main thread
-            threads.runOnMainThread {
+            uiCoroutine.launch {
                 val intent = Intent()
                         .setAction(ACTION_PREVIEW_RESULT)
                         .putExtra(EXTRA_WALLPAPER_PREVIEW_RESULT,
@@ -156,7 +159,7 @@ class PreviewService : FloatingWindowService() {
                                     RESULT_WALLPAPER_CANCELED)
 
                 // Notify the rest of the app about the user decision
-                LocalBroadcastManager.getInstance(this)
+                LocalBroadcastManager.getInstance(this@PreviewService)
                         .sendBroadcast(intent)
 
                 // Resume app in the foreground
@@ -168,9 +171,9 @@ class PreviewService : FloatingWindowService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        threads.runOnIoThread {
+        ioCoroutine.launch {
             // If it's already been restored, this method will just return
-            restoreWallpaper(this)
+            restoreWallpaper(this@PreviewService)
         }
     }
 }

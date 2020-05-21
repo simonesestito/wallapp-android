@@ -10,15 +10,12 @@ import android.app.WallpaperManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import androidx.annotation.ColorInt
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
@@ -30,8 +27,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.palette.graphics.Palette
@@ -73,42 +70,6 @@ fun @receiver:ColorInt Int.isLightColor() =
         ColorUtils.calculateLuminance(this) >= 0.5
 
 /**
- * Map [LiveData] value
- */
-fun <T, R> LiveData<T>.map(converter: (T) -> R): LiveData<R> {
-    return Transformations.map(this, converter)
-}
-
-/**
- * Filter items from a list wrapped inside a [LiveData]
- */
-inline fun <T> LiveData<List<T>>.filter(crossinline predicate: (T) -> Boolean): LiveData<List<T>> {
-    return Transformations.map(this) { list ->
-        list.filter(predicate)
-    }
-}
-
-/**
- * Map all items in a list wrapped in a [LiveData]
- */
-inline fun <T, R> LiveData<List<T>>.mapList(crossinline converter: (T) -> R): LiveData<List<R>> {
-    return Transformations.map(this) { list ->
-        list.map(converter)
-    }
-}
-
-/**
- * Observe a LiveData only once, then remove the observer
- */
-inline fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, crossinline onValue: (T?) -> Unit) =
-        observe(lifecycleOwner, object : Observer<T> {
-            override fun onChanged(newValue: T?) {
-                removeObserver(this /* Observer<T> */)
-                onValue(newValue)
-            }
-        })
-
-/**
  * Add a listener to a [RecyclerView]
  */
 inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) -> Unit) {
@@ -121,25 +82,6 @@ inline fun RecyclerView.onScrollListener(crossinline listener: (RecyclerView) ->
 }
 
 fun Fragment.findNavController() = NavHostFragment.findNavController(this)
-
-/**
- * Set light status bar altering [View.setSystemUiVisibility] flags
- */
-@RequiresApi(Build.VERSION_CODES.M)
-fun Activity.setLightStatusBar(light: Boolean) {
-    val decorView = window?.decorView
-    decorView ?: return
-
-    if (light) {
-        // Set light system bars (black icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility or
-                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-    } else {
-        // Set dark system bars (light icons)
-        decorView.systemUiVisibility = decorView.systemUiVisibility and
-                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-    }
-}
 
 /**
  * Add a listener to a [Transition]
@@ -254,18 +196,17 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
 }
 
 /**
- * Utility function to getInstance a [ViewModel] using a [ViewModelProvider.Factory] as required by Dagger
- * Using this function you are obliged to pass a factory
- */
-inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelProvider.Factory) =
-        ViewModelProviders.of(this, factory)[T::class.java]
-
-/**
  * Check if the user is connected to the Internet
  */
-fun Context.isConnectivityOnline() =
-        ContextCompat.getSystemService(this, ConnectivityManager::class.java)
-                ?.activeNetworkInfo?.isConnected ?: false
+fun Context.isConnectivityOnline(): Boolean {
+    val connectivityManager = ContextCompat.getSystemService(this, ConnectivityManager::class.java)
+            ?: return false
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        connectivityManager.activeNetwork != null
+    } else {
+        connectivityManager.activeNetworkInfo != null
+    }
+}
 
 /**
  * Check if the user has a live wallpaper set
@@ -317,12 +258,6 @@ val Context.sharedPreferences: SharedPreferences by thisLazy {
 
 val Fragment.sharedPreferences
     get() = requireContext().sharedPreferences
-
-fun Resources.Theme.resolveIntAttribute(id: Int): Int {
-    val typedValue = TypedValue()
-    resolveAttribute(id, typedValue, true)
-    return typedValue.data
-}
 
 /**
  * Call [View.setOnApplyWindowInsetsListener], ensuring the listener is called only once

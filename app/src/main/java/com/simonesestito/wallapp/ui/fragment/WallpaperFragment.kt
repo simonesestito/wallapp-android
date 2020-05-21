@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -29,6 +30,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
 import androidx.core.view.updatePadding
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
@@ -54,9 +56,7 @@ class WallpaperFragment : SharedElementsDestination() {
 
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
-    private val viewModel by lazy {
-        getViewModel<WallpapersViewModel>(viewModelFactory)
-    }
+    private val viewModel: WallpapersViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,12 +82,11 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.getWallpaperById(args.categoryId, args.wallpaperId)
-                .observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        onWallpaperReady(it)
-                    }
-                }
+        viewModel.getWallpaperById(args.categoryId, args.wallpaperId).observe(viewLifecycleOwner) {
+            if (it != null) {
+                onWallpaperReady(it)
+            }
+        }
 
         val partialWallpaper = Wallpaper(args.wallpaperId, args.categoryId, null, null, null)
         viewModel.loadWallpaperOn(partialWallpaper, wallpaperImage) {
@@ -210,7 +209,11 @@ class WallpaperFragment : SharedElementsDestination() {
 
         // Set bottom bar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
-        bottomAppBar.menu?.forEach { it.icon.setColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP) }
+        bottomAppBar.menu?.forEach {
+            it.icon
+                    .mutate()
+                    .colorFilter = PorterDuffColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP)
+        }
     }
 
     private fun doShare() {

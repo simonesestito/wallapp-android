@@ -21,6 +21,8 @@ data class Wallpaper constructor(
         val authorName: String?,
         val authorSocial: String?
 ) : Identifiable<String>, Parcelable {
+    val fullId = "$categoryId/$id"
+
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             parcel.readString()!!,
