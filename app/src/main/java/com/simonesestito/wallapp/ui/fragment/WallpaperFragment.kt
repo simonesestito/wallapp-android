@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -54,9 +55,7 @@ class WallpaperFragment : SharedElementsDestination() {
 
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
-    private val viewModel by lazy {
-        getViewModel<WallpapersViewModel>(viewModelFactory)
-    }
+    private val viewModel: WallpapersViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

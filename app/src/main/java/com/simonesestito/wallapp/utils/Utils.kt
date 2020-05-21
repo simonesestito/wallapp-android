@@ -26,7 +26,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.palette.graphics.Palette
@@ -192,13 +193,6 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
         Log.d("executeOnReady", "LifecycleOwner is not ready yet, action scheduled")
     }
 }
-
-/**
- * Utility function to getInstance a [ViewModel] using a [ViewModelProvider.Factory] as required by Dagger
- * Using this function you are obliged to pass a factory
- */
-inline fun <reified T : ViewModel> Fragment.getViewModel(factory: ViewModelProvider.Factory) =
-        ViewModelProviders.of(this, factory)[T::class.java]
 
 /**
  * Check if the user is connected to the Internet
