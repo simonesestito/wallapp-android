@@ -30,6 +30,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
 import androidx.core.view.updatePadding
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
@@ -208,7 +209,11 @@ class WallpaperFragment : SharedElementsDestination() {
 
         // Set bottom bar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
-        bottomAppBar.menu?.forEach { it.icon.setColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP) }
+        bottomAppBar.menu?.forEach {
+            it.icon
+                    .mutate()
+                    .colorFilter = PorterDuffColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP)
+        }
     }
 
     private fun doShare() {

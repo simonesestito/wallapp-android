@@ -11,6 +11,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.ConnectivityManager
+import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -197,9 +198,15 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
 /**
  * Check if the user is connected to the Internet
  */
-fun Context.isConnectivityOnline() =
-        ContextCompat.getSystemService(this, ConnectivityManager::class.java)
-                ?.activeNetworkInfo?.isConnected ?: false
+fun Context.isConnectivityOnline(): Boolean {
+    val connectivityManager = ContextCompat.getSystemService(this, ConnectivityManager::class.java)
+            ?: return false
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        connectivityManager.activeNetwork != null
+    } else {
+        connectivityManager.activeNetworkInfo != null
+    }
+}
 
 /**
  * Check if the user has a live wallpaper set
