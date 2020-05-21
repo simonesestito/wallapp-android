@@ -82,12 +82,11 @@ class WallpaperFragment : SharedElementsDestination() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.getWallpaperById(args.categoryId, args.wallpaperId)
-                .observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        onWallpaperReady(it)
-                    }
-                }
+        viewModel.getWallpaperById(args.categoryId, args.wallpaperId).observe(viewLifecycleOwner) {
+            if (it != null) {
+                onWallpaperReady(it)
+            }
+        }
 
         val partialWallpaper = Wallpaper(args.wallpaperId, args.categoryId, null, null, null)
         viewModel.loadWallpaperOn(partialWallpaper, wallpaperImage) {

@@ -21,8 +21,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,6 +56,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
 
     @Inject
     lateinit var adapter: WallpapersAdapter
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -111,15 +112,11 @@ class SingleCategoryFragment : SharedElementsDestination() {
         wallpapersRecyclerView.layoutManager = GridLayoutManager(requireContext(), currentLayoutSpanCount, LinearLayoutManager.HORIZONTAL, false)
         adjustRecyclerViewState()
 
-        // If there was an old LiveData, unregister it
-        oldLiveData?.removeObservers(viewLifecycleOwner)
-
-        // Get wallpapers list from Firebase using LiveData,
-        // updating the oldLiveData so we'll be able to dismiss it later
-        oldLiveData = viewModel.getWallpapersByCategoryId(args.category.id)
-
         // Finally, observe for updates
-        oldLiveData?.observe(viewLifecycleOwner, Observer { walls ->
+        viewModel.getWallpapersByCategoryId(args.category.id).observe(viewLifecycleOwner) { walls ->
+            if (walls == null)
+                return@observe
+
             val oldData = this.adapter.data
 
             // On wallpapers update, refresh the list
@@ -146,7 +143,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
             } else {
                 singleCategoryEmptyView.visibility = View.GONE
             }
-        })
+        }
 
         // Get layout span count from preferences
         val layoutRows = sharedPreferences.getInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, currentLayoutSpanCount)

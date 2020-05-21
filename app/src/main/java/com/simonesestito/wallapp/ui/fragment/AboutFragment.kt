@@ -14,9 +14,8 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
-import com.simonesestito.wallapp.*
+import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.utils.addTopWindowInsetPadding
-import com.simonesestito.wallapp.utils.openUrl
 import kotlinx.android.synthetic.main.about_fragment.view.*
 
 
@@ -32,31 +31,31 @@ class AboutFragment : AbstractAppFragment() {
             adjustElevation(y)
         }
 
-        view.apply {
-            authorPortfolioButton1.setOnClickListener {
-                context?.openUrl(AUTHOR_1_PORTFOLIO_WEBSITE)
-            }
-
-            authorPortfolioButton2.setOnClickListener {
-                context?.openUrl(AUTHOR_2_PORTFOLIO_WEBSITE)
-            }
-
-            authorMailButton1.setOnClickListener {
-                sendEmail(AUTHOR_1_MAIL)
-            }
-
-            authorMailButton2.setOnClickListener {
-                sendEmail(AUTHOR_2_MAIL)
-            }
-
-            aboutFeedbackPlayButton.setOnClickListener {
-                context?.openUrl(GOOGLE_PLAY_LINK)
-            }
-
-            aboutFeedbackMailButton.setOnClickListener {
-                sendEmail(AUTHOR_1_MAIL)
-            }
-        }
+        //view.apply {
+        //    authorPortfolioButton1.setOnClickListener {
+        //        context?.openUrl(AUTHOR_1_PORTFOLIO_WEBSITE)
+        //    }
+//
+        //    authorPortfolioButton2.setOnClickListener {
+        //        context?.openUrl(AUTHOR_2_PORTFOLIO_WEBSITE)
+        //    }
+//
+        //    authorMailButton1.setOnClickListener {
+        //        sendEmail(AUTHOR_1_MAIL)
+        //    }
+//
+        //    authorMailButton2.setOnClickListener {
+        //        sendEmail(AUTHOR_2_MAIL)
+        //    }
+//
+        //    aboutFeedbackPlayButton.setOnClickListener {
+        //        context?.openUrl(GOOGLE_PLAY_LINK)
+        //    }
+//
+        //    aboutFeedbackMailButton.setOnClickListener {
+        //        sendEmail(AUTHOR_1_MAIL)
+        //    }
+        //}
     }
 
     private fun sendEmail(address: String) {
@@ -67,7 +66,7 @@ class AboutFragment : AbstractAppFragment() {
             activity?.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
-            Snackbar.make(view!!, R.string.activity_not_found_error, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireView(), R.string.activity_not_found_error, Snackbar.LENGTH_LONG).show()
         }
     }
 }

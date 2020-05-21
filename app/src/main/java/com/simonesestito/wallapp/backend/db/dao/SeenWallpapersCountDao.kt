@@ -5,12 +5,12 @@
 
 package com.simonesestito.wallapp.backend.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SeenWallpapersCountDao {
@@ -18,5 +18,5 @@ interface SeenWallpapersCountDao {
     suspend fun insertOrUpdate(seenWallpapersCount: SeenWallpapersCount)
 
     @Query("SELECT * FROM SeenWallpapersCount")
-    fun getAllCounts(): LiveData<List<SeenWallpapersCount>>
+    fun getAllCounts(): Flow<List<SeenWallpapersCount>>
 }

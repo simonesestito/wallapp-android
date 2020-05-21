@@ -9,9 +9,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -21,7 +18,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 import com.simonesestito.wallapp.backend.model.Category
-import com.simonesestito.wallapp.backend.model.FirebaseCategory
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -29,38 +26,15 @@ import kotlin.coroutines.suspendCoroutine
 
 class CategoryRepository @Inject constructor(private val firebaseCategoryRepository: FirebaseCategoryRepository,
                                              private val seenWallpapersCountDao: SeenWallpapersCountDao) {
-    fun getCategories() =
-            MediatorLiveData<List<Category>>().apply {
-                val firebaseCategories = firebaseCategoryRepository.getCategories()
-                val wallpapersCounts = seenWallpapersCountDao.getAllCounts()
-
-                val onChanged = { _: Any ->
-                    doMappingAndSetResult(
-                            firebaseCategories,
-                            wallpapersCounts,
-                            this
-                    )
-                }
-
-                addSource(firebaseCategories, onChanged)
-                addSource(wallpapersCounts, onChanged)
+    fun getCategories() = seenWallpapersCountDao.getAllCounts()
+            .map { counts -> counts.map { it.categoryId to it.count }.toMap() }
+            .map { counts ->
+                firebaseCategoryRepository.getCategories()
+                        .map {
+                            val seen = counts[it.id] ?: it.wallpapersCount
+                            Category(data = it, unseenCount = it.wallpapersCount - seen)
+                        }
             }
-
-    private fun doMappingAndSetResult(firebaseCategories: LiveData<List<FirebaseCategory>>,
-                                      wallpapersCounts: LiveData<List<SeenWallpapersCount>>,
-                                      resultLiveData: MutableLiveData<List<Category>>) {
-        val countsMap = wallpapersCounts.value
-                ?.map { it.categoryId to it.count }
-                ?.toMap()
-                ?: emptyMap()
-
-        val categories = firebaseCategories.value?.map {
-            val seen = countsMap[it.id] ?: it.wallpapersCount
-            Category(data = it, unseenCount = it.wallpapersCount - seen)
-        } ?: return
-
-        resultLiveData.value = categories
-    }
 
     /**
      * Load the category cover bitmap.

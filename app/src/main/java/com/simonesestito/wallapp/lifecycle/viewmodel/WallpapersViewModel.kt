@@ -6,8 +6,7 @@
 package com.simonesestito.wallapp.lifecycle.viewmodel
 
 import android.widget.ImageView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.model.Wallpaper
@@ -15,10 +14,7 @@ import com.simonesestito.wallapp.backend.repository.CategoryRepository
 import com.simonesestito.wallapp.backend.repository.WallpaperRepository
 import com.simonesestito.wallapp.enums.CategoryGroup
 import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
-import com.simonesestito.wallapp.utils.map
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,39 +22,42 @@ class WallpapersViewModel @Inject constructor(private val categoryRepository: Ca
                                               private val wallpaperRepository: WallpaperRepository)
     : ViewModel() {
     private val allCategories by lazy { categoryRepository.getCategories() }
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     // Cached values
-    private var wallpapersCategoryId: String = ""
-    private var wallpapersByCategoryId: LiveData<List<Wallpaper>>? = null
-    private var wallpaperId: String = ""
-    private var wallpaperById: LiveData<Wallpaper?>? = null
+    private val wallpapersByCategoryId = MutableLiveData<List<Wallpaper>?>()
+    private val wallpaper = MutableLiveData<Wallpaper>()
 
     fun getCategoriesByGroup(@CategoryGroup group: String) =
             allCategories.map { list ->
                 list.filter { category -> category.data.group == group }
+            }.asLiveData(viewModelScope.coroutineContext)
+
+    fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>?> {
+        if (wallpapersByCategoryId.value?.firstOrNull()?.categoryId != categoryId) {
+            wallpapersByCategoryId.value = null
+            viewModelScope.launch {
+                val walls = wallpaperRepository.getWallpapersByCategoryId(categoryId)
+                wallpapersByCategoryId.postValue(walls)
             }
-
-    fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>> {
-        if (wallpapersCategoryId != categoryId) {
-            wallpapersCategoryId = categoryId
-            wallpapersByCategoryId = wallpaperRepository.getWallpapersByCategoryId(categoryId)
         }
-
-        return wallpapersByCategoryId!!
+        return wallpapersByCategoryId
     }
 
     fun getWallpaperById(categoryId: String, wallpaperId: String): LiveData<Wallpaper?> {
-        if (this.wallpaperId != "$categoryId/$wallpaperId") {
-            this.wallpaperId = "$categoryId/$wallpaperId"
-            this.wallpaperById = wallpaperRepository.getWallpaper(categoryId, wallpaperId)
+        val wallpaperPath = "$categoryId/$wallpaperId"
+        if (wallpaper.value?.fullId != wallpaperPath) {
+            wallpaper.value = null
+            viewModelScope.launch {
+                val fetchedWallpaper = wallpaperRepository.getWallpaper(categoryId, wallpaperId)
+                wallpaper.postValue(fetchedWallpaper)
+            }
         }
 
-        return this.wallpaperById!!
+        return wallpaper
     }
 
     fun updateSeenWallpapers(category: Category) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             categoryRepository.markCategoryAsViewed(category)
         }
     }
@@ -71,10 +70,5 @@ class WallpapersViewModel @Inject constructor(private val categoryRepository: Ca
                 useExactFormatSize = true,
                 onPaletteReady = callback
         )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        coroutineScope.cancel()
     }
 }

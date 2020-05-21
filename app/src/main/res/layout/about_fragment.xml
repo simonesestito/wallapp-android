@@ -4,7 +4,6 @@
   -->
 
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/aboutScrollContentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,6 +50,7 @@
             android:gravity="center_horizontal"
             android:text="@string/app_description" />
 
+        <!--
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -167,6 +167,8 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+-->
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/aboutFeedbackTitle"
             android:layout_width="wrap_content"
@@ -176,7 +178,6 @@
             android:layout_marginBottom="@dimen/margin_separator_normal"
             android:text="@string/about_fragment_feedback_title"
             android:textAppearance="@style/AppTheme.Text.Title" />
-
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/aboutFeedbackPlayButton"
