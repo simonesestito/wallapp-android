@@ -16,7 +16,7 @@ class SnapRecyclerView : RecyclerView {
     private val scrollListener = object : OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+            if (newState == SCROLL_STATE_IDLE) {
                 snapHelper.findSnapView(layoutManager)?.let { view ->
                     val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager!!, view)!!
                     smoothScrollBy(distance[0], distance[1])
@@ -31,8 +31,10 @@ class SnapRecyclerView : RecyclerView {
 
     var snapEnabled: Boolean = false
         set(value) {
+            if (field == value)
+                return
             field = value
-
+            
             if (value) {
                 attachSnapListeners()
             } else {
