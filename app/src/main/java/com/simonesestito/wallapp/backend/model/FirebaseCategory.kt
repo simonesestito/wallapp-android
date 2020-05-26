@@ -18,7 +18,6 @@
 
 package com.simonesestito.wallapp.backend.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.firestore.DocumentSnapshot
 import com.simonesestito.wallapp.*
@@ -26,7 +25,10 @@ import com.simonesestito.wallapp.enums.CATEGORY_GROUP_ORIGINAL
 import com.simonesestito.wallapp.enums.CategoryGroup
 import com.simonesestito.wallapp.enums.FORMAT_COVER
 import com.simonesestito.wallapp.utils.LocalizedString
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class FirebaseCategory(
         override val id: String,
         val displayName: LocalizedString,
@@ -34,18 +36,8 @@ data class FirebaseCategory(
         @CategoryGroup val group: String,
         val wallpapersCount: Int
 ) : Identifiable<String>, Parcelable {
+    @IgnoredOnParcel
     val previewImageUrl = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$id/$FORMAT_COVER"
-
-    constructor(parcel: Parcel) : this(
-            parcel.readString()!!,
-            mutableMapOf<String, Any>().apply {
-                parcel.readMap(this as Map<*, *>, this.javaClass.classLoader)
-            },
-            mutableMapOf<String, Any>().apply {
-                parcel.readMap(this as Map<*, *>, this.javaClass.classLoader)
-            },
-            parcel.readString()!!,
-            parcel.readInt())
 
     @Suppress("UNCHECKED_CAST")
     constructor(snap: DocumentSnapshot) : this(
@@ -54,19 +46,4 @@ data class FirebaseCategory(
             description = snap[KEY_DESCRIPTION] as LocalizedString,
             group = snap[KEY_CATEGORY_GROUP] as String? ?: CATEGORY_GROUP_ORIGINAL,
             wallpapersCount = (snap[KEY_CATEGORY_ITEMS_COUNT] as Long?)?.toInt() ?: 0)
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeMap(displayName)
-        parcel.writeMap(description)
-        parcel.writeString(group)
-        parcel.writeInt(wallpapersCount)
-    }
-
-    override fun describeContents() = hashCode()
-
-    companion object CREATOR : Parcelable.Creator<FirebaseCategory> {
-        override fun createFromParcel(parcel: Parcel) = FirebaseCategory(parcel)
-        override fun newArray(size: Int) = arrayOfNulls<FirebaseCategory?>(size)
-    }
 }

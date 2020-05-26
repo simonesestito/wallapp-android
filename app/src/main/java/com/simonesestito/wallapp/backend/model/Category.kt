@@ -18,36 +18,18 @@
 
 package com.simonesestito.wallapp.backend.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.Keep
 import com.simonesestito.wallapp.Identifiable
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
 @Keep
+@Parcelize
 data class Category(
         val data: FirebaseCategory,
         val unseenCount: Int
 ) : Identifiable<String>, Parcelable {
+    @IgnoredOnParcel
     override val id: String = data.id
-
-    constructor(parcel: Parcel) : this(
-            parcel.readParcelable(FirebaseCategory::class.java.classLoader)!!,
-            parcel.readInt())
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeParcelable(data, flags)
-        parcel.writeInt(unseenCount)
-    }
-
-    override fun describeContents() = 0
-
-    companion object CREATOR : Parcelable.Creator<Category> {
-        override fun createFromParcel(parcel: Parcel): Category {
-            return Category(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Category?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

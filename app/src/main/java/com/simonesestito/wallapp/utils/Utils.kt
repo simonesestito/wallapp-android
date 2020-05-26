@@ -56,13 +56,14 @@ import com.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.SHARED_PREFERENCES_FILENAME
 import com.simonesestito.wallapp.lifecycle.LifecycleExecutor
+import kotlinx.android.parcel.RawValue
 import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-typealias LocalizedString = Map<String, Any>
+typealias LocalizedString = @RawValue Map<String, Any>
 
 val LocalizedString.localized: String
     get() {
