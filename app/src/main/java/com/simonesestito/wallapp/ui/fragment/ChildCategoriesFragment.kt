@@ -117,11 +117,11 @@ class ChildCategoriesFragment : AbstractAppFragment() {
                 .observe(viewLifecycleOwner, this::onNewCategoriesList)
     }
 
-    private fun onNewCategoriesList(list: List<Category>) {
+    private fun onNewCategoriesList(list: List<Category>?) {
         // Hide loading spinner
         categoriesLoadingBar.hide()
 
-        if (list.isNotEmpty()) {
+        if (!list.isNullOrEmpty()) {
             // Update Adapter dataset
             categoriesAdapter.updateDataSet(list)
 

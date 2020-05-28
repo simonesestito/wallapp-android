@@ -38,11 +38,11 @@ class WallpapersViewModel @Inject constructor(private val categoryRepository: Ca
 
     // Cached values
     private val wallpapersByCategoryId = MutableLiveData<List<Wallpaper>?>()
-    private val wallpaper = MutableLiveData<Wallpaper>()
+    private val wallpaper = MutableLiveData<Wallpaper?>()
 
     fun getCategoriesByGroup(@CategoryGroup group: String) =
             allCategories.map { list ->
-                list.filter { category -> category.data.group == group }
+                list?.filter { category -> category.data.group == group }
             }.asLiveData(viewModelScope.coroutineContext)
 
     fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>?> {

@@ -31,6 +31,8 @@ import com.bumptech.glide.request.transition.Transition
 import com.simonesestito.wallapp.backend.db.dao.SeenWallpapersCountDao
 import com.simonesestito.wallapp.backend.db.entity.SeenWallpapersCount
 import com.simonesestito.wallapp.backend.model.Category
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -39,15 +41,20 @@ import kotlin.coroutines.suspendCoroutine
 
 class CategoryRepository @Inject constructor(private val firebaseCategoryRepository: FirebaseCategoryRepository,
                                              private val seenWallpapersCountDao: SeenWallpapersCountDao) {
-    fun getCategories() = seenWallpapersCountDao.getAllCounts()
-            .map { counts -> counts.map { it.categoryId to it.count }.toMap() }
-            .map { counts ->
-                firebaseCategoryRepository.getCategories()
-                        .map {
+    fun getCategories(): Flow<List<Category>?> {
+        return try {
+            seenWallpapersCountDao.getAllCounts()
+                    .map { counts -> counts.map { it.categoryId to it.count }.toMap() }
+                    .map { counts ->
+                        firebaseCategoryRepository.getCategories().map {
                             val seen = counts[it.id] ?: it.wallpapersCount
                             Category(data = it, unseenCount = it.wallpapersCount - seen)
                         }
-            }
+                    }
+        } catch (e: Exception) {
+            flowOf(null)
+        }
+    }
 
     /**
      * Load the category cover bitmap.
