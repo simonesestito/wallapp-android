@@ -147,9 +147,12 @@ class WallpaperSetupViewModel @Inject constructor(
                     context,
                     wallpaper.getStorageFileUrl(format),
                     "${wallpaper.categoryId}_${wallpaper.id}.$extension") {
-                mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))
+                Log.d(TAG, "Download progress: $it")
+                if (it != 100 || mutableDownloadStatus.value !is DownloadStatus.Success)
+                    mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))
             }
 
+            Log.d(TAG, "Download completed")
             mutableDownloadStatus.postValue(DownloadStatus.Success)
         } catch (e: IOException) {
             mutableDownloadStatus.postValue(DownloadStatus.Error)
