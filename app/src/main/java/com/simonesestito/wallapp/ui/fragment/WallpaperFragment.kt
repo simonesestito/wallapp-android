@@ -114,12 +114,6 @@ class WallpaperFragment : SharedElementsDestination() {
             openSetupBottomSheet()
         }
 
-        bottomAppBar.menu.findItem(R.id.wallpaperAuthorInfo).isVisible = arrayOf(
-                wallpaper.authorBio,
-                wallpaper.authorSocial,
-                wallpaper.authorName
-        ).any { it != null }
-
         bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.wallpaperShare -> doShare()

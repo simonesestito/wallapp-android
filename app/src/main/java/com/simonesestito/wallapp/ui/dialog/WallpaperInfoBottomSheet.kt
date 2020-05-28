@@ -39,12 +39,13 @@ class WallpaperInfoBottomSheet : AbstractAppBottomSheet() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.wallpaperAuthorBio.text = wallpaperArg.authorBio ?: ""
-        view.wallpaperAuthorName.text = wallpaperArg.authorName ?: ""
-        view.wallpaperAuthorSocial.visibility = if (wallpaperArg.authorSocial == null) View.GONE else View.VISIBLE
+        view.wallpaperAuthorBio.text = wallpaperArg.authorBio ?: Wallpaper.DEFAULT_AUTHOR_BIO
+        view.wallpaperAuthorName.text = wallpaperArg.authorName ?: Wallpaper.DEFAULT_AUTHOR_NAME
         view.wallpaperAuthorSocial.setOnClickListener {
             // Normalize URL
-            val url = if (wallpaperArg.authorSocial?.startsWith("http://") == true ||
+            val url = if (wallpaperArg.authorSocial == null)
+                Wallpaper.DEFAULT_AUTHOR_SOCIAL
+            else if (wallpaperArg.authorSocial?.startsWith("http://") == true ||
                     wallpaperArg.authorSocial?.startsWith("https://") == true)
                 wallpaperArg.authorSocial!!
             else

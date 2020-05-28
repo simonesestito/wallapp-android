@@ -32,6 +32,5 @@
         android:id="@+id/wallpaperAuthorInfo"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="@string/wallpaper_author_info"
-        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

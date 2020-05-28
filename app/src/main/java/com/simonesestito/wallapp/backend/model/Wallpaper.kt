@@ -35,6 +35,12 @@ data class Wallpaper constructor(
         val authorName: String?,
         val authorSocial: String?
 ) : Identifiable<String>, Parcelable {
+    companion object {
+        const val DEFAULT_AUTHOR_NAME = "Paolo Giubilato"
+        const val DEFAULT_AUTHOR_BIO = "WallApp's original wallpaper"
+        const val DEFAULT_AUTHOR_SOCIAL = "https://instagram.com/paolog._"
+    }
+
     @IgnoredOnParcel
     val fullId = "$categoryId/$id"
 
