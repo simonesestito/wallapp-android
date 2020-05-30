@@ -18,8 +18,6 @@
 
 package com.simonesestito.wallapp.backend.storage
 
-import android.os.Handler
-import android.os.Looper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
@@ -39,10 +37,9 @@ class DownloadService @Inject constructor() {
      *
      * @param url URL of the file
      * @param out Download to an OutputStream
-     * @param progress Callback called on progress update
+     * @param progress Callback called on progress update, NOT necessarily on the main thread
      */
     suspend fun downloadToOutputStream(url: String, out: OutputStream, progress: (Int) -> Unit) {
-        val currentThreadHandler = Handler(Looper.myLooper() ?: Looper.getMainLooper())
         progress(0)
 
         withContext(Dispatchers.IO) {
@@ -65,7 +62,7 @@ class DownloadService @Inject constructor() {
 
                         val currentProgress = bytesCopied * 100 / contentLength
                         if (currentProgress > oldProgress) {
-                            currentThreadHandler.post { progress(currentProgress) }
+                            progress(currentProgress)
                             oldProgress = currentProgress
                         }
                     }
@@ -73,7 +70,7 @@ class DownloadService @Inject constructor() {
             }
 
             if (isActive) {
-                currentThreadHandler.post { progress(100) }
+                progress(100)
             } else if (out is NamedFileOutputStream) {
                 out.file.delete()
             }
