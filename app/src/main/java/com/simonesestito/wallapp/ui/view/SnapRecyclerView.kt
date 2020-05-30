@@ -20,6 +20,7 @@ package com.simonesestito.wallapp.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 
@@ -30,7 +31,7 @@ class SnapRecyclerView : RecyclerView {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == SCROLL_STATE_IDLE) {
-                doSnapAction()
+                doSnapAction(smooth = true)
             }
         }
     }
@@ -53,7 +54,7 @@ class SnapRecyclerView : RecyclerView {
         }
 
     private fun attachSnapListeners() {
-        doSnapAction()
+        doSnapAction(smooth = false)
         addOnScrollListener(scrollListener)
     }
 
@@ -61,13 +62,18 @@ class SnapRecyclerView : RecyclerView {
         removeOnScrollListener(scrollListener)
     }
 
-    private fun doSnapAction() {
+    private fun doSnapAction(smooth: Boolean) {
         layoutManager ?: return
         snapHelper.findSnapView(layoutManager)?.let { view ->
             val viewIndex = layoutManager?.getPosition(view) ?: 0
-            if (viewIndex != 0 && viewIndex != adapter?.itemCount) {
+            val fullyVisible = (layoutManager as? LinearLayoutManager)
+                    ?.findFirstCompletelyVisibleItemPosition()
+            if (viewIndex != fullyVisible) {
                 val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager!!, view)!!
-                scrollBy(distance[0], distance[1])
+                if (smooth)
+                    smoothScrollBy(distance[0], distance[1])
+                else
+                    scrollBy(distance[0], distance[1])
             }
         }
     }
