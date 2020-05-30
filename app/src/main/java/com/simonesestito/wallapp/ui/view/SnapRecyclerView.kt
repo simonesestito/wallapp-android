@@ -30,10 +30,7 @@ class SnapRecyclerView : RecyclerView {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == SCROLL_STATE_IDLE) {
-                snapHelper.findSnapView(layoutManager)?.let { view ->
-                    val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager!!, view)!!
-                    smoothScrollBy(distance[0], distance[1])
-                }
+                doSnapAction()
             }
         }
     }
@@ -56,18 +53,22 @@ class SnapRecyclerView : RecyclerView {
         }
 
     private fun attachSnapListeners() {
-        // Avoid glitch to return in position
-        // Go to the right position without animation
-        snapHelper.findSnapView(layoutManager)?.let { view ->
-            val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager!!, view)!!
-            scrollBy(distance[0], distance[1])
-        }
-
-        // Set the listener
+        doSnapAction()
         addOnScrollListener(scrollListener)
     }
 
     private fun detachSnapListeners() {
         removeOnScrollListener(scrollListener)
+    }
+
+    private fun doSnapAction() {
+        layoutManager ?: return
+        snapHelper.findSnapView(layoutManager)?.let { view ->
+            val viewIndex = layoutManager?.getPosition(view) ?: 0
+            if (viewIndex != 0 && viewIndex != adapter?.itemCount) {
+                val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager!!, view)!!
+                scrollBy(distance[0], distance[1])
+            }
+        }
     }
 }
