@@ -27,8 +27,7 @@ data class ParcelableSkuDetails(
         val id: String,
         val name: String,
         val paidPrice: Int,
-        val currencySign: String,
-        val receivedMoney: Int
+        val currencySign: String
 ) : Parcelable {
     companion object {
         fun fromSkuDetails(skuDetails: SkuDetails): ParcelableSkuDetails {
@@ -44,9 +43,6 @@ data class ParcelableSkuDetails(
             // Price represented in cents
             val priceCents = skuDetails.priceAmountMicros / 1_000_0
 
-            // Price without taxes, minus 30%
-            val receivedMoney = (priceCents * 7) / 10
-
             // Full title: "product name (App name)"
             // Short title: "product name"
             val shortTitle = skuDetails.title.split('(')[0].trimEnd()
@@ -55,15 +51,11 @@ data class ParcelableSkuDetails(
                     skuDetails.sku,
                     shortTitle,
                     priceCents.toInt(),
-                    currencySign,
-                    receivedMoney.toInt()
+                    currencySign
             )
         }
     }
 
     @IgnoredOnParcel
     val formattedPaidPriceNoTaxes = currencySign + ' ' + String.format("%.2f", paidPrice / 100.0)
-
-    @IgnoredOnParcel
-    val formattedReceivedMoney = currencySign + ' ' + String.format("%.2f", receivedMoney / 100.0)
 }
