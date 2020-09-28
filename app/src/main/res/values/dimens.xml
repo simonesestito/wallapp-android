@@ -34,4 +34,5 @@
     <dimen name="wallpaper_list_horizontal_padding">@dimen/margin_separator_small</dimen>
     <dimen name="horizontal_progress_bar_width">160dp</dimen>
     <dimen name="app_bar_height">56dp</dimen>
+    <dimen name="list_item_two_rows_height">72dp</dimen>
 </resources>

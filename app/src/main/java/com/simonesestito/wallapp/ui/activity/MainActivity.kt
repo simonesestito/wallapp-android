@@ -25,21 +25,74 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.android.billingclient.api.*
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
-import com.simonesestito.wallapp.NavGraphDirections
-import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
+import com.simonesestito.wallapp.backend.model.ParcelableSkuDetails
+import com.simonesestito.wallapp.ui.BillingDelegate
 import com.simonesestito.wallapp.ui.ElevatingAppbar
+import com.simonesestito.wallapp.ui.dialog.DonationBottomSheet
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.isDarkTheme
+import com.simonesestito.wallapp.utils.launchBillingFlow
 
 
-class MainActivity : AppCompatActivity(), ElevatingAppbar {
+class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
+    private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
+        Log.i("BILLING", "Billing result = ${billingResult.debugMessage}")
+        Log.i("BILLING", "Purchases = " + purchases?.map { it.sku })
+        purchases?.forEach { handlePurchase(it) }
+    }
+
+    private var skuDetails: List<SkuDetails>? = null
+
+    private val billingClientStateListener = object : BillingClientStateListener {
+        override fun onBillingSetupFinished(billingResult: BillingResult) {
+            Log.i("BILLING", "onBillingSetupFinished")
+            Log.i("BILLING", "billingResult ${billingResult.debugMessage}")
+
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                val productIds = listOf(
+                        DONATION_COFFEE_SKU,
+                        DONATION_HAMBURGER_SKU,
+                        DONATION_DINNER_SKU
+                )
+                val requestParams = SkuDetailsParams.newBuilder()
+                        .setSkusList(productIds)
+                        .setType(BillingClient.SkuType.INAPP)
+                        .build()
+                billingClient.querySkuDetailsAsync(requestParams) { skuDetailsResult, skuDetails ->
+                    if (skuDetailsResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetails != null) {
+                        // Success.
+                        this@MainActivity.skuDetails = skuDetails.sortedBy { it.priceAmountMicros }
+                        onSkuDetailsAvailable()
+                    }
+                }
+
+                billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList?.forEach {
+                    handlePurchase(it)
+                }
+            }
+        }
+
+        override fun onBillingServiceDisconnected() = Unit
+    }
+
+    private val billingClient by lazy {
+        BillingClient.newBuilder(this)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -50,8 +103,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
 
         // TODO: IntroActivity
         //if (sharedPreferences.getBoolean(PREFS_IS_FIRST_LAUNCH_KEY, true)) {
-            // Show first launch activity
-            // It's responsibility of IntroActivity to set FIRST_LAUNCH to false
+        // Show first launch activity
+        // It's responsibility of IntroActivity to set FIRST_LAUNCH to false
         //}
 
         // Draw edge to edge
@@ -64,6 +117,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
                 onDestinationChanged()
             }
         }
+
+        billingClient.startConnection(billingClientStateListener)
     }
 
     override fun onStart() {
@@ -92,6 +147,14 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.donationDialogItem)?.let {
+            it.isVisible = skuDetails != null
+            it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     private fun onDestinationChanged() {
         // Update Menu because an item depends on current destination
         invalidateOptionsMenu()
@@ -104,6 +167,13 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
                         if (it.currentDestination?.id != R.id.aboutFragment)
                             it.navigate(NavGraphDirections.openAbout())
                     }
+                    true
+                }
+                R.id.donationDialogItem -> {
+                    val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
+                    DonationBottomSheet
+                            .createDialog(parcelableSkuDetails)
+                            .show(supportFragmentManager, null)
                     true
                 }
                 else -> super.onOptionsItemSelected(item)
@@ -138,6 +208,33 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar {
         // Applying a shadow on Toolbar in light theme would result in a duplicated shadow
         if (isDarkTheme()) {
             findViewById<MaterialToolbar>(R.id.appToolbar)!!.elevation = elevation
+        }
+    }
+
+    private fun onSkuDetailsAvailable() {
+        Log.i("BILLING", "onSkuDetailsAvailable, ${skuDetails!!.size} items")
+        invalidateOptionsMenu()
+    }
+
+    private fun handlePurchase(purchase: Purchase) {
+        val consumeParams = ConsumeParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+
+        billingClient.consumeAsync(consumeParams) { billingResult, _ ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                // Handle the success of the consume operation.
+                Toast.makeText(this, R.string.donation_success_message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    override fun initPurchase(sku: String) {
+        if (!billingClient.isReady)
+            return
+
+        lifecycleScope.launchWhenResumed {
+            billingClient.launchBillingFlow(this@MainActivity, sku)
         }
     }
 }

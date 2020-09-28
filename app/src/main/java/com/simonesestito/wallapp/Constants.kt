@@ -80,3 +80,7 @@ const val AUTHOR_2_PORTFOLIO_WEBSITE = "https://www.paologiubilato.com"
 const val AUTHOR_2_MAIL = "giubilato95@gmail.com"
 
 const val GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+
+const val DONATION_COFFEE_SKU = "donation_coffee"
+const val DONATION_HAMBURGER_SKU = "donation_hamburger"
+const val DONATION_DINNER_SKU = "donation_dinner"

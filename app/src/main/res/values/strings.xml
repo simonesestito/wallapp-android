@@ -83,4 +83,9 @@
     <string name="wallpaper_location_miui_warning">This wallpaper will be set on homescreen only. To apply on lockscreen, download it and apply it manually from system settings.</string>
     <string name="wallpaper_author_info">Author info</string>
     <string name="wallpaper_author_social">More info</string>
+    <string name="donation_dialog_menu_item">Donate</string>
+    <string name="donation_item_title" translatable="false">%1$s (%2$s)</string>
+    <string name="donation_item_subtitle">I\'ll receive only %s.\nVAT and Google tax are applied.</string>
+    <string name="donation_bottomsheet_title">Make a donation</string>
+    <string name="donation_success_message">Thanks for the donation! \u2764\uFE0F</string>
 </resources>
