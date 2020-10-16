@@ -53,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_separator_normal"
+            android:gravity="center"
             android:text="@string/app_motto"
             android:textAppearance="@style/AppTheme.Text.Subtitle" />
 
