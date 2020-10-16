@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.simonesestito.wallapp.AUTHOR_MAIL
 import com.simonesestito.wallapp.AUTHOR_PORTFOLIO_WEBSITE
 import com.simonesestito.wallapp.GOOGLE_PLAY_LINK
@@ -52,8 +53,12 @@ class AboutFragment : AbstractAppFragment() {
         view.apply {
             authorPortfolioButton.setOnClickListener { context?.openUrl(AUTHOR_PORTFOLIO_WEBSITE) }
             authorMailButton.setOnClickListener { sendEmail(AUTHOR_MAIL) }
-            aboutFeedbackPlayButton.setOnClickListener { context?.openUrl(GOOGLE_PLAY_LINK) }
             aboutFeedbackMailButton.setOnClickListener { sendEmail(AUTHOR_MAIL) }
+
+            aboutFeedbackPlayButton.setOnClickListener {
+                showReviewDialog(fallback = { context?.openUrl(GOOGLE_PLAY_LINK) })
+            }
+
             aboutDonationButton.setOnClickListener {
                 (activity as? BillingDelegate)?.showDonationDialog()
             }
@@ -61,8 +66,8 @@ class AboutFragment : AbstractAppFragment() {
     }
 
     @Suppress("SameParameterValue")
-    private fun sendEmail(address: String) {
-        val intent = Intent(Intent.ACTION_SENDTO, "mailto:$address".toUri()).apply {
+    private fun sendEmail(email: String) {
+        val intent = Intent(Intent.ACTION_SENDTO, "mailto:$email".toUri()).apply {
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
         }
         try {
@@ -71,5 +76,19 @@ class AboutFragment : AbstractAppFragment() {
             e.printStackTrace()
             Snackbar.make(requireView(), R.string.activity_not_found_error, Snackbar.LENGTH_LONG).show()
         }
+    }
+
+    private fun showReviewDialog(fallback: () -> Unit) {
+        val reviewManager = ReviewManagerFactory.create(requireContext())
+        reviewManager
+                .requestReviewFlow()
+                .addOnCompleteListener {
+                    if (it.isSuccessful && activity != null) {
+                        // Actually launch the review dialog
+                        reviewManager.launchReviewFlow(requireActivity(), it.result)
+                    } else {
+                        fallback()
+                    }
+                }
     }
 }
