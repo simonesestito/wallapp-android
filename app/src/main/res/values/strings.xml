@@ -90,4 +90,5 @@
     <string name="donation_bottomsheet_ask_text">Make a donation to support WallApp development!</string>
     <string name="donation_dialog_cancel_button">Not now</string>
     <string name="donation_dismiss_toast">You can always donate from the About page</string>
+    <string name="donation_about_text_item">Make a donation</string>
 </resources>

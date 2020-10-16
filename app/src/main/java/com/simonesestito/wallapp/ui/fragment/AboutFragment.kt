@@ -27,8 +27,13 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
+import com.simonesestito.wallapp.AUTHOR_MAIL
+import com.simonesestito.wallapp.AUTHOR_PORTFOLIO_WEBSITE
+import com.simonesestito.wallapp.GOOGLE_PLAY_LINK
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.ui.BillingDelegate
 import com.simonesestito.wallapp.utils.addTopWindowInsetPadding
+import com.simonesestito.wallapp.utils.openUrl
 import kotlinx.android.synthetic.main.about_fragment.view.*
 
 
@@ -44,33 +49,18 @@ class AboutFragment : AbstractAppFragment() {
             adjustElevation(y)
         }
 
-        //view.apply {
-        //    authorPortfolioButton1.setOnClickListener {
-        //        context?.openUrl(AUTHOR_1_PORTFOLIO_WEBSITE)
-        //    }
-//
-        //    authorPortfolioButton2.setOnClickListener {
-        //        context?.openUrl(AUTHOR_2_PORTFOLIO_WEBSITE)
-        //    }
-//
-        //    authorMailButton1.setOnClickListener {
-        //        sendEmail(AUTHOR_1_MAIL)
-        //    }
-//
-        //    authorMailButton2.setOnClickListener {
-        //        sendEmail(AUTHOR_2_MAIL)
-        //    }
-//
-        //    aboutFeedbackPlayButton.setOnClickListener {
-        //        context?.openUrl(GOOGLE_PLAY_LINK)
-        //    }
-//
-        //    aboutFeedbackMailButton.setOnClickListener {
-        //        sendEmail(AUTHOR_1_MAIL)
-        //    }
-        //}
+        view.apply {
+            authorPortfolioButton.setOnClickListener { context?.openUrl(AUTHOR_PORTFOLIO_WEBSITE) }
+            authorMailButton.setOnClickListener { sendEmail(AUTHOR_MAIL) }
+            aboutFeedbackPlayButton.setOnClickListener { context?.openUrl(GOOGLE_PLAY_LINK) }
+            aboutFeedbackMailButton.setOnClickListener { sendEmail(AUTHOR_MAIL) }
+            aboutDonationButton.setOnClickListener {
+                (activity as? BillingDelegate)?.showDonationDialog()
+            }
+        }
     }
 
+    @Suppress("SameParameterValue")
     private fun sendEmail(address: String) {
         val intent = Intent(Intent.ACTION_SENDTO, "mailto:$address".toUri()).apply {
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))

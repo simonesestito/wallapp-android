@@ -18,6 +18,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/bottom_sheet_elevation"
@@ -40,5 +41,70 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/donationDialogTitle" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/donationListGroup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="donationDialogTitle,donationItemsRecyclerView"
+        tools:visibility="invisible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/donationAskTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/margin_separator_normal"
+        android:text="@string/donation_bottomsheet_ask_title"
+        android:textAppearance="@style/AppTheme.Text.Title"
+        android:textColor="?colorAccent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/donationAskText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin_separator_normal"
+        android:text="@string/donation_bottomsheet_ask_text"
+        android:textAppearance="@style/AppTheme.Text.Subtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/donationAskTitle"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/donationAskDonateButton"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_separator_normal"
+        android:layout_marginEnd="@dimen/margin_separator_normal"
+        android:text="@string/donation_dialog_menu_item"
+        android:textColor="?colorOnSecondary"
+        app:backgroundTint="?colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/donationAskText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/donationAskCancelButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_separator_normal"
+        android:text="@string/donation_dialog_cancel_button"
+        android:textColor="?colorOnSurface"
+        app:layout_constraintEnd_toStartOf="@id/donationAskDonateButton"
+        app:layout_constraintTop_toTopOf="@id/donationAskDonateButton" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/donationAskGroup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:constraint_referenced_ids="donationAskTitle,donationAskText,donationAskCancelButton,donationAskDonateButton"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

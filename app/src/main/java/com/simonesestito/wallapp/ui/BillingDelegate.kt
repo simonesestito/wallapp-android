@@ -19,4 +19,5 @@ package com.simonesestito.wallapp.ui
 
 interface BillingDelegate {
     fun initPurchase(sku: String)
+    fun showDonationDialog(askDonation: Boolean = false)
 }

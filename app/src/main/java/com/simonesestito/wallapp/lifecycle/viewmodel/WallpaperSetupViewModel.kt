@@ -23,9 +23,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.simonesestito.wallapp.PREFS_APPLIED_WALLPAPERS_COUNTER
 import com.simonesestito.wallapp.backend.model.DownloadStatus
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.backend.storage.DownloadService
@@ -78,6 +80,8 @@ class WallpaperSetupViewModel @Inject constructor(
             return
         }
 
+        increaseWallpaperCounter(context)
+
         currentTempFile = withContext(Dispatchers.IO) {
             context.createCacheFile("wall-${wallpaper.id}-$format")
         }
@@ -111,6 +115,8 @@ class WallpaperSetupViewModel @Inject constructor(
 
         withContext(Dispatchers.IO) { backupWallpaper(context) }
 
+        increaseWallpaperCounter(context)
+
         if (coroutineContext.isActive) {
             // Apply wallpaper only if task has not been cancelled
             // and status is still the same
@@ -128,6 +134,13 @@ class WallpaperSetupViewModel @Inject constructor(
     fun stopDownloadTask() {
         if (!isTaskInProgress()) {
             currentTempFile?.delete()
+        }
+    }
+
+    private fun increaseWallpaperCounter(context: Context) {
+        context.sharedPreferences.edit {
+            val oldCounter = context.sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
+            putInt(PREFS_APPLIED_WALLPAPERS_COUNTER, oldCounter + 1)
         }
     }
 

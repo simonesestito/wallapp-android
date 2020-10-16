@@ -21,8 +21,8 @@
     android:id="@+id/aboutScrollContentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
     android:layout_margin="@dimen/activity_content_margin"
+    android:clipToPadding="false"
     android:paddingTop="@dimen/app_bar_height">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -128,24 +128,37 @@
             android:textAppearance="@style/AppTheme.Text.Title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/aboutDonationButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/donation_about_text_item"
+            app:drawableStartCompat="@drawable/ic_gift_outline"
+            app:drawableTint="?colorAccent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/aboutFeedbackPlayButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?android:attr/selectableItemBackground"
-            android:drawableStart="@drawable/ic_star_accent_24dp"
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
-            android:text="@string/about_feedback_play_store" />
+            android:text="@string/about_feedback_play_store"
+            app:drawableStartCompat="@drawable/ic_star_accent_24dp"
+            app:drawableTint="?colorAccent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/aboutFeedbackMailButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?android:attr/selectableItemBackground"
-            android:drawableStart="@drawable/ic_bug_report_accent_24dp"
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
-            android:text="@string/about_feedback_bug_report" />
+            android:text="@string/about_feedback_bug_report"
+            app:drawableStartCompat="@drawable/ic_bug_report_accent_24dp"
+            app:drawableTint="?colorAccent" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

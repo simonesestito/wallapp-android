@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.wallpaper_info_bottomsheet.view.*
 
 class WallpaperInfoBottomSheet : AbstractAppBottomSheet() {
     private val wallpaperArg: Wallpaper by lazy {
-        arguments?.getParcelable<Wallpaper>(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE)!!
+        arguments?.getParcelable(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

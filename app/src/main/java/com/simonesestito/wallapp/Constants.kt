@@ -41,8 +41,11 @@ const val SCALEWAY_BUCKET_URL = "https://wallapp-bucket.s3.fr-par.scw.cloud"
 const val CHROME_PACKAGE_NAME = "com.android.chrome"
 
 const val SHARED_PREFERENCES_FILENAME = "wallapp_prefs"
-const val PREFS_IS_FIRST_LAUNCH_KEY = "first_launch"
 const val PREFS_SINGLE_CATEGORY_LAYOUT_ROWS = "single_category_layout_rows"
+const val PREFS_APPLIED_WALLPAPERS_COUNTER = "applied_wallpapers_counter"
+const val PREFS_DONATION_DIALOG_SHOWN = "donation_dialog_shown"
+
+const val APPLIED_WALLS_COUNTER_DONATION_THRESHOLD = 3
 
 const val REQUEST_PREVIEW_OVERLAY_PERMISSION = 1
 const val REQUEST_READ_STORAGE_PERMISSION = 2
@@ -73,11 +76,8 @@ const val MAX_CACHED_PALETTE_SIZE = 100
 
 const val IO_EXECUTOR_MAX_THREADS = 1
 
-const val AUTHOR_1_PORTFOLIO_WEBSITE = "https://simonesestito.com"
-const val AUTHOR_1_MAIL = "simone@simonesestito.com"
-
-const val AUTHOR_2_PORTFOLIO_WEBSITE = "https://www.paologiubilato.com"
-const val AUTHOR_2_MAIL = "giubilato95@gmail.com"
+const val AUTHOR_PORTFOLIO_WEBSITE = "https://simonesestito.com"
+const val AUTHOR_MAIL = "simone@simonesestito.com"
 
 const val GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
 

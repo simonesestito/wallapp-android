@@ -147,17 +147,28 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.findItem(R.id.donationDialogItem)?.let {
-            it.isVisible = skuDetails != null
-            it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-        }
-        return super.onPrepareOptionsMenu(menu)
-    }
-
     private fun onDestinationChanged() {
         // Update Menu because an item depends on current destination
         invalidateOptionsMenu()
+    }
+
+    private fun askDonationIfNecessary() {
+        val appliedWallpapersCounter = 3 // sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
+        val donationDialogShown = false // sharedPreferences.getBoolean(PREFS_DONATION_DIALOG_SHOWN, false)
+
+        Log.e("MainActivity", "askDonationIfNecessary")
+        if (appliedWallpapersCounter >= APPLIED_WALLS_COUNTER_DONATION_THRESHOLD
+                && !donationDialogShown
+                && !skuDetails.isNullOrEmpty()) {
+            showDonationDialog(askDonation = true)
+        }
+    }
+
+    override fun showDonationDialog(askDonation: Boolean) {
+        val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
+        DonationBottomSheet
+                .createDialog(parcelableSkuDetails, askDonation)
+                .show(supportFragmentManager, null)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
@@ -167,13 +178,6 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
                         if (it.currentDestination?.id != R.id.aboutFragment)
                             it.navigate(NavGraphDirections.openAbout())
                     }
-                    true
-                }
-                R.id.donationDialogItem -> {
-                    val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
-                    DonationBottomSheet
-                            .createDialog(parcelableSkuDetails)
-                            .show(supportFragmentManager, null)
                     true
                 }
                 else -> super.onOptionsItemSelected(item)
@@ -212,8 +216,7 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
     }
 
     private fun onSkuDetailsAvailable() {
-        Log.i("BILLING", "onSkuDetailsAvailable, ${skuDetails!!.size} items")
-        invalidateOptionsMenu()
+        askDonationIfNecessary()
     }
 
     private fun handlePurchase(purchase: Purchase) {
