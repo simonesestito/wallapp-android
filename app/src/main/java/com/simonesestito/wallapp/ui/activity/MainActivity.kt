@@ -43,6 +43,7 @@ import com.simonesestito.wallapp.ui.dialog.DonationBottomSheet
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.isDarkTheme
 import com.simonesestito.wallapp.utils.launchBillingFlow
+import com.simonesestito.wallapp.utils.sharedPreferences
 
 
 class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
@@ -153,8 +154,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
     }
 
     private fun askDonationIfNecessary() {
-        val appliedWallpapersCounter = 3 // sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
-        val donationDialogShown = false // sharedPreferences.getBoolean(PREFS_DONATION_DIALOG_SHOWN, false)
+        val appliedWallpapersCounter = sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
+        val donationDialogShown = sharedPreferences.getBoolean(PREFS_DONATION_DIALOG_SHOWN, false)
 
         Log.e("MainActivity", "askDonationIfNecessary")
         if (appliedWallpapersCounter >= APPLIED_WALLS_COUNTER_DONATION_THRESHOLD
