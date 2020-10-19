@@ -19,6 +19,7 @@
 package com.simonesestito.wallapp.ui.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -28,6 +29,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
@@ -44,6 +46,9 @@ import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.isDarkTheme
 import com.simonesestito.wallapp.utils.launchBillingFlow
 import com.simonesestito.wallapp.utils.sharedPreferences
+import nl.dionsegijn.konfetti.KonfettiView
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 
 
 class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
@@ -229,8 +234,27 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 // Handle the success of the consume operation.
                 Toast.makeText(this, R.string.donation_success_message, Toast.LENGTH_LONG).show()
+                showConfettiView()
             }
         }
+    }
+
+    private fun showConfettiView() {
+        val confettiView: KonfettiView = findViewById(R.id.confettiView)
+        confettiView.doOnPreDraw {
+            // Burst from center
+            confettiView.build()
+                    .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                    .setDirection(0.0, 359.0)
+                    .setSpeed(1f, 8f)
+                    .setFadeOutEnabled(true)
+                    .setTimeToLive(4000)
+                    .addShapes(Shape.Circle, Shape.Square)
+                    .addSizes(Size(12), Size(16, 6f))
+                    .setPosition(confettiView.width / 2f, confettiView.height / 3f)
+                    .burst(200)
+        }
+        confettiView.visibility = View.VISIBLE
     }
 
     override fun initPurchase(sku: String) {
