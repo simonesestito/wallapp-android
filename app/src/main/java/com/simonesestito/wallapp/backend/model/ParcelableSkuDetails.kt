@@ -26,6 +26,7 @@ import kotlinx.android.parcel.Parcelize
 data class ParcelableSkuDetails(
         val id: String,
         val name: String,
+        val description: String,
         val paidPrice: Int,
         val currencySign: String
 ) : Parcelable {
@@ -50,6 +51,7 @@ data class ParcelableSkuDetails(
             return ParcelableSkuDetails(
                     skuDetails.sku,
                     shortTitle,
+                    skuDetails.description,
                     priceCents.toInt(),
                     currencySign
             )

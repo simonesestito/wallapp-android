@@ -46,7 +46,7 @@ class DonationItemsAdapter(private val skuDetails: List<ParcelableSkuDetails>) :
 
         holder.icon.setImageResource(getIconResFromSkuId(item.id))
         holder.title.text = context.resources.getString(R.string.donation_item_title, item.name, item.formattedPaidPriceNoTaxes)
-        holder.subtitle.setText(R.string.donation_item_subtitle)
+        holder.subtitle.text = item.description
 
         holder.itemView.tag = item
         holder.itemView.setOnClickListener {

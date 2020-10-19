@@ -78,7 +78,6 @@
     <string name="wallpaper_author_info">Informazioni sull\'autore</string>
     <string name="wallpaper_author_social">Più informazioni</string>
     <string name="donation_dialog_menu_item">Dona</string>
-    <string name="donation_item_subtitle">IVA e tassa Play Store applicate.</string>
     <string name="donation_bottomsheet_title">Fai una donazione</string>
     <string name="donation_success_message">Grazie per la donazione! \u2764\uFE0F</string>
     <string name="donation_bottomsheet_ask_title">Ti piace l\'app?</string>
