@@ -19,7 +19,7 @@
 package com.simonesestito.wallapp.ui.activity
 
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.Color.rgb
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -243,8 +243,16 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
         val confettiView: KonfettiView = findViewById(R.id.confettiView)
         confettiView.doOnPreDraw {
             // Burst from center
+            val wallappIconColors = listOf(
+                    rgb(243, 164, 134),
+                    rgb(49, 204, 169),
+                    rgb(77, 147, 228),
+                    rgb(207, 156, 226),
+                    rgb(130, 226, 139),
+                    rgb(218, 126, 127)
+            )
             confettiView.build()
-                    .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                    .addColors(wallappIconColors)
                     .setDirection(0.0, 359.0)
                     .setSpeed(1f, 8f)
                     .setFadeOutEnabled(true)
