@@ -69,7 +69,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
                 val productIds = listOf(
                         DONATION_COFFEE_SKU,
                         DONATION_HAMBURGER_SKU,
-                        DONATION_DINNER_SKU
+                        DONATION_DINNER_SKU,
+                        DONATION_XL_TIP_SKU
                 )
                 val requestParams = SkuDetailsParams.newBuilder()
                         .setSkusList(productIds)
