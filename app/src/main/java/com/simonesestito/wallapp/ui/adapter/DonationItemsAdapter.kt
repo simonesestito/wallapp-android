@@ -57,8 +57,8 @@ class DonationItemsAdapter(private val skuDetails: List<ParcelableSkuDetails>) :
     @DrawableRes
     private fun getIconResFromSkuId(id: String) = when (id) {
         DONATION_COFFEE_SKU -> R.drawable.ic_coffee
-        DONATION_HAMBURGER_SKU -> R.drawable.ic_hamburger
-        DONATION_DINNER_SKU -> R.drawable.ic_food_dinner
+        DONATION_HAMBURGER_SKU -> R.drawable.ic_cash
+        DONATION_DINNER_SKU -> R.drawable.ic_cash_multiple
         else -> R.drawable.ic_gift_outline
     }
 
