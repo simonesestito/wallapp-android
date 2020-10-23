@@ -154,6 +154,15 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.donationDialogItem)?.let {
+            val appliedWallpapersCounter = sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
+            it.isVisible = skuDetails != null && appliedWallpapersCounter >= APPLIED_WALLS_COUNTER_DONATION_THRESHOLD
+            it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     private fun onDestinationChanged() {
         // Update Menu because an item depends on current destination
         invalidateOptionsMenu()
@@ -185,6 +194,13 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
                         if (it.currentDestination?.id != R.id.aboutFragment)
                             it.navigate(NavGraphDirections.openAbout())
                     }
+                    true
+                }
+                R.id.donationDialogItem -> {
+                    val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
+                    DonationBottomSheet
+                            .createDialog(parcelableSkuDetails)
+                            .show(supportFragmentManager, null)
                     true
                 }
                 else -> super.onOptionsItemSelected(item)
@@ -223,6 +239,7 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
     }
 
     private fun onSkuDetailsAvailable() {
+        invalidateOptionsMenu()
         askDonationIfNecessary()
     }
 

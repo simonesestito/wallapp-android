@@ -136,7 +136,7 @@
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
             android:text="@string/donation_about_text_item"
-            app:drawableStartCompat="@drawable/ic_gift_outline"
+            app:drawableStartCompat="@drawable/ic_gift_menu_outline"
             app:drawableTint="?colorAccent" />
 
         <androidx.appcompat.widget.AppCompatTextView

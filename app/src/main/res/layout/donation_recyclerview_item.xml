@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?colorAccent"
-        tools:src="@drawable/ic_gift_outline" />
+        tools:src="@drawable/ic_gift_menu_outline" />
 
     <TextView
         android:id="@+id/donationItemTitle"

@@ -17,7 +17,15 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/donationDialogItem"
+        android:icon="@drawable/ic_gift_menu_outline"
+        android:title="@string/donation_dialog_menu_item"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/aboutMenuItem"
         android:title="@string/about_fragment_title"

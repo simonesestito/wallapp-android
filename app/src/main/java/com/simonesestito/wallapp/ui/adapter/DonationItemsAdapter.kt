@@ -59,7 +59,7 @@ class DonationItemsAdapter(private val skuDetails: List<ParcelableSkuDetails>) :
         DONATION_COFFEE_SKU -> R.drawable.ic_coffee
         DONATION_HAMBURGER_SKU -> R.drawable.ic_cash
         DONATION_DINNER_SKU -> R.drawable.ic_cash_multiple
-        else -> R.drawable.ic_gift_outline
+        else -> R.drawable.ic_gift_menu_outline
     }
 
     override fun getItemCount() = skuDetails.size
