@@ -52,11 +52,13 @@ import nl.dionsegijn.konfetti.models.Size
 
 
 class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
-    private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
-        Log.i("BILLING", "Billing result = ${billingResult.debugMessage}")
-        Log.i("BILLING", "Purchases = " + purchases?.map { it.sku })
-        purchases?.forEach { handlePurchase(it) }
-    }
+    private val purchasesUpdatedListener =
+        { billingResult: BillingResult, rawPurchases: List<Purchase>? ->
+            val purchases = rawPurchases.orEmpty()
+            Log.i("BILLING", "Billing result = ${billingResult.debugMessage}")
+            Log.i("BILLING", "Purchases = " + purchases.flatMap { it.skus })
+            purchases.forEach { handlePurchase(it) }
+        }
 
     private var skuDetails: List<SkuDetails>? = null
 
@@ -67,15 +69,15 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
 
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 val productIds = listOf(
-                        DONATION_COFFEE_SKU,
-                        DONATION_HAMBURGER_SKU,
-                        DONATION_DINNER_SKU,
-                        DONATION_XL_TIP_SKU
+                    DONATION_COFFEE_SKU,
+                    DONATION_HAMBURGER_SKU,
+                    DONATION_DINNER_SKU,
+                    DONATION_XL_TIP_SKU
                 )
                 val requestParams = SkuDetailsParams.newBuilder()
-                        .setSkusList(productIds)
-                        .setType(BillingClient.SkuType.INAPP)
-                        .build()
+                    .setSkusList(productIds)
+                    .setType(BillingClient.SkuType.INAPP)
+                    .build()
                 billingClient.querySkuDetailsAsync(requestParams) { skuDetailsResult, skuDetails ->
                     if (skuDetailsResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetails != null) {
                         // Success.
@@ -84,9 +86,10 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
                     }
                 }
 
-                billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList?.forEach {
-                    handlePurchase(it)
-                }
+                billingClient.queryPurchasesAsync(
+                    BillingClient.SkuType.INAPP,
+                    purchasesUpdatedListener
+                )
             }
         }
 
@@ -95,9 +98,9 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
 
     private val billingClient by lazy {
         BillingClient.newBuilder(this)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build()
+            .setListener(purchasesUpdatedListener)
+            .enablePendingPurchases()
+            .build()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,7 +119,7 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
 
         // Draw edge to edge
         findViewById<View>(R.id.root).systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
         findNavController(R.id.navHostFragment).let {
             setupActionBarWithNavController(this, it)
@@ -147,7 +150,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
             menu.clear()
             MenuInflater(this).inflate(R.menu.main_activity_menu, menu)
 
-            val isInAbout = findNavController(R.id.navHostFragment).currentDestination?.id == R.id.aboutFragment
+            val isInAbout =
+                findNavController(R.id.navHostFragment).currentDestination?.id == R.id.aboutFragment
             // Show About menu item only if user is not in About page yet
             menu.findItem(R.id.aboutMenuItem).isVisible = !isInAbout
         }
@@ -156,8 +160,10 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.donationDialogItem)?.let {
-            val appliedWallpapersCounter = sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
-            it.isVisible = skuDetails != null && appliedWallpapersCounter >= APPLIED_WALLS_COUNTER_DONATION_THRESHOLD
+            val appliedWallpapersCounter =
+                sharedPreferences.getInt(PREFS_APPLIED_WALLPAPERS_COUNTER, 0)
+            it.isVisible =
+                skuDetails != null && appliedWallpapersCounter >= APPLIED_WALLS_COUNTER_DONATION_THRESHOLD
             it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         return super.onPrepareOptionsMenu(menu)
@@ -174,8 +180,9 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
 
         Log.e("MainActivity", "askDonationIfNecessary")
         if (appliedWallpapersCounter >= APPLIED_WALLS_COUNTER_DONATION_THRESHOLD
-                && !donationDialogShown
-                && !skuDetails.isNullOrEmpty()) {
+            && !donationDialogShown
+            && !skuDetails.isNullOrEmpty()
+        ) {
             showDonationDialog(askDonation = true)
         }
     }
@@ -183,28 +190,30 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
     override fun showDonationDialog(askDonation: Boolean) {
         val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
         DonationBottomSheet
-                .createDialog(parcelableSkuDetails, askDonation)
-                .show(supportFragmentManager, null)
+            .createDialog(parcelableSkuDetails, askDonation)
+            .show(supportFragmentManager, null)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
-            when (item.itemId) {
-                R.id.aboutMenuItem -> {
-                    findNavController(R.id.navHostFragment).let {
-                        if (it.currentDestination?.id != R.id.aboutFragment)
-                            it.navigate(NavGraphDirections.openAbout())
-                    }
-                    true
+        when (item.itemId) {
+            R.id.aboutMenuItem -> {
+                findNavController(R.id.navHostFragment).let {
+                    if (it.currentDestination?.id != R.id.aboutFragment)
+                        it.navigate(NavGraphDirections.openAbout())
                 }
-                R.id.donationDialogItem -> {
-                    val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
-                    DonationBottomSheet
-                            .createDialog(parcelableSkuDetails)
-                            .show(supportFragmentManager, null)
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
+                true
             }
+
+            R.id.donationDialogItem -> {
+                val parcelableSkuDetails = skuDetails!!.map(ParcelableSkuDetails::fromSkuDetails)
+                DonationBottomSheet
+                    .createDialog(parcelableSkuDetails)
+                    .show(supportFragmentManager, null)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -221,10 +230,10 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
     }
 
     override fun showAppbarElevation() =
-            updateElevation(resources.getDimension(R.dimen.scroll_appbar_elevation))
+        updateElevation(resources.getDimension(R.dimen.scroll_appbar_elevation))
 
     override fun hideAppbarElevation() =
-            updateElevation(resources.getDimension(R.dimen.default_appbar_elevation))
+        updateElevation(resources.getDimension(R.dimen.default_appbar_elevation))
 
     private fun updateElevation(elevation: Float) {
         findViewById<AppBarLayout>(R.id.appBarLayout)!!.elevation = elevation
@@ -245,8 +254,8 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
 
     private fun handlePurchase(purchase: Purchase) {
         val consumeParams = ConsumeParams.newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
+            .setPurchaseToken(purchase.purchaseToken)
+            .build()
 
         billingClient.consumeAsync(consumeParams) { billingResult, _ ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
@@ -262,23 +271,23 @@ class MainActivity : AppCompatActivity(), ElevatingAppbar, BillingDelegate {
         confettiView.doOnPreDraw {
             // Burst from center
             val wallappIconColors = listOf(
-                    rgb(243, 164, 134),
-                    rgb(49, 204, 169),
-                    rgb(77, 147, 228),
-                    rgb(207, 156, 226),
-                    rgb(130, 226, 139),
-                    rgb(218, 126, 127)
+                rgb(243, 164, 134),
+                rgb(49, 204, 169),
+                rgb(77, 147, 228),
+                rgb(207, 156, 226),
+                rgb(130, 226, 139),
+                rgb(218, 126, 127)
             )
             confettiView.build()
-                    .addColors(wallappIconColors)
-                    .setDirection(0.0, 359.0)
-                    .setSpeed(1f, 8f)
-                    .setFadeOutEnabled(true)
-                    .setTimeToLive(4000)
-                    .addShapes(Shape.Circle, Shape.Square)
-                    .addSizes(Size(12), Size(16, 6f))
-                    .setPosition(confettiView.width / 2f, confettiView.height / 3f)
-                    .burst(200)
+                .addColors(wallappIconColors)
+                .setDirection(0.0, 359.0)
+                .setSpeed(1f, 8f)
+                .setFadeOutEnabled(true)
+                .setTimeToLive(4000)
+                .addShapes(Shape.Circle, Shape.Square)
+                .addSizes(Size(12), Size(16, 6f))
+                .setPosition(confettiView.width / 2f, confettiView.height / 3f)
+                .burst(200)
         }
         confettiView.visibility = View.VISIBLE
     }
