@@ -25,8 +25,8 @@ import com.simonesestito.wallapp.enums.CATEGORY_GROUP_ORIGINAL
 import com.simonesestito.wallapp.enums.CategoryGroup
 import com.simonesestito.wallapp.enums.FORMAT_COVER
 import com.simonesestito.wallapp.utils.LocalizedString
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FirebaseCategory(

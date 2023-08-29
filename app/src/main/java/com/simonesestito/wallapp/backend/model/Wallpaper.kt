@@ -24,8 +24,8 @@ import com.simonesestito.wallapp.SCALEWAY_BUCKET_URL
 import com.simonesestito.wallapp.STORAGE_CATEGORIES
 import com.simonesestito.wallapp.STORAGE_WALLPAPERS
 import com.simonesestito.wallapp.enums.WallpaperFormat
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Wallpaper constructor(

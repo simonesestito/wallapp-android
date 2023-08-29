@@ -18,17 +18,16 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'kotlin-kapt'
-
+apply plugin: 'kotlin-parcelize'
 
 android {
     defaultConfig {
         applicationId "com.simonesestito.wallapp"
         minSdkVersion 21
-        targetSdkVersion 33
-        compileSdk 33
+        targetSdkVersion 34
+        compileSdk 34
         versionCode 40
         versionName "2.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -45,6 +44,9 @@ android {
             includeAndroidResources = true
         }
     }
+    viewBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -56,10 +58,10 @@ android {
 
 dependencies {
     def lifecycleKtx = '2.6.0'
-    def room = '2.5.2'
+    def room = '2.6.0-beta01'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // AndroidX
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -95,6 +97,7 @@ dependencies {
     // Room database
     implementation "androidx.room:room-runtime:$room"
     implementation "androidx.room:room-ktx:$room"
+    annotationProcessor "androidx.room:room-compiler:$room"
     //noinspection KaptUsageInsteadOfKsp
     kapt "androidx.room:room-compiler:$room"
 

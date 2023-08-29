@@ -56,7 +56,7 @@ import com.simonesestito.wallapp.FIRESTORE_LOCALIZED_DEFAULT
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.SHARED_PREFERENCES_FILENAME
 import com.simonesestito.wallapp.lifecycle.LifecycleExecutor
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.RawValue
 import java.io.File
 import java.io.IOException
 import java.util.*

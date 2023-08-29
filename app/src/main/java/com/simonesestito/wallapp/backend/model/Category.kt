@@ -21,8 +21,8 @@ package com.simonesestito.wallapp.backend.model
 import android.os.Parcelable
 import androidx.annotation.Keep
 import com.simonesestito.wallapp.Identifiable
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Keep
 @Parcelize

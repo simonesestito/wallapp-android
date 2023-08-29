@@ -56,7 +56,7 @@
     </style>
 
     <!-- BottomSheet theme -->
-    <style name="Base.V21.AppTheme.BottomSheet.Dialog" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
+    <style name="Base.V21.AppTheme.BottomSheet.Dialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppTheme.BottomSheet</item>
     </style>
 

@@ -19,8 +19,8 @@ package com.simonesestito.wallapp.backend.model
 
 import android.os.Parcelable
 import com.android.billingclient.api.SkuDetails
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ParcelableSkuDetails(
