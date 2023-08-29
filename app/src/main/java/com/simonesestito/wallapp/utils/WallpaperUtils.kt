@@ -40,7 +40,8 @@ import java.io.IOException
 @WorkerThread
 fun backupWallpaper(context: Context) {
     val destFile = File(context.noBackupFilesDir, BACKUP_WALLPAPER_FILENAME)
-    val userWallpaper = ContextCompat.getSystemService(context, WallpaperManager::class.java)?.drawable!!
+    val userWallpaper =
+        ContextCompat.getSystemService(context, WallpaperManager::class.java)?.drawable!!
 
     if (userWallpaper is BitmapDrawable) {
         userWallpaper.bitmap.writeToFile(destFile, recycleOnEnd = false)
@@ -56,7 +57,7 @@ fun restoreWallpaper(context: Context) {
         return
     }
     ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
-            .setStream(backupFile.inputStream())
+        .setStream(backupFile.inputStream())
     backupFile.delete()
 }
 
@@ -74,8 +75,8 @@ fun getSuggestedWallpaperFormat(displayMetrics: DisplayMetrics): String {
 
     // If not exactly one of those formats, pick the best one
     return downloadableFormats
-            .sortedBy { format -> Math.abs(format.dimensions.ratio - userRatio) }
-            .first()
+        .sortedBy { format -> Math.abs(format.dimensions.ratio - userRatio) }
+        .first()
 }
 
 @Throws(IOException::class, IllegalStateException::class)
@@ -99,16 +100,16 @@ fun Bitmap.writeToFile(dest: File, recycleOnEnd: Boolean) {
  */
 @WorkerThread
 fun supportApplyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int) =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            applyWallpaper(context, wallpaperFile)
-        } else {
-            applyWallpaper(context, wallpaperFile, location)
-        }
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        applyWallpaper(context, wallpaperFile)
+    } else {
+        applyWallpaper(context, wallpaperFile, location)
+    }
 
 @WorkerThread
 private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {
     val systemWallpaperService =
-            ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
+        ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
 
     return try {
         systemWallpaperService.setStream(wallpaperFile.inputStream())
@@ -121,7 +122,11 @@ private fun applyWallpaper(context: Context, wallpaperFile: File): Boolean {
 
 @RequiresApi(Build.VERSION_CODES.N)
 @WorkerThread
-private fun applyWallpaper(context: Context, wallpaperFile: File, @WallpaperLocation location: Int): Boolean {
+private fun applyWallpaper(
+    context: Context,
+    wallpaperFile: File,
+    @WallpaperLocation location: Int
+): Boolean {
     val which: Int = when (location) {
         WALLPAPER_LOCATION_HOME -> WallpaperManager.FLAG_SYSTEM
         WALLPAPER_LOCATION_LOCK -> WallpaperManager.FLAG_LOCK
@@ -130,13 +135,13 @@ private fun applyWallpaper(context: Context, wallpaperFile: File, @WallpaperLoca
     }
 
     val systemWallpaperService =
-            ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
+        ContextCompat.getSystemService(context, WallpaperManager::class.java)!!
 
     Log.d("WallpaperUtils", "Flag which: $which")
 
     return try {
         systemWallpaperService
-                .setStream(wallpaperFile.inputStream(), null, true, which) != 0
+            .setStream(wallpaperFile.inputStream(), null, true, which) != 0
     } catch (e: IOException) {
         e.printStackTrace()
         false

@@ -44,15 +44,15 @@ import javax.inject.Inject
  * List of categories is always given by the fragment using this Adapter
  */
 class CategoriesAdapter @Inject constructor(
-        private val categoryRepository: CategoryRepository,
-        private val paletteCache: PaletteCache
+    private val categoryRepository: CategoryRepository,
+    private val paletteCache: PaletteCache
 ) : AsyncAdapter<Category, CategoriesVH>() {
     var onItemClickListener: ((Category) -> Unit)? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesVH {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.categories_recycler_item, parent, false)
+            .inflate(R.layout.categories_recycler_item, parent, false)
         return CategoriesVH(view as ColoredCardView)
     }
 
@@ -65,16 +65,17 @@ class CategoriesAdapter @Inject constructor(
             descriptionView.text = category.data.description.localized
 
             wallpapersCount.text = resources.getString(
-                    R.string.category_wallpapers_count_prefix,
-                    category.data.wallpapersCount)
+                R.string.category_wallpapers_count_prefix,
+                category.data.wallpapersCount
+            )
             setUnseenCount(category.unseenCount)
 
             coroutineScope.launch {
                 try {
                     val bitmap = categoryRepository.loadCover(category, holder.itemView)
                     val palette = paletteCache[category] ?: Palette.from(bitmap)
-                            .suspendGenerate()
-                            .also { paletteCache[category] = it }
+                        .suspendGenerate()
+                        .also { paletteCache[category] = it }
                     holder.cardItem.updateCoverImage(bitmap, palette)
                 } catch (e: Exception) {
                     e.printStackTrace()

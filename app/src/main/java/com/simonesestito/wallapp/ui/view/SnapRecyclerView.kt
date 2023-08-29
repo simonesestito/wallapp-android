@@ -38,7 +38,11 @@ class SnapRecyclerView : RecyclerView {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet?) : super(context, attributeSet)
-    constructor(context: Context, attributeSet: AttributeSet?, defStyle: Int) : super(context, attributeSet, defStyle)
+    constructor(context: Context, attributeSet: AttributeSet?, defStyle: Int) : super(
+        context,
+        attributeSet,
+        defStyle
+    )
 
     var snapEnabled: Boolean = false
         set(value) {
@@ -67,7 +71,7 @@ class SnapRecyclerView : RecyclerView {
         snapHelper.findSnapView(layoutManager)?.let { view ->
             val viewIndex = layoutManager?.getPosition(view) ?: 0
             val fullyVisible = (layoutManager as? LinearLayoutManager)
-                    ?.findFirstCompletelyVisibleItemPosition()
+                ?.findFirstCompletelyVisibleItemPosition()
             if (viewIndex != fullyVisible) {
                 val distance = snapHelper.calculateDistanceToFinalSnap(layoutManager!!, view)!!
                 if (smooth)

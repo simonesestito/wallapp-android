@@ -27,12 +27,12 @@ import kotlin.coroutines.suspendCoroutine
 
 suspend fun Query.toSuspendQuery(): List<DocumentSnapshot> = suspendCoroutine { cont ->
     this.get()
-            .addOnSuccessListener { result -> cont.resume(result.documents) }
-            .addOnFailureListener { e -> cont.resumeWithException(e) }
+        .addOnSuccessListener { result -> cont.resume(result.documents) }
+        .addOnFailureListener { e -> cont.resumeWithException(e) }
 }
 
 suspend fun DocumentReference.toSuspendDocument(): DocumentSnapshot = suspendCoroutine { cont ->
     this.get()
-            .addOnSuccessListener { result -> cont.resume(result) }
-            .addOnFailureListener { e -> cont.resumeWithException(e) }
+        .addOnSuccessListener { result -> cont.resume(result) }
+        .addOnFailureListener { e -> cont.resumeWithException(e) }
 }

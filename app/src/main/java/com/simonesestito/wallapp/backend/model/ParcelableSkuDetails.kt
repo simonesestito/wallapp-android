@@ -24,22 +24,22 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ParcelableSkuDetails(
-        val id: String,
-        val name: String,
-        val description: String,
-        val paidPrice: Int,
-        val currencySign: String
+    val id: String,
+    val name: String,
+    val description: String,
+    val paidPrice: Int,
+    val currencySign: String
 ) : Parcelable {
     companion object {
         fun fromSkuDetails(skuDetails: SkuDetails): ParcelableSkuDetails {
             // Extract currency sign from formatted Play Store price
             val unwantedChars = charArrayOf(',', '.', ' ', 160.toChar() /* Non breaking space */)
             val currencySign = skuDetails.price.toCharArray()
-                    .asSequence()
-                    .filterNot { it.isDigit() }
-                    .filterNot { unwantedChars.contains(it) }
-                    // Use the currency code as last resort
-                    .firstOrNull()?.toString() ?: skuDetails.priceCurrencyCode
+                .asSequence()
+                .filterNot { it.isDigit() }
+                .filterNot { unwantedChars.contains(it) }
+                // Use the currency code as last resort
+                .firstOrNull()?.toString() ?: skuDetails.priceCurrencyCode
 
             // Price represented in cents
             val priceCents = skuDetails.priceAmountMicros / 1_000_0
@@ -49,11 +49,11 @@ data class ParcelableSkuDetails(
             val shortTitle = skuDetails.title.split('(')[0].trimEnd()
 
             return ParcelableSkuDetails(
-                    skuDetails.sku,
-                    shortTitle,
-                    skuDetails.description,
-                    priceCents.toInt(),
-                    currencySign
+                skuDetails.sku,
+                shortTitle,
+                skuDetails.description,
+                priceCents.toInt(),
+                currencySign
             )
         }
     }

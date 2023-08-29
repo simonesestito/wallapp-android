@@ -29,7 +29,10 @@ import com.simonesestito.wallapp.utils.TAG
 class LifecycleExecutor(private inline val action: () -> Unit) : LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun executeAction(owner: LifecycleOwner) {
-        Log.d(TAG, "LifecycleOwner ${owner.javaClass.simpleName} is ready: performing scheduled action")
+        Log.d(
+            TAG,
+            "LifecycleOwner ${owner.javaClass.simpleName} is ready: performing scheduled action"
+        )
         owner.lifecycle.removeObserver(this)
         action()
     }

@@ -19,13 +19,17 @@
 package com.simonesestito.wallapp.utils
 
 import android.app.Activity
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.querySkuDetails
 
 suspend fun BillingClient.querySkuDetails(sku: String): SkuDetails? {
     val params = SkuDetailsParams.newBuilder()
-            .setSkusList(listOf(sku))
-            .setType(BillingClient.SkuType.INAPP)
-            .build()
+        .setSkusList(listOf(sku))
+        .setType(BillingClient.SkuType.INAPP)
+        .build()
     val result = this.querySkuDetails(params)
     return result.skuDetailsList?.firstOrNull()
 }
@@ -35,7 +39,7 @@ suspend fun BillingClient.launchBillingFlow(activity: Activity, sku: String) {
     val skuDetails = querySkuDetails(sku) ?: return
 
     val billingFlowParams = BillingFlowParams.newBuilder()
-            .setSkuDetails(skuDetails)
-            .build()
+        .setSkuDetails(skuDetails)
+        .build()
     launchBillingFlow(activity, billingFlowParams)
 }

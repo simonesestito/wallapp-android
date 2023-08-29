@@ -19,7 +19,14 @@
 package com.simonesestito.wallapp.ui.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Shader
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -41,7 +48,7 @@ import com.simonesestito.wallapp.utils.isLightColor
  * Then, it has a gradient starting from the bottom, with the primary color in the image.
  */
 class ColoredCardView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
     @ColorInt
     private val colorSurface: Int
@@ -77,10 +84,11 @@ class ColoredCardView @JvmOverloads constructor(
     init {
         // Get styleable attributes
         context.theme
-                .obtainStyledAttributes(attrs, R.styleable.ColoredCardView, 0, 0)
-                .use {
-                    destImageRect.bottom = it.getDimensionPixelSize(R.styleable.ColoredCardView_coverImageHeight, 0)
-                }
+            .obtainStyledAttributes(attrs, R.styleable.ColoredCardView, 0, 0)
+            .use {
+                destImageRect.bottom =
+                    it.getDimensionPixelSize(R.styleable.ColoredCardView_coverImageHeight, 0)
+            }
 
         // Get theme attributes
         val themeAttr = TypedValue()
@@ -101,9 +109,11 @@ class ColoredCardView @JvmOverloads constructor(
             throw IllegalArgumentException("ColoredCardView expects exactly 1 child view")
 
         // Add image height to measured dimensions
-        setMeasuredDimension(measuredWidth, View.resolveSize(
+        setMeasuredDimension(
+            measuredWidth, View.resolveSize(
                 destImageRect.height() + MeasureSpec.getSize(measuredHeight), heightMeasureSpec
-        ))
+            )
+        )
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -250,9 +260,10 @@ class ColoredCardView @JvmOverloads constructor(
         coverGradientPaint.apply {
             isDither = true
             shader = LinearGradient(
-                    0f, gradientStart, 0f, gradientEnd,
-                    Color.TRANSPARENT, imageColor,
-                    Shader.TileMode.CLAMP)
+                0f, gradientStart, 0f, gradientEnd,
+                Color.TRANSPARENT, imageColor,
+                Shader.TileMode.CLAMP
+            )
         }
 
         solidBackgroundPaint.apply {

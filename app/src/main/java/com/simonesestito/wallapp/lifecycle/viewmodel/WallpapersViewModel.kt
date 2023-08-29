@@ -19,7 +19,11 @@
 package com.simonesestito.wallapp.lifecycle.viewmodel
 
 import android.widget.ImageView
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.model.Wallpaper
@@ -31,9 +35,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class WallpapersViewModel @Inject constructor(private val categoryRepository: CategoryRepository,
-                                              private val wallpaperRepository: WallpaperRepository)
-    : ViewModel() {
+class WallpapersViewModel @Inject constructor(
+    private val categoryRepository: CategoryRepository,
+    private val wallpaperRepository: WallpaperRepository
+) : ViewModel() {
     private val allCategories by lazy { categoryRepository.getCategories() }
 
     // Cached values
@@ -41,9 +46,9 @@ class WallpapersViewModel @Inject constructor(private val categoryRepository: Ca
     private val wallpaper = MutableLiveData<Wallpaper?>()
 
     fun getCategoriesByGroup(@CategoryGroup group: String) =
-            allCategories.map { list ->
-                list?.filter { category -> category.data.group == group }
-            }.asLiveData(viewModelScope.coroutineContext)
+        allCategories.map { list ->
+            list?.filter { category -> category.data.group == group }
+        }.asLiveData(viewModelScope.coroutineContext)
 
     fun getWallpapersByCategoryId(categoryId: String): LiveData<List<Wallpaper>?> {
         if (wallpapersByCategoryId.value?.firstOrNull()?.categoryId != categoryId) {
@@ -77,11 +82,11 @@ class WallpapersViewModel @Inject constructor(private val categoryRepository: Ca
 
     fun loadWallpaperOn(wallpaper: Wallpaper, target: ImageView, callback: (Palette) -> Unit) {
         wallpaperRepository.loadWallpaper(
-                wallpaper,
-                FORMAT_PREVIEW,
-                imageView = target,
-                useExactFormatSize = true,
-                onPaletteReady = callback
+            wallpaper,
+            FORMAT_PREVIEW,
+            imageView = target,
+            useExactFormatSize = true,
+            onPaletteReady = callback
         )
     }
 }

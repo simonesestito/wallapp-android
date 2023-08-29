@@ -32,5 +32,10 @@ import android.content.Context
  */
 interface IStorageDownloadService {
     val requiredPermissions: Array<String>
-    suspend fun downloadToStorage(context: Context, url: String, filename: String, progress: (Int) -> Unit)
+    suspend fun downloadToStorage(
+        context: Context,
+        url: String,
+        filename: String,
+        progress: (Int) -> Unit
+    )
 }

@@ -22,9 +22,9 @@ import androidx.annotation.StringDef
 
 @Retention(AnnotationRetention.SOURCE)
 @StringDef(
-        FORMAT_18_9,
-        FORMAT_IPHONE,
-        FORMAT_PREVIEW
+    FORMAT_18_9,
+    FORMAT_IPHONE,
+    FORMAT_PREVIEW
 )
 annotation class WallpaperFormat
 
@@ -44,8 +44,8 @@ const val FORMAT_PREVIEW = "preview.jpg"
 const val FORMAT_COVER = "cover.jpg"
 
 val downloadableFormats = arrayOf(
-        FORMAT_18_9,
-        FORMAT_IPHONE
+    FORMAT_18_9,
+    FORMAT_IPHONE
 )
 
 val @receiver:WallpaperFormat String.dimensions: Dimensions

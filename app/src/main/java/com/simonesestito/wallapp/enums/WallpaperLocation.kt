@@ -22,9 +22,9 @@ import androidx.annotation.IntDef
 
 @Retention(AnnotationRetention.SOURCE)
 @IntDef(
-        WALLPAPER_LOCATION_HOME,
-        WALLPAPER_LOCATION_LOCK,
-        WALLPAPER_LOCATION_BOTH
+    WALLPAPER_LOCATION_HOME,
+    WALLPAPER_LOCATION_LOCK,
+    WALLPAPER_LOCATION_BOTH
 )
 annotation class WallpaperLocation
 

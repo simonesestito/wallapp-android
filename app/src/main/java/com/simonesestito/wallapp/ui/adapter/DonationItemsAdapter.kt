@@ -31,12 +31,13 @@ import com.simonesestito.wallapp.DONATION_HAMBURGER_SKU
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.ParcelableSkuDetails
 
-class DonationItemsAdapter(private val skuDetails: List<ParcelableSkuDetails>) : RecyclerView.Adapter<DonationItemsAdapter.DonationItemViewHolder>() {
+class DonationItemsAdapter(private val skuDetails: List<ParcelableSkuDetails>) :
+    RecyclerView.Adapter<DonationItemsAdapter.DonationItemViewHolder>() {
     var onItemClickListener: DonationItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DonationItemViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.donation_recyclerview_item, parent, false)
+            .inflate(R.layout.donation_recyclerview_item, parent, false)
         return DonationItemViewHolder(view)
     }
 
@@ -45,7 +46,11 @@ class DonationItemsAdapter(private val skuDetails: List<ParcelableSkuDetails>) :
         val context = holder.itemView.context
 
         holder.icon.setImageResource(getIconResFromSkuId(item.id))
-        holder.title.text = context.resources.getString(R.string.donation_item_title, item.name, item.formattedPaidPriceNoTaxes)
+        holder.title.text = context.resources.getString(
+            R.string.donation_item_title,
+            item.name,
+            item.formattedPaidPriceNoTaxes
+        )
         holder.subtitle.text = item.description
 
         holder.itemView.tag = item

@@ -30,9 +30,9 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun appDatabase(applicationContext: Context): AppDatabase = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            ROOM_DATABASE_NAME
+        applicationContext,
+        AppDatabase::class.java,
+        ROOM_DATABASE_NAME
     ).build()
 
     @Provides

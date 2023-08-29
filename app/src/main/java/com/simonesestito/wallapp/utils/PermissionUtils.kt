@@ -36,7 +36,11 @@ import com.simonesestito.wallapp.ui.dialog.PermissionsDialog
  *
  * Target fragment needs to override [Fragment.onActivityResult] to detect user action
  */
-fun Fragment.requestPermissionsRationale(@StringRes message: Int, requestCode: Int, vararg permissions: String) {
+fun Fragment.requestPermissionsRationale(
+    @StringRes message: Int,
+    requestCode: Int,
+    vararg permissions: String
+) {
     if (shouldShowRequestPermissionRationale(permissions)) {
         val dialog = PermissionsDialog.createDialog(getString(message))
         dialog.show(parentFragmentManager, null)
@@ -50,18 +54,18 @@ fun Fragment.requestPermissionsRationale(@StringRes message: Int, requestCode: I
  * Detect if at least 1 permission of the array needs an explanation dialog
  */
 fun Fragment.shouldShowRequestPermissionRationale(permissions: Array<out String>) =
-        permissions.any { shouldShowRequestPermissionRationale(it) }
+    permissions.any { shouldShowRequestPermissionRationale(it) }
 
 /**
  * Check overlays permission
  */
 fun Context.canDrawOverlays() =
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+    Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
 
 /**
  * Check if a set of permissions is granted
  */
 fun Context.checkSelfPermissions(vararg permissions: String) =
-        permissions.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
+    permissions.all {
+        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+    }

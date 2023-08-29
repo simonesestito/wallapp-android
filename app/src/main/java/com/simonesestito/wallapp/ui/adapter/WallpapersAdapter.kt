@@ -32,14 +32,14 @@ import javax.inject.Inject
 /**
  * Wallpapers Adapter (format PREVIEW)
  */
-class WallpapersAdapter @Inject constructor(private val wallpaperRepository: WallpaperRepository)
-    : AsyncAdapter<Wallpaper, WallpapersVH>() {
+class WallpapersAdapter @Inject constructor(private val wallpaperRepository: WallpaperRepository) :
+    AsyncAdapter<Wallpaper, WallpapersVH>() {
 
     var onItemClickListener: WallpaperClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WallpapersVH {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.single_category_wallpaper_item, parent, false)
+            .inflate(R.layout.single_category_wallpaper_item, parent, false)
         return WallpapersVH(view)
     }
 
@@ -47,10 +47,10 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
         val wallpaper = data[position]
         holder.apply {
             wallpaperRepository.loadWallpaper(
-                    wallpaper,
-                    FORMAT_PREVIEW,
-                    wallpaperImagePreview,
-                    useExactFormatSize = true
+                wallpaper,
+                FORMAT_PREVIEW,
+                wallpaperImagePreview,
+                useExactFormatSize = true
             )
             wallpaperImagePreview.transitionName = wallpaper.id
             wallpaperImagePreview.apply {

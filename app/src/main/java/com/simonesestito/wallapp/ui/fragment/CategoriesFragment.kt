@@ -34,16 +34,21 @@ import com.simonesestito.wallapp.utils.setupWithViewPager
 class CategoriesFragment : AbstractAppFragment(), ElevatingAppbar {
     private lateinit var viewBinding: CategoriesFragmentBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.categories_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.categories_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = CategoriesFragmentBinding.bind(view)
         viewBinding.categoriesFragmentRoot.addTopWindowInsetPadding()
         viewBinding.categoriesGroupViewPager.adapter = ChildCategoriesFragmentAdapter(this)
-        viewBinding.categoriesTabLayout.setupWithViewPager(viewBinding.categoriesGroupViewPager, ALL_CATEGORY_GROUPS)
+        viewBinding.categoriesTabLayout.setupWithViewPager(
+            viewBinding.categoriesGroupViewPager,
+            ALL_CATEGORY_GROUPS
+        )
     }
 
     override fun showAppbarElevation() {
@@ -58,11 +63,13 @@ class CategoriesFragment : AbstractAppFragment(), ElevatingAppbar {
             findElevatingAppbar()?.hideAppbarElevation()
         }
 
-        viewBinding.categoriesTabLayout.elevation = resources.getDimension(R.dimen.scroll_appbar_elevation)
+        viewBinding.categoriesTabLayout.elevation =
+            resources.getDimension(R.dimen.scroll_appbar_elevation)
     }
 
     override fun hideAppbarElevation() {
         findElevatingAppbar()?.hideAppbarElevation()
-        viewBinding.categoriesTabLayout.elevation = resources.getDimension(R.dimen.default_appbar_elevation)
+        viewBinding.categoriesTabLayout.elevation =
+            resources.getDimension(R.dimen.default_appbar_elevation)
     }
 }

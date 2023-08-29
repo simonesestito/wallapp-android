@@ -51,16 +51,16 @@ abstract class FloatingWindowService : Service() {
      */
     @Suppress("DEPRECATION")
     open fun onCreateLayoutParams(): WindowManager.LayoutParams =
-            WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                    else
-                        WindowManager.LayoutParams.TYPE_PHONE,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    PixelFormat.TRANSLUCENT
-            )
+        WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            else
+                WindowManager.LayoutParams.TYPE_PHONE,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
 
     /**
      * Called the view has been added to the [WindowManager]
@@ -104,9 +104,11 @@ abstract class FloatingWindowService : Service() {
     }
     //endregion
 
-    class DragTouchListener(private val params: WindowManager.LayoutParams,
-                            private val windowManager: WindowManager,
-                            private val floatingView: View) : View.OnTouchListener {
+    class DragTouchListener(
+        private val params: WindowManager.LayoutParams,
+        private val windowManager: WindowManager,
+        private val floatingView: View
+    ) : View.OnTouchListener {
         private var initialX: Int = 0
         private var initialY: Int = 0
         private var initialTouchX: Float = 0f

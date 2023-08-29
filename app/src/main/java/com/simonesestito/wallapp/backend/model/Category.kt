@@ -27,8 +27,8 @@ import kotlinx.parcelize.Parcelize
 @Keep
 @Parcelize
 data class Category(
-        val data: FirebaseCategory,
-        val unseenCount: Int
+    val data: FirebaseCategory,
+    val unseenCount: Int
 ) : Identifiable<String>, Parcelable {
     @IgnoredOnParcel
     override val id: String = data.id

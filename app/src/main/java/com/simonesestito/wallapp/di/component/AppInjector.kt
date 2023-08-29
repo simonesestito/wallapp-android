@@ -20,7 +20,13 @@ package com.simonesestito.wallapp.di.component
 
 import com.simonesestito.wallapp.WallappApplication
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
-import com.simonesestito.wallapp.di.module.*
+import com.simonesestito.wallapp.di.module.CacheModule
+import com.simonesestito.wallapp.di.module.ContextModule
+import com.simonesestito.wallapp.di.module.DatabaseModule
+import com.simonesestito.wallapp.di.module.FirebaseModule
+import com.simonesestito.wallapp.di.module.StorageModule
+import com.simonesestito.wallapp.di.module.ThreadModule
+import com.simonesestito.wallapp.di.module.ViewModelModule
 import com.simonesestito.wallapp.ui.dialog.AbstractWallpaperBottomSheet
 import com.simonesestito.wallapp.ui.fragment.ChildCategoriesFragment
 import com.simonesestito.wallapp.ui.fragment.SingleCategoryFragment
@@ -29,23 +35,25 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [
-    ViewModelModule::class,
-    FirebaseModule::class,
-    CacheModule::class,
-    ThreadModule::class,
-    DatabaseModule::class,
-    ContextModule::class,
-    StorageModule::class
-])
+@Component(
+    modules = [
+        ViewModelModule::class,
+        FirebaseModule::class,
+        CacheModule::class,
+        ThreadModule::class,
+        DatabaseModule::class,
+        ContextModule::class,
+        StorageModule::class
+    ]
+)
 interface AppInjector {
     companion object {
         private var injector: AppInjector? = null
         fun getInstance(): AppInjector {
             if (injector == null) {
                 injector = DaggerAppInjector.builder()
-                        .contextModule(ContextModule(WallappApplication.INSTANCE))
-                        .build()
+                    .contextModule(ContextModule(WallappApplication.INSTANCE))
+                    .build()
             }
             return injector!!
         }

@@ -46,8 +46,8 @@ import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 
 class WallpaperSetupViewModel @Inject constructor(
-        private val downloadService: DownloadService,
-        private val storageDownloadService: IStorageDownloadService
+    private val downloadService: DownloadService,
+    private val storageDownloadService: IStorageDownloadService
 ) : ViewModel() {
     private var currentTempFile: File? = null
     private val mutableDownloadStatus = MutableLiveData<DownloadStatus>()
@@ -67,10 +67,12 @@ class WallpaperSetupViewModel @Inject constructor(
      * To be notified about the status, observe [getDownloadStatus] return value
      */
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun applyWallpaper(context: Context,
-                               wallpaper: Wallpaper,
-                               @WallpaperFormat format: String,
-                               @WallpaperLocation location: Int) {
+    suspend fun applyWallpaper(
+        context: Context,
+        wallpaper: Wallpaper,
+        @WallpaperFormat format: String,
+        @WallpaperLocation location: Int
+    ) {
         if (isTaskInProgress()) {
             return
         }
@@ -108,7 +110,8 @@ class WallpaperSetupViewModel @Inject constructor(
      */
     suspend fun applyPreviewWallpaper(context: Context, wallpaper: Wallpaper) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             mutableDownloadStatus.value = DownloadStatus.Error
             return
         }
@@ -121,10 +124,10 @@ class WallpaperSetupViewModel @Inject constructor(
             // Apply wallpaper only if task has not been cancelled
             // and status is still the same
             applyWallpaper(
-                    context,
-                    wallpaper,
-                    getSuggestedWallpaperFormat(context.resources.displayMetrics),
-                    WALLPAPER_LOCATION_HOME
+                context,
+                wallpaper,
+                getSuggestedWallpaperFormat(context.resources.displayMetrics),
+                WALLPAPER_LOCATION_HOME
             )
         } else {
             Log.e(this@WallpaperSetupViewModel.TAG, "Task cancellation detected. Doing nothing")
@@ -150,16 +153,21 @@ class WallpaperSetupViewModel @Inject constructor(
     val storagePermissions = storageDownloadService.requiredPermissions
 
     @Throws(SecurityException::class)
-    suspend fun downloadToGallery(context: Context, wallpaper: Wallpaper, @WallpaperFormat format: String) {
+    suspend fun downloadToGallery(
+        context: Context,
+        wallpaper: Wallpaper,
+        @WallpaperFormat format: String
+    ) {
         val extension = format.split('.').last()
 
         try {
             mutableDownloadStatus.postValue(DownloadStatus.Progressing(0))
 
             storageDownloadService.downloadToStorage(
-                    context,
-                    wallpaper.getStorageFileUrl(format),
-                    "${wallpaper.categoryId}_${wallpaper.id}.$extension") {
+                context,
+                wallpaper.getStorageFileUrl(format),
+                "${wallpaper.categoryId}_${wallpaper.id}.$extension"
+            ) {
                 Log.d(TAG, "Download progress: $it")
                 if (it != 100 || mutableDownloadStatus.value is DownloadStatus.Progressing)
                     mutableDownloadStatus.postValue(DownloadStatus.Progressing(it))
@@ -177,7 +185,7 @@ class WallpaperSetupViewModel @Inject constructor(
      * @return true if a task is in progress, starting a new task is not safe
      */
     private fun isTaskInProgress() =
-            mutableDownloadStatus.value is DownloadStatus.Progressing ||
-                    mutableDownloadStatus.value == DownloadStatus.Finalizing
+        mutableDownloadStatus.value is DownloadStatus.Progressing ||
+                mutableDownloadStatus.value == DownloadStatus.Finalizing
 
 }

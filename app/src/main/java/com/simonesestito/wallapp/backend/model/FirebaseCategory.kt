@@ -30,20 +30,21 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FirebaseCategory(
-        override val id: String,
-        val displayName: LocalizedString,
-        val description: LocalizedString,
-        @CategoryGroup val group: String,
-        val wallpapersCount: Int
+    override val id: String,
+    val displayName: LocalizedString,
+    val description: LocalizedString,
+    @CategoryGroup val group: String,
+    val wallpapersCount: Int
 ) : Identifiable<String>, Parcelable {
     @IgnoredOnParcel
     val previewImageUrl = "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$id/$FORMAT_COVER"
 
     @Suppress("UNCHECKED_CAST")
     constructor(snap: DocumentSnapshot) : this(
-            id = snap.id,
-            displayName = snap[KEY_DISPLAY_NAME] as LocalizedString,
-            description = snap[KEY_DESCRIPTION] as LocalizedString,
-            group = snap[KEY_CATEGORY_GROUP] as String? ?: CATEGORY_GROUP_ORIGINAL,
-            wallpapersCount = (snap[KEY_CATEGORY_ITEMS_COUNT] as Long?)?.toInt() ?: 0)
+        id = snap.id,
+        displayName = snap[KEY_DISPLAY_NAME] as LocalizedString,
+        description = snap[KEY_DESCRIPTION] as LocalizedString,
+        group = snap[KEY_CATEGORY_GROUP] as String? ?: CATEGORY_GROUP_ORIGINAL,
+        wallpapersCount = (snap[KEY_CATEGORY_ITEMS_COUNT] as Long?)?.toInt() ?: 0
+    )
 }

@@ -23,6 +23,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class SeenWallpapersCount(
-        @PrimaryKey val categoryId: String,
-        val count: Int = 0
+    @PrimaryKey val categoryId: String,
+    val count: Int = 0
 )

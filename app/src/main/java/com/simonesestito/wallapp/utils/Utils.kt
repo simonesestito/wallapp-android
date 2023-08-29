@@ -81,7 +81,7 @@ val Any.TAG: String
  * @return true if the color is light
  */
 fun @receiver:ColorInt Int.isLightColor() =
-        ColorUtils.calculateLuminance(this) >= 0.5
+    ColorUtils.calculateLuminance(this) >= 0.5
 
 /**
  * Add a listener to a [RecyclerView]
@@ -100,19 +100,23 @@ fun Fragment.findNavController() = NavHostFragment.findNavController(this)
 /**
  * Add a listener to a [Transition]
  */
-inline fun Transition.addListener(crossinline onStart: () -> Unit = {},
-                                  crossinline onEnd: () -> Unit = {}) =
-        addListener(object : TransitionListenerAdapter() {
-            override fun onTransitionStart(transition: Transition) = onStart()
-            override fun onTransitionEnd(transition: Transition) = onEnd()
-        })
+inline fun Transition.addListener(
+    crossinline onStart: () -> Unit = {},
+    crossinline onEnd: () -> Unit = {}
+) =
+    addListener(object : TransitionListenerAdapter() {
+        override fun onTransitionStart(transition: Transition) = onStart()
+        override fun onTransitionEnd(transition: Transition) = onEnd()
+    })
 
 /**
  * Add a listener to an [Animation]
  */
-inline fun Animation.addListener(crossinline onStart: () -> Unit = {},
-                                 crossinline onEnd: () -> Unit = {},
-                                 crossinline onRepeat: () -> Unit = {}): Animation {
+inline fun Animation.addListener(
+    crossinline onStart: () -> Unit = {},
+    crossinline onEnd: () -> Unit = {},
+    crossinline onRepeat: () -> Unit = {}
+): Animation {
     this.setAnimationListener(object : Animation.AnimationListener {
         override fun onAnimationEnd(p0: Animation?) = onEnd()
         override fun onAnimationStart(p0: Animation?) = onStart()
@@ -162,17 +166,20 @@ fun Context.createCacheFile(prefix: String, suffix: String = ".tmp"): File {
  * @param intentFilter
  * @param receiver Lambda representation of the [BroadcastReceiver.onReceive]
  */
-fun LocalBroadcastManager.registerReceiver(intentFilter: IntentFilter, receiver: (Intent, Context) -> Boolean) =
-        registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent != null && context != null) {
-                    val hasToUnregister = receiver(intent, context)
-                    if (hasToUnregister) {
-                        unregisterReceiver(this)
-                    }
+fun LocalBroadcastManager.registerReceiver(
+    intentFilter: IntentFilter,
+    receiver: (Intent, Context) -> Boolean
+) =
+    registerReceiver(object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent != null && context != null) {
+                val hasToUnregister = receiver(intent, context)
+                if (hasToUnregister) {
+                    unregisterReceiver(this)
                 }
             }
-        }, intentFilter)
+        }
+    }, intentFilter)
 
 /**
  * Check if a given list contains only the given element
@@ -214,7 +221,7 @@ fun LifecycleOwner.executeOnReady(action: () -> Unit) {
  */
 fun Context.isConnectivityOnline(): Boolean {
     val connectivityManager = ContextCompat.getSystemService(this, ConnectivityManager::class.java)
-            ?: return false
+        ?: return false
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         connectivityManager.activeNetwork != null
     } else {
@@ -234,10 +241,10 @@ fun WallpaperManager.isSetLiveWallpaper() = this.wallpaperInfo != null
 fun Context.openUrl(url: String, forceChrome: Boolean = false, useCustomTab: Boolean = true) {
     if (useCustomTab) {
         val customTabIntent = CustomTabsIntent.Builder()
-                .enableUrlBarHiding()
-                .setShowTitle(true)
-                .setToolbarColor(ResourcesCompat.getColor(resources, R.color.color_accent, null))
-                .build()
+            .enableUrlBarHiding()
+            .setShowTitle(true)
+            .setToolbarColor(ResourcesCompat.getColor(resources, R.color.color_accent, null))
+            .build()
 
         if (forceChrome) {
             customTabIntent.intent.setPackage(CHROME_PACKAGE_NAME)
@@ -293,14 +300,24 @@ inline fun View.setOnApplyWindowInsetsListenerOnce(crossinline listener: (View, 
  * Detect if the current device is running MIUI
  */
 fun Context.isPlatformMIUI() = arrayOf(
-        Intent("miui.intent.action.OP_AUTO_START")
-                .addCategory(Intent.CATEGORY_DEFAULT),
-        Intent()
-                .setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
-        Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST")
-                .addCategory(Intent.CATEGORY_DEFAULT),
-        Intent()
-                .setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings"))
+    Intent("miui.intent.action.OP_AUTO_START")
+        .addCategory(Intent.CATEGORY_DEFAULT),
+    Intent()
+        .setComponent(
+            ComponentName(
+                "com.miui.securitycenter",
+                "com.miui.permcenter.autostart.AutoStartManagementActivity"
+            )
+        ),
+    Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST")
+        .addCategory(Intent.CATEGORY_DEFAULT),
+    Intent()
+        .setComponent(
+            ComponentName(
+                "com.miui.securitycenter",
+                "com.miui.powercenter.PowerSettings"
+            )
+        )
 ).any { packageManager.resolveActivity(it, PackageManager.MATCH_DEFAULT_ONLY) != null }
 
 /**
@@ -311,8 +328,8 @@ suspend fun Palette.Builder.suspendGenerate(): Palette = suspendCoroutine {
 }
 
 fun Context.isDarkTheme() = resources
-        .configuration
-        .uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES ||
+    .configuration
+    .uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES ||
         AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
 
 fun TabLayout.setupWithViewPager(viewPager: ViewPager2, tabTitles: Array<String>) {
@@ -324,8 +341,8 @@ fun TabLayout.setupWithViewPager(viewPager: ViewPager2, tabTitles: Array<String>
 fun View.addTopWindowInsetPadding() {
     setOnApplyWindowInsetsListenerOnce { root, insets ->
         root.updatePadding(
-                top = insets.systemWindowInsetTop + root.paddingTop,
-                bottom = insets.systemWindowInsetBottom
+            top = insets.systemWindowInsetTop + root.paddingTop,
+            bottom = insets.systemWindowInsetBottom
         )
     }
 }

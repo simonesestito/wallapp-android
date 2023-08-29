@@ -38,11 +38,17 @@ import java.util.*
  * @see [IStorageDownloadService]
  */
 @RequiresApi(Build.VERSION_CODES.Q)
-class StorageDownloadServiceV29(private val downloadService: DownloadService) : IStorageDownloadService {
+class StorageDownloadServiceV29(private val downloadService: DownloadService) :
+    IStorageDownloadService {
     override val requiredPermissions = emptyArray<String>()
 
-    override suspend fun downloadToStorage(context: Context, url: String, filename: String, progress: (Int) -> Unit) {
-        val mime = when (filename.toLowerCase(Locale.ROOT).split('.').last()) {
+    override suspend fun downloadToStorage(
+        context: Context,
+        url: String,
+        filename: String,
+        progress: (Int) -> Unit
+    ) {
+        val mime = when (filename.lowercase(Locale.ROOT).split('.').last()) {
             "png" -> "image/png"
             "jpg", "jpeg" -> "image/jpeg"
             else -> "image/*"
@@ -50,15 +56,15 @@ class StorageDownloadServiceV29(private val downloadService: DownloadService) : 
 
         // Create a record in MediaStore with isPending = 1
         val contentValues = contentValuesOf(
-                DISPLAY_NAME to filename,
-                MIME_TYPE to mime,
-                RELATIVE_PATH to Environment.DIRECTORY_PICTURES + File.separator + PICTURES_DOWNLOAD_SUBDIR,
-                IS_PENDING to 1
+            DISPLAY_NAME to filename,
+            MIME_TYPE to mime,
+            RELATIVE_PATH to Environment.DIRECTORY_PICTURES + File.separator + PICTURES_DOWNLOAD_SUBDIR,
+            IS_PENDING to 1
         )
 
         // Create file
         val fileUri = getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-                .let { context.contentResolver.insert(it, contentValues)!! }
+            .let { context.contentResolver.insert(it, contentValues)!! }
 
         // Open OutputStream
         val outputStream = context.contentResolver.openOutputStream(fileUri)!!

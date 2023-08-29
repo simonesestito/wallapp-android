@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Category
@@ -66,9 +65,11 @@ class ChildCategoriesFragment : AbstractAppFragment() {
         AppInjector.getInstance().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.child_categories_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.child_categories_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,7 +98,8 @@ class ChildCategoriesFragment : AbstractAppFragment() {
     }
 
     private fun adjustElevation() {
-        val layoutManager = viewBinding.categoriesRecyclerView.layoutManager as? LinearLayoutManager ?: return
+        val layoutManager =
+            viewBinding.categoriesRecyclerView.layoutManager as? LinearLayoutManager ?: return
 
         // Find the first completely visible item
         // If it's the first one, hide the elevation
@@ -117,7 +119,7 @@ class ChildCategoriesFragment : AbstractAppFragment() {
      */
     private fun loadCategoriesList() {
         viewModel.getCategoriesByGroup(categoryGroup)
-                .observe(viewLifecycleOwner, this::onNewCategoriesList)
+            .observe(viewLifecycleOwner, this::onNewCategoriesList)
     }
 
     private fun onNewCategoriesList(list: List<Category>?) {

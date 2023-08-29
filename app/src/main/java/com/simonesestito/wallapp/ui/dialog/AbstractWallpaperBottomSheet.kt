@@ -49,7 +49,7 @@ import javax.inject.Inject
  * Created to optimize code recycling
  */
 abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
-        CoroutineScope by CoroutineScope(Dispatchers.Main) {
+    CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     companion object {
         const val PROGRESS_INDETERMINATE = -1
@@ -71,7 +71,11 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
         AppInjector.getInstance().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val view = inflater.inflate(R.layout.wallpaper_bottomsheet, container, false)
         viewBinding = WallpaperBottomsheetBinding.bind(view)
         return view
@@ -108,13 +112,13 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
 
         wallpaperFeedback.apply {
             animate()
-                    .withStartAction {
-                        wallpaperFeedback.alpha = 0f
-                        wallpaperFeedback.visibility = View.VISIBLE
-                    }.alpha(1f)
-                    .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .start()
+                .withStartAction {
+                    wallpaperFeedback.alpha = 0f
+                    wallpaperFeedback.visibility = View.VISIBLE
+                }.alpha(1f)
+                .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .start()
         }
     }
 
@@ -127,11 +131,11 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
 
         wallpaperDownloading.apply {
             animate()
-                    .alpha(0f)
-                    .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                    .withEndAction {
-                        wallpaperDownloading.visibility = View.INVISIBLE
-                    }.start()
+                .alpha(0f)
+                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+                .withEndAction {
+                    wallpaperDownloading.visibility = View.INVISIBLE
+                }.start()
         }
     }
 
@@ -141,12 +145,12 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
             return
 
         wallpaperSetup.animate()
-                .alpha(0f)
-                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .withEndAction {
-                    // Use INVISIBLE instead of GONE to preserve its space in layout
-                    wallpaperSetup.visibility = View.INVISIBLE
-                }.start()
+            .alpha(0f)
+            .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+            .withEndAction {
+                // Use INVISIBLE instead of GONE to preserve its space in layout
+                wallpaperSetup.visibility = View.INVISIBLE
+            }.start()
     }
 
     private fun showDownloadLayout() {
@@ -156,15 +160,15 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
             return
 
         wallpaperDownloading.animate()
-                .alpha(1f)
-                .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
-                .withStartAction {
-                    // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
-                    wallpaperDownloading.alpha = 0f
-                    wallpaperDownloading.visibility = View.VISIBLE
-                }
-                .start()
+            .alpha(1f)
+            .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+            .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
+            .withStartAction {
+                // Switch from GONE (assigned in xml) to VISIBLE with alpha 0f
+                wallpaperDownloading.alpha = 0f
+                wallpaperDownloading.visibility = View.VISIBLE
+            }
+            .start()
 
         viewBinding.wallpaperDownloading.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
     }

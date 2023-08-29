@@ -79,7 +79,8 @@ const val IO_EXECUTOR_MAX_THREADS = 1
 const val AUTHOR_PORTFOLIO_WEBSITE = "https://simonesestito.com"
 const val AUTHOR_MAIL = "simone@simonesestito.com"
 
-const val GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+const val GOOGLE_PLAY_LINK =
+    "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
 
 const val DONATION_COFFEE_SKU = "donation_coffee"
 const val DONATION_HAMBURGER_SKU = "donation_hamburger"

@@ -41,7 +41,8 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
         super.onViewCreated(view, savedInstanceState)
         val viewBinding = WallpaperBottomsheetLoadingBinding.bind(view)
 
-        val wallpaperManager = ContextCompat.getSystemService(requireContext(), WallpaperManager::class.java)!!
+        val wallpaperManager =
+            ContextCompat.getSystemService(requireContext(), WallpaperManager::class.java)!!
         if (wallpaperManager.isSetLiveWallpaper()) {
             // Preview Mode doesn't support live wallpapers
             showFailedResult(R.string.wallpaper_preview_live_wallpaper_set_error)
@@ -56,14 +57,17 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
                         updateProgress(status.progress)
                     }
                 }
+
                 DownloadStatus.Finalizing -> {
                     viewBinding.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
                     updateProgress(PROGRESS_INDETERMINATE)
                 }
+
                 DownloadStatus.Success -> {
                     tryDismiss()
                     startPreviewMode()
                 }
+
                 DownloadStatus.Error -> showFailedResult()
             }
         })
@@ -84,12 +88,14 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
         })
 
         // Start Preview service
-        ContextCompat.startForegroundService(requireContext(), Intent(
+        ContextCompat.startForegroundService(
+            requireContext(), Intent(
                 requireContext(),
                 PreviewService::class.java
-        ).putExtra(
+            ).putExtra(
                 EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE,
                 wallpaperArg
-        ))
+            )
+        )
     }
 }

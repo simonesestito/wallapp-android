@@ -29,11 +29,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Wallpaper constructor(
-        override val id: String,
-        val categoryId: String,
-        val authorBio: String?,
-        val authorName: String?,
-        val authorSocial: String?
+    override val id: String,
+    val categoryId: String,
+    val authorBio: String?,
+    val authorName: String?,
+    val authorSocial: String?
 ) : Identifiable<String>, Parcelable {
     companion object {
         const val DEFAULT_AUTHOR_NAME = "Paolo Giubilato"
@@ -45,5 +45,5 @@ data class Wallpaper constructor(
     val fullId = "$categoryId/$id"
 
     fun getStorageFileUrl(@WallpaperFormat format: String) =
-            "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$categoryId/$STORAGE_WALLPAPERS/$id/$format"
+        "$SCALEWAY_BUCKET_URL/$STORAGE_CATEGORIES/$categoryId/$STORAGE_WALLPAPERS/$id/$format"
 }

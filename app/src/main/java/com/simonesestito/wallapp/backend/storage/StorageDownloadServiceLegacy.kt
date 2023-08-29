@@ -40,11 +40,16 @@ import kotlin.coroutines.coroutineContext
  * @see IStorageDownloadService
  */
 @TargetApi(Build.VERSION_CODES.P)
-class StorageDownloadServiceLegacy(private val downloadService: DownloadService)
-    : IStorageDownloadService {
+class StorageDownloadServiceLegacy(private val downloadService: DownloadService) :
+    IStorageDownloadService {
 
     @Throws(SecurityException::class)
-    override suspend fun downloadToStorage(context: Context, url: String, filename: String, progress: (Int) -> Unit) {
+    override suspend fun downloadToStorage(
+        context: Context,
+        url: String,
+        filename: String,
+        progress: (Int) -> Unit
+    ) {
         val file = createStorageFile(filename)
         downloadService.downloadToFile(url, file, progress)
         if (coroutineContext.isActive)
@@ -55,7 +60,7 @@ class StorageDownloadServiceLegacy(private val downloadService: DownloadService)
         val args = ContentValues()
         val imageSeconds = System.currentTimeMillis() / 1000
         val filename = file.name
-        val mime = when (filename.toLowerCase(Locale.ROOT).split('.').last()) {
+        val mime = when (filename.lowercase(Locale.ROOT).split('.').last()) {
             "png" -> "image/png"
             "jpg", "jpeg" -> "image/jpeg"
             else -> "image/*"
@@ -71,18 +76,20 @@ class StorageDownloadServiceLegacy(private val downloadService: DownloadService)
         args.put(MediaStore.Images.ImageColumns.SIZE, file.length())
 
         WallappApplication.INSTANCE
-                .contentResolver
-                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, args)
+            .contentResolver
+            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, args)
     }
 
     override val requiredPermissions = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 
     @TargetApi(Build.VERSION_CODES.P)
     @Suppress("DEPRECATION")
     private fun createStorageFile(filename: String): File {
-        val picturesRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val picturesRoot =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val wallappDir = picturesRoot.resolve(PICTURES_DOWNLOAD_SUBDIR)
         if (!wallappDir.exists())
             wallappDir.mkdirs()

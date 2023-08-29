@@ -25,7 +25,8 @@ import com.simonesestito.wallapp.DiffUtilCallback
 import com.simonesestito.wallapp.Identifiable
 
 
-abstract class AsyncAdapter<T : Identifiable<*>, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
+abstract class AsyncAdapter<T : Identifiable<*>, VH : RecyclerView.ViewHolder> :
+    RecyclerView.Adapter<VH>() {
     private val asyncDiffer by lazy {
         AsyncListDiffer<T>(this, DiffUtilCallback<T>())
     }

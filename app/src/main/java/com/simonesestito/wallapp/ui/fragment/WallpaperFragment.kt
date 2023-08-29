@@ -44,7 +44,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.forEach
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.*
@@ -76,7 +75,11 @@ class WallpaperFragment : SharedElementsDestination() {
         AppInjector.getInstance().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val view = inflater.inflate(R.layout.wallpaper_fragment, container, false)
         viewBinding = WallpaperFragmentBinding.bind(view)
         return view
@@ -149,7 +152,11 @@ class WallpaperFragment : SharedElementsDestination() {
         viewBinding.downloadFab.show()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_READ_STORAGE_PERMISSION -> {
@@ -162,39 +169,39 @@ class WallpaperFragment : SharedElementsDestination() {
 
     private fun openSetupBottomSheet() {
         WallpaperSetupBottomSheet()
-                .apply {
-                    arguments = bundleOf(
-                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
-                    )
-                }
-                .show(childFragmentManager, null)
+            .apply {
+                arguments = bundleOf(
+                    EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
+                )
+            }
+            .show(childFragmentManager, null)
     }
 
     private fun openPreviewBottomSheet() {
         // Register receiver to be updated about user decision from PreviewService
         LocalBroadcastManager.getInstance(requireContext())
-                .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, _ ->
-                    // This activity is resumed in the foreground by PreviewService
-                    // This block handles data received from PreviewService
+            .registerReceiver(IntentFilter(ACTION_PREVIEW_RESULT)) { intent, _ ->
+                // This activity is resumed in the foreground by PreviewService
+                // This block handles data received from PreviewService
 
-                    // Handle received result
-                    val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
-                    if (result == RESULT_WALLPAPER_CONFIRMED) {
-                        // Execute this code only when onStart() has been called
-                        executeOnReady {
-                            openSetupBottomSheet()
-                        }
+                // Handle received result
+                val result = intent.getIntExtra(EXTRA_WALLPAPER_PREVIEW_RESULT, -1)
+                if (result == RESULT_WALLPAPER_CONFIRMED) {
+                    // Execute this code only when onStart() has been called
+                    executeOnReady {
+                        openSetupBottomSheet()
                     }
-                    return@registerReceiver true // Unregister automatically
                 }
+                return@registerReceiver true // Unregister automatically
+            }
 
         WallpaperPreviewBottomSheet()
-                .apply {
-                    arguments = bundleOf(
-                            EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
-                    )
-                }
-                .show(childFragmentManager, null)
+            .apply {
+                arguments = bundleOf(
+                    EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE to wallpaper
+                )
+            }
+            .show(childFragmentManager, null)
     }
 
     private fun applyLayoutColor(palette: Palette) {
@@ -209,19 +216,19 @@ class WallpaperFragment : SharedElementsDestination() {
 
         // Back button dark or white according to PRIMARY lightness
         viewBinding.backButton.setColorFilter(
-                if (isPrimaryLight) Color.DKGRAY else Color.WHITE
+            if (isPrimaryLight) Color.DKGRAY else Color.WHITE
         )
 
         // Download icon dark/white according to VIBRANT (currently fab background)
         viewBinding.downloadFab.imageTintList = ColorStateList.valueOf(
-                if (isVibrantLight) Color.DKGRAY else Color.WHITE
+            if (isVibrantLight) Color.DKGRAY else Color.WHITE
         )
 
         // Set bottom bar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
         viewBinding.bottomAppBar.menu?.forEach {
             it.icon?.mutate()
-                    ?.colorFilter = PorterDuffColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP)
+                ?.colorFilter = PorterDuffColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP)
         }
     }
 
@@ -236,14 +243,15 @@ class WallpaperFragment : SharedElementsDestination() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun requestOverlayPermission() {
         startActivityForResult(
-                Intent(
-                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        "package:${BuildConfig.APPLICATION_ID}".toUri()
-                ),
-                REQUEST_PREVIEW_OVERLAY_PERMISSION
+            Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                "package:${BuildConfig.APPLICATION_ID}".toUri()
+            ),
+            REQUEST_PREVIEW_OVERLAY_PERMISSION
         )
 
-        Toast.makeText(requireContext(), R.string.overlay_permission_request, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), R.string.overlay_permission_request, Toast.LENGTH_LONG)
+            .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -253,7 +261,10 @@ class WallpaperFragment : SharedElementsDestination() {
             doPreview()
         } else if (requestCode == REQUEST_READ_STORAGE_PERMISSION && resultCode == Activity.RESULT_OK) {
             // User wants to grant storage permission
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_STORAGE_PERMISSION)
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_READ_STORAGE_PERMISSION
+            )
         }
     }
 
@@ -265,12 +276,16 @@ class WallpaperFragment : SharedElementsDestination() {
         }
 
         // Check EXTERNAL_STORAGE permission
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             return requestPermissionsRationale(
-                    R.string.permission_read_storage_request_message,
-                    REQUEST_READ_STORAGE_PERMISSION,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+                R.string.permission_read_storage_request_message,
+                REQUEST_READ_STORAGE_PERMISSION,
+                Manifest.permission.READ_EXTERNAL_STORAGE
             )
         }
 
@@ -294,9 +309,9 @@ class WallpaperFragment : SharedElementsDestination() {
         context ?: return
         viewBinding.bottomAppBar.visibility = View.VISIBLE
         val animation = AnimationUtils.loadAnimation(context, R.anim.bottom_bar_up)
-                .addListener(
-                        onEnd = { viewBinding.downloadFab.show() }
-                )
+            .addListener(
+                onEnd = { viewBinding.downloadFab.show() }
+            )
         viewBinding.bottomAppBar.startAnimation(animation)
     }
 

@@ -39,8 +39,12 @@ import com.simonesestito.wallapp.utils.openUrl
 
 
 class AboutFragment : AbstractAppFragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.about_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        inflater.inflate(R.layout.about_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,21 +79,22 @@ class AboutFragment : AbstractAppFragment() {
             activity?.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
-            Snackbar.make(requireView(), R.string.activity_not_found_error, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(requireView(), R.string.activity_not_found_error, Snackbar.LENGTH_LONG)
+                .show()
         }
     }
 
     private fun showReviewDialog(fallback: () -> Unit) {
         val reviewManager = ReviewManagerFactory.create(requireContext())
         reviewManager
-                .requestReviewFlow()
-                .addOnCompleteListener {
-                    if (it.isSuccessful && activity != null) {
-                        // Actually launch the review dialog
-                        reviewManager.launchReviewFlow(requireActivity(), it.result)
-                    } else {
-                        fallback()
-                    }
+            .requestReviewFlow()
+            .addOnCompleteListener {
+                if (it.isSuccessful && activity != null) {
+                    // Actually launch the review dialog
+                    reviewManager.launchReviewFlow(requireActivity(), it.result)
+                } else {
+                    fallback()
                 }
+            }
     }
 }

@@ -28,9 +28,9 @@ import javax.inject.Inject
 
 class FirebaseCategoryRepository @Inject constructor(private val firestore: FirebaseFirestore) {
     suspend fun getCategories() = firestore
-            .collection(FIRESTORE_CATEGORIES)
-            .whereEqualTo(KEY_PUBLISHED, true)
-            .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
-            .toSuspendQuery()
-            .map { FirebaseCategory(it) }
+        .collection(FIRESTORE_CATEGORIES)
+        .whereEqualTo(KEY_PUBLISHED, true)
+        .orderBy(KEY_CREATION_DATE, Query.Direction.DESCENDING)
+        .toSuspendQuery()
+        .map { FirebaseCategory(it) }
 }

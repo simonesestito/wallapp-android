@@ -39,18 +39,20 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class CategoryRepository @Inject constructor(private val firebaseCategoryRepository: FirebaseCategoryRepository,
-                                             private val seenWallpapersCountDao: SeenWallpapersCountDao) {
+class CategoryRepository @Inject constructor(
+    private val firebaseCategoryRepository: FirebaseCategoryRepository,
+    private val seenWallpapersCountDao: SeenWallpapersCountDao
+) {
     fun getCategories(): Flow<List<Category>?> {
         return try {
             seenWallpapersCountDao.getAllCounts()
-                    .map { counts -> counts.map { it.categoryId to it.count }.toMap() }
-                    .map { counts ->
-                        firebaseCategoryRepository.getCategories().map {
-                            val seen = counts[it.id] ?: it.wallpapersCount
-                            Category(data = it, unseenCount = it.wallpapersCount - seen)
-                        }
+                .map { counts -> counts.map { it.categoryId to it.count }.toMap() }
+                .map { counts ->
+                    firebaseCategoryRepository.getCategories().map {
+                        val seen = counts[it.id] ?: it.wallpapersCount
+                        Category(data = it, unseenCount = it.wallpapersCount - seen)
                     }
+                }
         } catch (e: Exception) {
             flowOf(null)
         }
@@ -70,28 +72,42 @@ class CategoryRepository @Inject constructor(private val firebaseCategoryReposit
      */
     suspend fun loadCover(category: Category, view: View): Bitmap = suspendCoroutine { cont ->
         Glide
-                .with(view)
-                .asBitmap()
-                .load(category.data.previewImageUrl)
-                .addListener(object : RequestListener<Bitmap> {
-                    override fun onResourceReady(resource: Bitmap, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean) = false
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
-                        cont.resumeWithException(e!!)
-                        return true
-                    }
-                })
-                .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) = Unit
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        Log.e("Category Glide", "onResourceReady")
-                        cont.resume(resource)
-                    }
-                })
+            .with(view)
+            .asBitmap()
+            .load(category.data.previewImageUrl)
+            .addListener(object : RequestListener<Bitmap> {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ) = false
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    cont.resumeWithException(e!!)
+                    return true
+                }
+            })
+            .into(object : com.bumptech.glide.request.target.CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) = Unit
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    Log.e("Category Glide", "onResourceReady")
+                    cont.resume(resource)
+                }
+            })
     }
 
     suspend fun markCategoryAsViewed(category: Category) =
-            seenWallpapersCountDao.insertOrUpdate(SeenWallpapersCount(
-                    category.data.id,
-                    category.data.wallpapersCount
-            ))
+        seenWallpapersCountDao.insertOrUpdate(
+            SeenWallpapersCount(
+                category.data.id,
+                category.data.wallpapersCount
+            )
+        )
 }

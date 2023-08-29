@@ -32,14 +32,14 @@ class PaletteCache(maxSize: Int) : LruCache<String, Palette>(maxSize) {
     }
 
     operator fun get(wallpaper: Wallpaper): Palette? =
-            get("wallpaper:${wallpaper.categoryId}/${wallpaper.id}")
+        get("wallpaper:${wallpaper.categoryId}/${wallpaper.id}")
 
     operator fun set(wallpaper: Wallpaper, palette: Palette) {
         put("wallpaper:${wallpaper.categoryId}/${wallpaper.id}", palette)
     }
 
     operator fun get(category: Category): Palette? =
-            get("category:${category.id}")
+        get("category:${category.id}")
 
     operator fun set(category: Category, palette: Palette) {
         put("category:${category.id}", palette)

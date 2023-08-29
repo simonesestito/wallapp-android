@@ -34,7 +34,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.viewbinding.ViewBinding
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
@@ -54,7 +53,8 @@ class PreviewService : FloatingWindowService() {
     private val ioCoroutine = CoroutineScope(Dispatchers.IO)
     private val uiCoroutine = CoroutineScope(Dispatchers.Main)
     private lateinit var wallpaper: Wallpaper
-    @Inject lateinit var paletteCache: PaletteCache
+    @Inject
+    lateinit var paletteCache: PaletteCache
 
     override val isFloatingWindow: Boolean
         get() = false // Don't allow dragging
@@ -67,10 +67,11 @@ class PreviewService : FloatingWindowService() {
             it.setOnApplyWindowInsetsListener { view, insets ->
                 // Add status bar height
                 view.setPadding(
-                        view.paddingLeft,
-                        view.paddingTop + insets.stableInsetTop,
-                        view.paddingRight,
-                        view.paddingEnd)
+                    view.paddingLeft,
+                    view.paddingTop + insets.stableInsetTop,
+                    view.paddingRight,
+                    view.paddingEnd
+                )
                 view.requestLayout()
                 return@setOnApplyWindowInsetsListener insets
             }
@@ -86,27 +87,28 @@ class PreviewService : FloatingWindowService() {
 
     private fun startForeground() {
         val pendingIntent = PendingIntent.getActivity(
-                this,
-                PREVIEW_SERVICE_PENDING_INTENT_ID,
-                getMainActivityIntent(),
-            PendingIntent.FLAG_IMMUTABLE)
+            this,
+            PREVIEW_SERVICE_PENDING_INTENT_ID,
+            getMainActivityIntent(),
+            PendingIntent.FLAG_IMMUTABLE
+        )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = getSystemService(NotificationManager::class.java)
             val channel = NotificationChannel(
-                    PREVIEW_SERVICE_NOTIFICATION_CHANNEL,
-                    getString(R.string.preview_mode_title),
-                    NotificationManager.IMPORTANCE_LOW
+                PREVIEW_SERVICE_NOTIFICATION_CHANNEL,
+                getString(R.string.preview_mode_title),
+                NotificationManager.IMPORTANCE_LOW
             )
             notificationManager?.createNotificationChannel(channel)
         }
         val notification = NotificationCompat.Builder(this, PREVIEW_SERVICE_NOTIFICATION_CHANNEL)
-                .setSmallIcon(R.drawable.brush)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setContentTitle(getString(R.string.preview_service_notification_title))
-                .setContentText(getString(R.string.preview_service_notification_text))
-                .setContentIntent(pendingIntent)
-                .build()
+            .setSmallIcon(R.drawable.brush)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentTitle(getString(R.string.preview_service_notification_title))
+            .setContentText(getString(R.string.preview_service_notification_text))
+            .setContentIntent(pendingIntent)
+            .build()
 
         startForeground(PREVIEW_SERVICE_NOTIFICATION_ID, notification)
     }
@@ -131,16 +133,16 @@ class PreviewService : FloatingWindowService() {
     }
 
     override fun onCreateLayoutParams() =
-            super.onCreateLayoutParams().apply {
-                gravity = Gravity.TOP
-                y = 0
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                flags = flags or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN
-            }
+        super.onCreateLayoutParams().apply {
+            gravity = Gravity.TOP
+            y = 0
+            width = WindowManager.LayoutParams.MATCH_PARENT
+            flags = flags or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+        }
 
     private fun getMainActivityIntent() = Intent(this, MainActivity::class.java).apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -166,16 +168,18 @@ class PreviewService : FloatingWindowService() {
             // Continue on Main thread
             uiCoroutine.launch {
                 val intent = Intent()
-                        .setAction(ACTION_PREVIEW_RESULT)
-                        .putExtra(EXTRA_WALLPAPER_PREVIEW_RESULT,
-                                if (wallpaperConfirmed)
-                                    RESULT_WALLPAPER_CONFIRMED
-                                else
-                                    RESULT_WALLPAPER_CANCELED)
+                    .setAction(ACTION_PREVIEW_RESULT)
+                    .putExtra(
+                        EXTRA_WALLPAPER_PREVIEW_RESULT,
+                        if (wallpaperConfirmed)
+                            RESULT_WALLPAPER_CONFIRMED
+                        else
+                            RESULT_WALLPAPER_CANCELED
+                    )
 
                 // Notify the rest of the app about the user decision
                 LocalBroadcastManager.getInstance(this@PreviewService)
-                        .sendBroadcast(intent)
+                    .sendBroadcast(intent)
 
                 // Resume app in the foreground
                 startActivity(getMainActivityIntent())

@@ -35,7 +35,6 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,7 +49,6 @@ import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.localized
 import com.simonesestito.wallapp.utils.sharedPreferences
 import javax.inject.Inject
-import kotlin.math.ceil
 
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
@@ -206,7 +204,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.singleCategoryLayoutSwitch -> {
-                (viewBinding.wallpapersRecyclerView?.layoutManager as GridLayoutManager?)?.let {
+                (viewBinding.wallpapersRecyclerView.layoutManager as GridLayoutManager?)?.let {
                     changeLayoutRowCount(if (it.spanCount == 1) 2 else 1)
                 }
                 activity?.invalidateOptionsMenu()
@@ -258,7 +256,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
      * Useful when restoring state
      */
     private fun adjustRecyclerViewState() {
-        val layoutManager = viewBinding.wallpapersRecyclerView?.layoutManager as GridLayoutManager?
+        val layoutManager = viewBinding.wallpapersRecyclerView.layoutManager as GridLayoutManager?
 
         if (layoutManager == null) {
             Log.e(

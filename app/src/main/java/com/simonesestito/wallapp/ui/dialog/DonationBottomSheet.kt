@@ -40,17 +40,18 @@ class DonationBottomSheet : AbstractAppBottomSheet() {
         private const val ARG_SKU_DETAILS = "sku_details"
         private const val ARG_ASK_DONATION = "ask_donation"
 
-        fun createDialog(skuDetails: List<ParcelableSkuDetails>, askDonation: Boolean = false) = DonationBottomSheet().apply {
-            val args = bundleOf()
-            if (skuDetails is ArrayList)
-                args.putParcelableArrayList(ARG_SKU_DETAILS, skuDetails)
-            else
-                args.putParcelableArrayList(ARG_SKU_DETAILS, ArrayList(skuDetails))
-            args.putBoolean(ARG_ASK_DONATION, askDonation)
-            arguments = args
+        fun createDialog(skuDetails: List<ParcelableSkuDetails>, askDonation: Boolean = false) =
+            DonationBottomSheet().apply {
+                val args = bundleOf()
+                if (skuDetails is ArrayList)
+                    args.putParcelableArrayList(ARG_SKU_DETAILS, skuDetails)
+                else
+                    args.putParcelableArrayList(ARG_SKU_DETAILS, ArrayList(skuDetails))
+                args.putBoolean(ARG_ASK_DONATION, askDonation)
+                arguments = args
 
-            isCancelable = !askDonation
-        }
+                isCancelable = !askDonation
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,18 +65,23 @@ class DonationBottomSheet : AbstractAppBottomSheet() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (arguments?.getBoolean(ARG_ASK_DONATION, false) == true) {
-            Toast.makeText(requireContext(), R.string.donation_dismiss_toast, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), R.string.donation_dismiss_toast, Toast.LENGTH_LONG)
+                .show()
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.donation_bottomsheet, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        inflater.inflate(R.layout.donation_bottomsheet, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = requireArguments()
         val skuDetails = args.getParcelableArrayList<ParcelableSkuDetails>(ARG_SKU_DETAILS)
-                ?: emptyList()
+            ?: emptyList()
         val askDonation = args.getBoolean(ARG_ASK_DONATION, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.donationItemsRecyclerView)

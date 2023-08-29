@@ -33,7 +33,11 @@ class WallpaperInfoBottomSheet : AbstractAppBottomSheet() {
         arguments?.getParcelable(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE)!!
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.wallpaper_info_bottomsheet, container, false)
     }
 
@@ -41,13 +45,15 @@ class WallpaperInfoBottomSheet : AbstractAppBottomSheet() {
         super.onViewCreated(view, savedInstanceState)
         val viewBinding = WallpaperInfoBottomsheetBinding.bind(view)
         viewBinding.wallpaperAuthorBio.text = wallpaperArg.authorBio ?: Wallpaper.DEFAULT_AUTHOR_BIO
-        viewBinding.wallpaperAuthorName.text = wallpaperArg.authorName ?: Wallpaper.DEFAULT_AUTHOR_NAME
+        viewBinding.wallpaperAuthorName.text =
+            wallpaperArg.authorName ?: Wallpaper.DEFAULT_AUTHOR_NAME
         viewBinding.wallpaperAuthorSocial.setOnClickListener {
             // Normalize URL
             val url = if (wallpaperArg.authorSocial == null)
                 Wallpaper.DEFAULT_AUTHOR_SOCIAL
             else if (wallpaperArg.authorSocial?.startsWith("http://") == true ||
-                    wallpaperArg.authorSocial?.startsWith("https://") == true)
+                wallpaperArg.authorSocial?.startsWith("https://") == true
+            )
                 wallpaperArg.authorSocial!!
             else
                 "https://${wallpaperArg.authorSocial}"

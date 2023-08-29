@@ -22,8 +22,8 @@ import androidx.annotation.StringDef
 
 @Retention(AnnotationRetention.SOURCE)
 @StringDef(
-        CATEGORY_GROUP_ORIGINAL,
-        CATEGORY_GROUP_COMMUNITY
+    CATEGORY_GROUP_ORIGINAL,
+    CATEGORY_GROUP_COMMUNITY
 )
 annotation class CategoryGroup
 
