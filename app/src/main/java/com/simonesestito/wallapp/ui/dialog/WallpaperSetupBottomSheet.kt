@@ -25,31 +25,34 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.Observer
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.REQUEST_WRITE_STORAGE_PERMISSION
 import com.simonesestito.wallapp.backend.model.DownloadStatus
+import com.simonesestito.wallapp.databinding.WallpaperBottomsheetBinding
+import com.simonesestito.wallapp.databinding.WallpaperBottomsheetSetupBinding
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_BOTH
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_HOME
 import com.simonesestito.wallapp.enums.WALLPAPER_LOCATION_LOCK
 import com.simonesestito.wallapp.enums.WallpaperLocation
 import com.simonesestito.wallapp.utils.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_setup.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
+    lateinit var viewBinding: WallpaperBottomsheetBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = WallpaperBottomsheetBinding.bind(view)
+
+        val wallpaperLocationChipGroup = viewBinding.wallpaperSetup.wallpaperLocationChipGroup
+
         // Apply default selection
-        view.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
+        viewBinding.wallpaperSetup.wallpaperLocationChipGroup.check(R.id.wallpaperLocationChipBoth)
 
         // Necessary in the following listener
-        var lastChecked = view.wallpaperLocationChipGroup.checkedChipId
+        var lastChecked = wallpaperLocationChipGroup.checkedChipId
 
-        view.wallpaperLocationChipGroup.setOnCheckedChangeListener { group, checkedId ->
+        wallpaperLocationChipGroup.setOnCheckedChangeListener { group, checkedId ->
             // Always require a selection
             // NOTE: this block of code will no longer be necessary since material library 1.2.0
             if (checkedId == View.NO_ID)
@@ -59,26 +62,27 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
 
 
             try {
-                viewModel.currentWallpaperLocation = getSelectedLocation()
+                viewModel.currentWallpaperLocation =
+                    viewBinding.wallpaperSetup.getSelectedLocation()
             } catch (_: IllegalArgumentException) {
                 // Thrown by getSelectedLocation in case of wrong selection
             }
         }
 
-        view.wallpaperApplyButton.setOnClickListener {
+        viewBinding.wallpaperSetup.wallpaperApplyButton.setOnClickListener {
             CoroutineScope(coroutineContext).launch {
                 viewModel.applyWallpaper(
-                        requireContext(),
-                        wallpaperArg,
-                        getSuggestedWallpaperFormat(resources.displayMetrics),
-                        // Use saved location in ViewModel instead of getting it now
-                        // It can lead to crash in case of bad selection
-                        viewModel.currentWallpaperLocation
+                    requireContext(),
+                    wallpaperArg,
+                    getSuggestedWallpaperFormat(resources.displayMetrics),
+                    // Use saved location in ViewModel instead of getting it now
+                    // It can lead to crash in case of bad selection
+                    viewModel.currentWallpaperLocation
                 )
             }
         }
 
-        view.wallpaperDownloadButton.setOnClickListener { saveToGallery() }
+        viewBinding.wallpaperSetup.wallpaperDownloadButton.setOnClickListener { saveToGallery() }
 
         // -- API < 24 and MIUI fallback
         val isMIUI = requireContext().isPlatformMIUI()
@@ -86,20 +90,20 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
             // Hide wallpaper location selection
             // It isn't supported before 7.0 (API 24)
             // On MIUI apps can't overwrite lockscreen wallpaper
-            view.wallpaperLocationTitle?.visibility = View.GONE
-            view.wallpaperLocationChipGroup?.visibility = View.GONE
+            viewBinding.wallpaperSetup.wallpaperLocationTitle.visibility = View.GONE
+            viewBinding.wallpaperSetup.wallpaperLocationChipGroup.visibility = View.GONE
             viewModel.currentWallpaperLocation = WALLPAPER_LOCATION_BOTH
 
             if (isMIUI) {
                 // Display MIUI warning
-                view.wallpaperMiuiWarning?.visibility = View.VISIBLE
+                viewBinding.wallpaperSetup.wallpaperMiuiWarning.visibility = View.VISIBLE
             }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.getDownloadStatus().observe(this, Observer { status ->
+        viewModel.getDownloadStatus().observe(this) { status ->
             Log.d(TAG, status.toString())
             when (status) {
                 is DownloadStatus.Progressing -> onDownloadStarted(status.progress)
@@ -107,7 +111,7 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
                 DownloadStatus.Success -> onDownloadResult(true)
                 DownloadStatus.Error -> onDownloadResult(false)
             }
-        })
+        }
     }
 
     /**
@@ -119,18 +123,20 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
         if (permissions.isNotEmpty() && !requireContext().checkSelfPermissions(*permissions)) {
             // Missing permissions
             requestPermissionsRationale(
-                    R.string.permission_write_storage_request_message,
-                    REQUEST_WRITE_STORAGE_PERMISSION,
-                    *permissions
+                R.string.permission_write_storage_request_message,
+                REQUEST_WRITE_STORAGE_PERMISSION,
+                *permissions
             )
             return
         }
 
         // Start downloading the wallpaper
         CoroutineScope(coroutineContext).launch {
-            viewModel.downloadToGallery(requireContext(), wallpaperArg, getSuggestedWallpaperFormat(
+            viewModel.downloadToGallery(
+                requireContext(), wallpaperArg, getSuggestedWallpaperFormat(
                     requireContext().resources.displayMetrics
-            ))
+                )
+            )
         }
     }
 
@@ -140,13 +146,13 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
      */
     @WallpaperLocation
     @Throws(IllegalArgumentException::class)
-    private fun getSelectedLocation() =
-            when (wallpaperLocationChipGroup.checkedChipId) {
-                R.id.wallpaperLocationChipHome -> WALLPAPER_LOCATION_HOME
-                R.id.wallpaperLocationChipLock -> WALLPAPER_LOCATION_LOCK
-                R.id.wallpaperLocationChipBoth -> WALLPAPER_LOCATION_BOTH
-                else -> throw IllegalArgumentException("Unknown chip selection")
-            }
+    private fun WallpaperBottomsheetSetupBinding.getSelectedLocation() =
+        when (wallpaperLocationChipGroup.checkedChipId) {
+            R.id.wallpaperLocationChipHome -> WALLPAPER_LOCATION_HOME
+            R.id.wallpaperLocationChipLock -> WALLPAPER_LOCATION_LOCK
+            R.id.wallpaperLocationChipBoth -> WALLPAPER_LOCATION_BOTH
+            else -> throw IllegalArgumentException("Unknown chip selection")
+        }
 
     private fun onDownloadStarted(progress: Int) {
         if (progress == 0) {
@@ -156,7 +162,7 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
     }
 
     private fun onDownloadFinalizing() {
-        wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
+        viewBinding.wallpaperDownloading.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
         updateProgress(PROGRESS_INDETERMINATE)
     }
 
@@ -169,7 +175,11 @@ class WallpaperSetupBottomSheet : AbstractWallpaperBottomSheet() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.any { it != PackageManager.PERMISSION_GRANTED }) {
             // Permissions denied

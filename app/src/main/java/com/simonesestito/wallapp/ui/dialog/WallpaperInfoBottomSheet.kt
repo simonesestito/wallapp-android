@@ -25,8 +25,8 @@ import android.view.ViewGroup
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
+import com.simonesestito.wallapp.databinding.WallpaperInfoBottomsheetBinding
 import com.simonesestito.wallapp.utils.openUrl
-import kotlinx.android.synthetic.main.wallpaper_info_bottomsheet.view.*
 
 class WallpaperInfoBottomSheet : AbstractAppBottomSheet() {
     private val wallpaperArg: Wallpaper by lazy {
@@ -39,9 +39,10 @@ class WallpaperInfoBottomSheet : AbstractAppBottomSheet() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.wallpaperAuthorBio.text = wallpaperArg.authorBio ?: Wallpaper.DEFAULT_AUTHOR_BIO
-        view.wallpaperAuthorName.text = wallpaperArg.authorName ?: Wallpaper.DEFAULT_AUTHOR_NAME
-        view.wallpaperAuthorSocial.setOnClickListener {
+        val viewBinding = WallpaperInfoBottomsheetBinding.bind(view)
+        viewBinding.wallpaperAuthorBio.text = wallpaperArg.authorBio ?: Wallpaper.DEFAULT_AUTHOR_BIO
+        viewBinding.wallpaperAuthorName.text = wallpaperArg.authorName ?: Wallpaper.DEFAULT_AUTHOR_NAME
+        viewBinding.wallpaperAuthorSocial.setOnClickListener {
             // Normalize URL
             val url = if (wallpaperArg.authorSocial == null)
                 Wallpaper.DEFAULT_AUTHOR_SOCIAL

@@ -28,6 +28,7 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Category
+import com.simonesestito.wallapp.databinding.ChildCategoriesFragmentBinding
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.enums.CategoryGroup
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
@@ -35,8 +36,6 @@ import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.CategoriesAdapter
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.onScrollListener
-import kotlinx.android.synthetic.main.child_categories_fragment.*
-import kotlinx.android.synthetic.main.child_categories_fragment.view.*
 import javax.inject.Inject
 
 class ChildCategoriesFragment : AbstractAppFragment() {
@@ -49,6 +48,8 @@ class ChildCategoriesFragment : AbstractAppFragment() {
     @CategoryGroup
     val categoryGroup: String
         get() = requireArguments().getString(ARG_CATEGORY_GROUP)!!
+
+    private lateinit var viewBinding: ChildCategoriesFragmentBinding
 
     companion object {
         const val ARG_CATEGORY_GROUP = "category_group"
@@ -71,20 +72,22 @@ class ChildCategoriesFragment : AbstractAppFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = ChildCategoriesFragmentBinding.bind(view)
+
         // Show loading spinner
-        view.categoriesLoadingBar.show()
+        viewBinding.categoriesLoadingBar.show()
 
         // Set initial RecyclerView status, without any data
-        view.categoriesRecyclerView.adapter = categoriesAdapter
-        view.categoriesRecyclerView.layoutManager = LinearLayoutManager(context)
-        view.categoriesRecyclerView.setHasFixedSize(true)
+        viewBinding.categoriesRecyclerView.adapter = categoriesAdapter
+        viewBinding.categoriesRecyclerView.layoutManager = LinearLayoutManager(context)
+        viewBinding.categoriesRecyclerView.setHasFixedSize(true)
 
         categoriesAdapter.onItemClickListener = {
             val direction = CategoriesFragmentDirections.toCategory(it)
             findNavController().navigate(direction)
         }
 
-        view.categoriesRecyclerView.onScrollListener { adjustElevation() }
+        viewBinding.categoriesRecyclerView.onScrollListener { adjustElevation() }
         findElevatingAppbar()?.hideAppbarElevation()
     }
 
@@ -94,7 +97,7 @@ class ChildCategoriesFragment : AbstractAppFragment() {
     }
 
     private fun adjustElevation() {
-        val layoutManager = categoriesRecyclerView.layoutManager as? LinearLayoutManager ?: return
+        val layoutManager = viewBinding.categoriesRecyclerView.layoutManager as? LinearLayoutManager ?: return
 
         // Find the first completely visible item
         // If it's the first one, hide the elevation
@@ -119,23 +122,23 @@ class ChildCategoriesFragment : AbstractAppFragment() {
 
     private fun onNewCategoriesList(list: List<Category>?) {
         // Hide loading spinner
-        categoriesLoadingBar.hide()
+        viewBinding.categoriesLoadingBar.hide()
 
         if (!list.isNullOrEmpty()) {
             // Update Adapter dataset
             categoriesAdapter.updateDataSet(list)
 
             // Hide Empty View
-            categoriesEmptyView.visibility = View.GONE
+            viewBinding.categoriesEmptyView.visibility = View.GONE
 
             // Show RecyclerView
-            categoriesRecyclerView.visibility = View.VISIBLE
+            viewBinding.categoriesRecyclerView.visibility = View.VISIBLE
         } else {
             // Hide RecyclerView
-            categoriesRecyclerView.visibility = View.GONE
+            viewBinding.categoriesRecyclerView.visibility = View.GONE
 
             // Show Empty View
-            categoriesEmptyView.visibility = View.VISIBLE
+            viewBinding.categoriesEmptyView.visibility = View.VISIBLE
         }
     }
 }

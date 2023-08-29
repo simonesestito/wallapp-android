@@ -18,11 +18,9 @@
 
 package com.simonesestito.wallapp.ui.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.annotation.RequiresApi
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import com.simonesestito.wallapp.utils.addListener
@@ -30,7 +28,6 @@ import com.simonesestito.wallapp.utils.addListener
 /**
  * Special fragment that acts as a destination for a SharedElements transition
  */
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 abstract class SharedElementsDestination : AbstractAppFragment() {
     /**
      * Determine if the postponed transition should be started
@@ -44,26 +41,30 @@ abstract class SharedElementsDestination : AbstractAppFragment() {
      * @return Shared Elements transition to apply
      */
     protected open fun createSharedElementsEnterTransition(): Transition =
-            TransitionInflater.from(context)
-                    .inflateTransition(android.R.transition.move)
-                    .apply {
-                        interpolator = DecelerateInterpolator(2.0f)
-                        duration = requireContext().resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-                    }.addListener(
-                            onStart = { onPreSharedElementsTransition() },
-                            onEnd = { onPostSharedElementsTransition() }
-                    )
+        TransitionInflater.from(requireContext())
+            .inflateTransition(android.R.transition.move)
+            .apply {
+                interpolator = DecelerateInterpolator(2.0f)
+                duration =
+                    requireContext().resources.getInteger(android.R.integer.config_mediumAnimTime)
+                        .toLong()
+            }.addListener(
+                onStart = { onPreSharedElementsTransition() },
+                onEnd = { onPostSharedElementsTransition() }
+            )
 
     /**
      * @return The transition or null if you don't want a return transition
      */
     protected open fun createSharedElementsReturnTransition(): Transition? =
-            TransitionInflater.from(context)
-                    .inflateTransition(android.R.transition.move)
-                    .apply {
-                        interpolator = DecelerateInterpolator(2.0f)
-                        duration = requireContext().resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-                    }
+        TransitionInflater.from(requireContext())
+            .inflateTransition(android.R.transition.move)
+            .apply {
+                interpolator = DecelerateInterpolator(2.0f)
+                duration =
+                    requireContext().resources.getInteger(android.R.integer.config_mediumAnimTime)
+                        .toLong()
+            }
 
     /**
      * Called after the creation of the view but before transition start

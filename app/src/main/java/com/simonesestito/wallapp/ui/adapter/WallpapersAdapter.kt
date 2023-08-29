@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
 import com.simonesestito.wallapp.backend.repository.WallpaperRepository
+import com.simonesestito.wallapp.databinding.SingleCategoryWallpaperItemBinding
 import com.simonesestito.wallapp.enums.FORMAT_PREVIEW
-import kotlinx.android.synthetic.main.single_category_wallpaper_item.view.*
 import javax.inject.Inject
 
 /**
@@ -49,11 +49,11 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
             wallpaperRepository.loadWallpaper(
                     wallpaper,
                     FORMAT_PREVIEW,
-                    wallpaperView,
+                    wallpaperImagePreview,
                     useExactFormatSize = true
             )
-            itemView.wallpaperImagePreview.transitionName = wallpaper.id
-            itemView.wallpaperImagePreview.apply {
+            wallpaperImagePreview.transitionName = wallpaper.id
+            wallpaperImagePreview.apply {
                 setOnClickListener {
                     onItemClickListener?.invoke(wallpaper, it)
                 }
@@ -64,7 +64,8 @@ class WallpapersAdapter @Inject constructor(private val wallpaperRepository: Wal
 }
 
 class WallpapersVH(view: View) : RecyclerView.ViewHolder(view) {
-    val wallpaperView = itemView.wallpaperImagePreview!!
+    private val viewBinding = SingleCategoryWallpaperItemBinding.bind(itemView)
+    val wallpaperImagePreview = viewBinding.wallpaperImagePreview
 }
 
 typealias WallpaperClickListener = (Wallpaper, View) -> Unit

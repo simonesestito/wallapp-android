@@ -23,25 +23,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.databinding.CategoriesFragmentBinding
 import com.simonesestito.wallapp.enums.ALL_CATEGORY_GROUPS
 import com.simonesestito.wallapp.ui.ElevatingAppbar
 import com.simonesestito.wallapp.ui.adapter.ChildCategoriesFragmentAdapter
 import com.simonesestito.wallapp.utils.addTopWindowInsetPadding
 import com.simonesestito.wallapp.utils.isDarkTheme
 import com.simonesestito.wallapp.utils.setupWithViewPager
-import kotlinx.android.synthetic.main.categories_fragment.*
-import kotlinx.android.synthetic.main.categories_fragment.view.*
 
 class CategoriesFragment : AbstractAppFragment(), ElevatingAppbar {
+    private lateinit var viewBinding: CategoriesFragmentBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.categories_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.categoriesFragmentRoot.addTopWindowInsetPadding()
-        view.categoriesGroupViewPager.adapter = ChildCategoriesFragmentAdapter(this)
-        view.categoriesTabLayout.setupWithViewPager(view.categoriesGroupViewPager, ALL_CATEGORY_GROUPS)
+        viewBinding = CategoriesFragmentBinding.bind(view)
+        viewBinding.categoriesFragmentRoot.addTopWindowInsetPadding()
+        viewBinding.categoriesGroupViewPager.adapter = ChildCategoriesFragmentAdapter(this)
+        viewBinding.categoriesTabLayout.setupWithViewPager(viewBinding.categoriesGroupViewPager, ALL_CATEGORY_GROUPS)
     }
 
     override fun showAppbarElevation() {
@@ -56,11 +58,11 @@ class CategoriesFragment : AbstractAppFragment(), ElevatingAppbar {
             findElevatingAppbar()?.hideAppbarElevation()
         }
 
-        categoriesTabLayout.elevation = resources.getDimension(R.dimen.scroll_appbar_elevation)
+        viewBinding.categoriesTabLayout.elevation = resources.getDimension(R.dimen.scroll_appbar_elevation)
     }
 
     override fun hideAppbarElevation() {
         findElevatingAppbar()?.hideAppbarElevation()
-        categoriesTabLayout.elevation = resources.getDimension(R.dimen.default_appbar_elevation)
+        viewBinding.categoriesTabLayout.elevation = resources.getDimension(R.dimen.default_appbar_elevation)
     }
 }

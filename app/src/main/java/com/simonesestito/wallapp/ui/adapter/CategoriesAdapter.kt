@@ -28,10 +28,10 @@ import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Category
 import com.simonesestito.wallapp.backend.repository.CategoryRepository
+import com.simonesestito.wallapp.databinding.CategoriesRecyclerItemBinding
 import com.simonesestito.wallapp.ui.view.ColoredCardView
 import com.simonesestito.wallapp.utils.localized
 import com.simonesestito.wallapp.utils.suspendGenerate
-import kotlinx.android.synthetic.main.categories_recycler_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -95,15 +95,16 @@ class CategoriesAdapter @Inject constructor(
 }
 
 class CategoriesVH(val cardItem: ColoredCardView) : RecyclerView.ViewHolder(cardItem) {
-    val nameView = itemView.categoryItemName!!
-    val descriptionView = itemView.categoryItemDescription!!
-    val wallpapersCount = itemView.categoryItemWallpapersCount!!
+    private val viewBinding = CategoriesRecyclerItemBinding.bind(itemView)
+    val nameView = viewBinding.categoryItemName
+    val descriptionView = viewBinding.categoryItemDescription
+    val wallpapersCount = viewBinding.categoryItemWallpapersCount
 
     fun setUnseenCount(count: Int) {
         if (count <= 0) {
-            itemView.unseenCount.visibility = View.INVISIBLE
+            viewBinding.unseenCount.visibility = View.INVISIBLE
         } else {
-            itemView.unseenCount.apply {
+            viewBinding.unseenCount.apply {
                 visibility = View.VISIBLE
                 text = count.toString()
             }

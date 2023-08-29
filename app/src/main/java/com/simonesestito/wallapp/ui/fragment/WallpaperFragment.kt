@@ -49,6 +49,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.palette.graphics.Palette
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.model.Wallpaper
+import com.simonesestito.wallapp.databinding.WallpaperFragmentBinding
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.AppViewModelFactory
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
@@ -56,8 +57,6 @@ import com.simonesestito.wallapp.ui.dialog.WallpaperInfoBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperPreviewBottomSheet
 import com.simonesestito.wallapp.ui.dialog.WallpaperSetupBottomSheet
 import com.simonesestito.wallapp.utils.*
-import kotlinx.android.synthetic.main.wallpaper_fragment.*
-import kotlinx.android.synthetic.main.wallpaper_fragment.view.*
 import javax.inject.Inject
 
 class WallpaperFragment : SharedElementsDestination() {
@@ -70,24 +69,28 @@ class WallpaperFragment : SharedElementsDestination() {
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     private val viewModel: WallpapersViewModel by viewModels { viewModelFactory }
+    private lateinit var viewBinding: WallpaperFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.wallpaper_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater.inflate(R.layout.wallpaper_fragment, container, false)
+        viewBinding = WallpaperFragmentBinding.bind(view)
+        return view
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.backButton.setOnClickListener {
+        viewBinding.backButton.setOnClickListener {
             activity?.onBackPressed()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
-            view.bottomAppBar.updatePadding(bottom = insets.systemWindowInsets.bottom)
-            view.backButton.updatePadding(top = insets.systemWindowInsets.top)
+            viewBinding.bottomAppBar.updatePadding(bottom = insets.systemWindowInsets.bottom)
+            viewBinding.backButton.updatePadding(top = insets.systemWindowInsets.top)
 
             return@setOnApplyWindowInsetsListener insets
         }
@@ -102,7 +105,7 @@ class WallpaperFragment : SharedElementsDestination() {
         }
 
         val partialWallpaper = Wallpaper(args.wallpaperId, args.categoryId, null, null, null)
-        viewModel.loadWallpaperOn(partialWallpaper, wallpaperImage) {
+        viewModel.loadWallpaperOn(partialWallpaper, viewBinding.wallpaperImage) {
             applyLayoutColor(it)
         }
     }
@@ -110,11 +113,11 @@ class WallpaperFragment : SharedElementsDestination() {
     private fun onWallpaperReady(wallpaper: Wallpaper) {
         this.wallpaper = wallpaper
 
-        downloadFab.setOnClickListener {
+        viewBinding.downloadFab.setOnClickListener {
             openSetupBottomSheet()
         }
 
-        bottomAppBar.setOnMenuItemClickListener { menuItem ->
+        viewBinding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.wallpaperShare -> doShare()
                 R.id.wallpaperPreview -> doPreview()
@@ -137,13 +140,13 @@ class WallpaperFragment : SharedElementsDestination() {
             activity?.intent = null
 
             // Show FAB manually since it won't be shown with animation
-            downloadFab?.show()
+            viewBinding.downloadFab.show()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        downloadFab?.show()
+        viewBinding.downloadFab.show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -202,24 +205,23 @@ class WallpaperFragment : SharedElementsDestination() {
         val isVibrantLight = vibrant.isLightColor()
 
         // Download FAB background as vibrant
-        downloadFab.backgroundTintList = ColorStateList.valueOf(vibrant)
+        viewBinding.downloadFab.backgroundTintList = ColorStateList.valueOf(vibrant)
 
         // Back button dark or white according to PRIMARY lightness
-        backButton.setColorFilter(
+        viewBinding.backButton.setColorFilter(
                 if (isPrimaryLight) Color.DKGRAY else Color.WHITE
         )
 
         // Download icon dark/white according to VIBRANT (currently fab background)
-        downloadFab.imageTintList = ColorStateList.valueOf(
+        viewBinding.downloadFab.imageTintList = ColorStateList.valueOf(
                 if (isVibrantLight) Color.DKGRAY else Color.WHITE
         )
 
         // Set bottom bar icons as vibrant (if dark) or dark gray
         val iconsColor = if (isVibrantLight) Color.DKGRAY else vibrant
-        bottomAppBar.menu?.forEach {
-            it.icon
-                    .mutate()
-                    .colorFilter = PorterDuffColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP)
+        viewBinding.bottomAppBar.menu?.forEach {
+            it.icon?.mutate()
+                    ?.colorFilter = PorterDuffColorFilter(iconsColor, PorterDuff.Mode.SRC_ATOP)
         }
     }
 
@@ -284,23 +286,24 @@ class WallpaperFragment : SharedElementsDestination() {
     //region SharedElements methods
     override fun onPreSharedElementsTransition() {
         super.onPreSharedElementsTransition()
-        bottomAppBar?.visibility = View.INVISIBLE
+        viewBinding.bottomAppBar.visibility = View.INVISIBLE
     }
 
     override fun onPostSharedElementsTransition() {
         super.onPostSharedElementsTransition()
         context ?: return
-        bottomAppBar?.visibility = View.VISIBLE
+        viewBinding.bottomAppBar.visibility = View.VISIBLE
         val animation = AnimationUtils.loadAnimation(context, R.anim.bottom_bar_up)
                 .addListener(
-                        onEnd = { downloadFab?.show() }
+                        onEnd = { viewBinding.downloadFab.show() }
                 )
-        bottomAppBar?.startAnimation(animation)
+        viewBinding.bottomAppBar.startAnimation(animation)
     }
 
     override fun onPrepareSharedElements(createdView: View) {
-        createdView.wallpaperImage.transitionName = args.wallpaperId
-        bottomAppBar?.replaceMenu(R.menu.wallpaper_fragment_bottom_bar_menu)
+        val viewBinding = WallpaperFragmentBinding.bind(createdView)
+        viewBinding.wallpaperImage.transitionName = args.wallpaperId
+        viewBinding.bottomAppBar.replaceMenu(R.menu.wallpaper_fragment_bottom_bar_menu)
     }
     //endregion
 }

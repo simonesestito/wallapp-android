@@ -32,10 +32,10 @@ import com.simonesestito.wallapp.AUTHOR_MAIL
 import com.simonesestito.wallapp.AUTHOR_PORTFOLIO_WEBSITE
 import com.simonesestito.wallapp.GOOGLE_PLAY_LINK
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.databinding.AboutFragmentBinding
 import com.simonesestito.wallapp.ui.BillingDelegate
 import com.simonesestito.wallapp.utils.addTopWindowInsetPadding
 import com.simonesestito.wallapp.utils.openUrl
-import kotlinx.android.synthetic.main.about_fragment.view.*
 
 
 class AboutFragment : AbstractAppFragment() {
@@ -44,13 +44,14 @@ class AboutFragment : AbstractAppFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.aboutScrollContentRoot.addTopWindowInsetPadding()
+        val viewBinding = AboutFragmentBinding.bind(view)
+        viewBinding.aboutScrollContentRoot.addTopWindowInsetPadding()
 
-        view.aboutScrollContentRoot.setOnScrollChangeListener { _: NestedScrollView?, _: Int, y: Int, _: Int, _: Int ->
+        viewBinding.aboutScrollContentRoot.setOnScrollChangeListener { _: NestedScrollView?, _: Int, y: Int, _: Int, _: Int ->
             adjustElevation(y)
         }
 
-        view.apply {
+        viewBinding.apply {
             authorPortfolioButton.setOnClickListener { context?.openUrl(AUTHOR_PORTFOLIO_WEBSITE) }
             authorMailButton.setOnClickListener { sendEmail(AUTHOR_MAIL) }
             aboutFeedbackMailButton.setOnClickListener { sendEmail(AUTHOR_MAIL) }

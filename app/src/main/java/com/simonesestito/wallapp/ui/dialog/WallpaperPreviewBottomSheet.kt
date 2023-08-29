@@ -28,9 +28,9 @@ import com.simonesestito.wallapp.EXTRA_WALLPAPER_PREVIEW_WINDOW_PARCELABLE
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.androidservice.PreviewService
 import com.simonesestito.wallapp.backend.model.DownloadStatus
+import com.simonesestito.wallapp.databinding.WallpaperBottomsheetLoadingBinding
 import com.simonesestito.wallapp.utils.isSetLiveWallpaper
 import com.simonesestito.wallapp.utils.tryDismiss
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -39,6 +39,7 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewBinding = WallpaperBottomsheetLoadingBinding.bind(view)
 
         val wallpaperManager = ContextCompat.getSystemService(requireContext(), WallpaperManager::class.java)!!
         if (wallpaperManager.isSetLiveWallpaper()) {
@@ -51,12 +52,12 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
             when (status) {
                 is DownloadStatus.Progressing -> {
                     if (status.progress > 0) {
-                        view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+                        viewBinding.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
                         updateProgress(status.progress)
                     }
                 }
                 DownloadStatus.Finalizing -> {
-                    view.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
+                    viewBinding.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_finalizing)
                     updateProgress(PROGRESS_INDETERMINATE)
                 }
                 DownloadStatus.Success -> {
@@ -68,7 +69,7 @@ class WallpaperPreviewBottomSheet : AbstractWallpaperBottomSheet() {
         })
 
         updateProgress(PROGRESS_INDETERMINATE)
-        view.wallpaperDownloadText.setText(R.string.wallpaper_preview_state_backup)
+        viewBinding.wallpaperDownloadText.setText(R.string.wallpaper_preview_state_backup)
 
         CoroutineScope(coroutineContext).launch {
             viewModel.applyPreviewWallpaper(requireContext(), wallpaperArg)

@@ -34,15 +34,16 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.viewbinding.ViewBinding
 import com.simonesestito.wallapp.*
 import com.simonesestito.wallapp.backend.cache.PaletteCache
 import com.simonesestito.wallapp.backend.model.Wallpaper
+import com.simonesestito.wallapp.databinding.PreviewFloatingWindowBinding
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.ui.activity.MainActivity
 import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.isLightColor
 import com.simonesestito.wallapp.utils.restoreWallpaper
-import kotlinx.android.synthetic.main.preview_floating_window.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -88,7 +89,7 @@ class PreviewService : FloatingWindowService() {
                 this,
                 PREVIEW_SERVICE_PENDING_INTENT_ID,
                 getMainActivityIntent(),
-                0)
+            PendingIntent.FLAG_IMMUTABLE)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = getSystemService(NotificationManager::class.java)
@@ -112,19 +113,20 @@ class PreviewService : FloatingWindowService() {
 
     override fun onViewAdded(view: View, arguments: Bundle?) {
         super.onViewAdded(view, arguments)
-        view.previewModeButtonPositive.setOnClickListener { sendResult(view, true) }
-        view.previewModeButtonNegative.setOnClickListener { sendResult(view, false) }
+        val viewBinding = PreviewFloatingWindowBinding.bind(view)
+        viewBinding.previewModeButtonPositive.setOnClickListener { sendResult(viewBinding, true) }
+        viewBinding.previewModeButtonNegative.setOnClickListener { sendResult(viewBinding, false) }
         val default = Color.TRANSPARENT
         Log.d(TAG, "Wallpaper $wallpaper")
         val color = paletteCache[wallpaper]?.getDominantColor(default) ?: default
         Log.d(TAG, "Cached color: $color")
         if (color != default) {
             // Apply color to UI
-            view.previewFloatingWindowRoot.setBackgroundColor(color)
+            viewBinding.previewFloatingWindowRoot.setBackgroundColor(color)
             val uiColor = if (color.isLightColor()) Color.BLACK else Color.WHITE
-            view.previewModeBannerTitle.setTextColor(uiColor)
-            view.previewModeButtonPositive.setColorFilter(uiColor, PorterDuff.Mode.SRC_ATOP)
-            view.previewModeButtonNegative.setColorFilter(uiColor, PorterDuff.Mode.SRC_ATOP)
+            viewBinding.previewModeBannerTitle.setTextColor(uiColor)
+            viewBinding.previewModeButtonPositive.setColorFilter(uiColor, PorterDuff.Mode.SRC_ATOP)
+            viewBinding.previewModeButtonNegative.setColorFilter(uiColor, PorterDuff.Mode.SRC_ATOP)
         }
     }
 
@@ -147,13 +149,13 @@ class PreviewService : FloatingWindowService() {
     /**
      * Caller must have registered a [android.content.BroadcastReceiver] with [LocalBroadcastManager]
      * Broadcasts are sent with action [ACTION_PREVIEW_RESULT]
-     * @param rootView The entire banner View
+     * @param viewBinding The entire banner View
      * @param wallpaperConfirmed Boolean which indicates if the wallpaper has been accepted or declined by the user
      */
-    private fun sendResult(rootView: View, wallpaperConfirmed: Boolean) {
-        rootView.previewModeButtonPositive.visibility = View.GONE
-        rootView.previewModeButtonNegative.visibility = View.GONE
-        rootView.previewModeBannerTitle.setText(R.string.preview_mode_title_close_preview)
+    private fun sendResult(viewBinding: PreviewFloatingWindowBinding, wallpaperConfirmed: Boolean) {
+        viewBinding.previewModeButtonPositive.visibility = View.GONE
+        viewBinding.previewModeButtonNegative.visibility = View.GONE
+        viewBinding.previewModeBannerTitle.setText(R.string.preview_mode_title_close_preview)
 
         // Restore wallpaper on IO Thread, it's a blocking operation
         ioCoroutine.launch {

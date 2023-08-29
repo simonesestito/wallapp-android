@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simonesestito.wallapp.PREFS_SINGLE_CATEGORY_LAYOUT_ROWS
 import com.simonesestito.wallapp.R
+import com.simonesestito.wallapp.databinding.SingleCategoryFragmentBinding
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpapersViewModel
 import com.simonesestito.wallapp.ui.adapter.WallpapersAdapter
@@ -48,9 +49,8 @@ import com.simonesestito.wallapp.utils.TAG
 import com.simonesestito.wallapp.utils.findNavController
 import com.simonesestito.wallapp.utils.localized
 import com.simonesestito.wallapp.utils.sharedPreferences
-import kotlinx.android.synthetic.main.single_category_fragment.*
-import kotlinx.android.synthetic.main.single_category_fragment.view.*
 import javax.inject.Inject
+import kotlin.math.ceil
 
 private const val KEY_LAYOUT_ROW_COUNT = "layout_row_count"
 
@@ -69,6 +69,8 @@ class SingleCategoryFragment : SharedElementsDestination() {
 
     private var currentLayoutSpanCount: Int = 1
 
+    private lateinit var viewBinding: SingleCategoryFragmentBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppInjector.getInstance().inject(this)
@@ -76,12 +78,14 @@ class SingleCategoryFragment : SharedElementsDestination() {
         adapter.onItemClickListener = { wallpaper, itemView ->
             // Setup SharedElements
             val directions = SingleCategoryFragmentDirections
-                    .toWallpaperDetails(wallpaper.id, wallpaper.categoryId)
+                .toWallpaperDetails(wallpaper.id, wallpaper.categoryId)
 
-            findNavController().navigate(directions, FragmentNavigator.Extras
+            findNavController().navigate(
+                directions, FragmentNavigator.Extras
                     .Builder()
                     .addSharedElement(itemView, itemView.transitionName)
-                    .build())
+                    .build()
+            )
         }
 
         setHasOptionsMenu(true)
@@ -101,22 +105,32 @@ class SingleCategoryFragment : SharedElementsDestination() {
         shouldStartTransition = false
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.single_category_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.single_category_fragment, container, false)
+        viewBinding = SingleCategoryFragmentBinding.bind(view)
+        return view
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.categoryLoadingSpinner.show()
+        viewBinding.categoryLoadingSpinner.show()
 
         // Update seen wallpapers count
         viewModel.updateSeenWallpapers(args.category)
 
         // Set category description
-        categoryDescription.text = args.category.data.description.localized
+        viewBinding.categoryDescription.text = args.category.data.description.localized
 
-        wallpapersRecyclerView.adapter = this.adapter
-        wallpapersRecyclerView.layoutManager = GridLayoutManager(requireContext(), currentLayoutSpanCount, LinearLayoutManager.HORIZONTAL, false)
+        viewBinding.wallpapersRecyclerView.adapter = this.adapter
+        viewBinding.wallpapersRecyclerView.layoutManager = GridLayoutManager(
+            requireContext(),
+            currentLayoutSpanCount,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         adjustRecyclerViewState()
 
         // Finally, observe for updates
@@ -135,29 +149,31 @@ class SingleCategoryFragment : SharedElementsDestination() {
                 // Try adding a callback on async list differ
                 // After a delay, if the list is not empty, scroll to 0
                 if (adapter.data.isNotEmpty() &&
-                        oldData.size < adapter.data.size &&
-                        oldData != adapter.data) {
-                    wallpapersRecyclerView?.smoothScrollToPosition(0)
+                    oldData.size < adapter.data.size &&
+                    oldData != adapter.data
+                ) {
+                    viewBinding.wallpapersRecyclerView.smoothScrollToPosition(0)
                 }
             }
 
             // Update content loading spinner
-            categoryLoadingSpinner?.hide() // Loaded
+            viewBinding.categoryLoadingSpinner.hide() // Loaded
 
             // If new list is empty, show empty view
             if (walls.isEmpty()) {
-                singleCategoryEmptyView.visibility = View.VISIBLE
+                viewBinding.singleCategoryEmptyView.visibility = View.VISIBLE
             } else {
-                singleCategoryEmptyView.visibility = View.GONE
+                viewBinding.singleCategoryEmptyView.visibility = View.GONE
             }
         }
 
         // Get layout span count from preferences
-        val layoutRows = sharedPreferences.getInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, currentLayoutSpanCount)
+        val layoutRows =
+            sharedPreferences.getInt(PREFS_SINGLE_CATEGORY_LAYOUT_ROWS, currentLayoutSpanCount)
         changeLayoutRowCount(layoutRows)
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
-            view.wallpapersRecyclerView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            viewBinding.wallpapersRecyclerView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = insets.systemGestureInsets.bottom
             }
 
@@ -166,8 +182,9 @@ class SingleCategoryFragment : SharedElementsDestination() {
     }
 
     override fun onPrepareSharedElements(createdView: View) {
-        createdView.wallpapersRecyclerView.doOnLayout {
-            if (createdView.wallpapersRecyclerView.childCount > 0)
+        val viewBinding = SingleCategoryFragmentBinding.bind(createdView)
+        viewBinding.wallpapersRecyclerView.doOnLayout {
+            if (viewBinding.wallpapersRecyclerView.childCount > 0)
                 startPostponedEnterTransition()
         }
     }
@@ -181,15 +198,15 @@ class SingleCategoryFragment : SharedElementsDestination() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.single_category_fragment_menu, menu)
         menu.findItem(R.id.singleCategoryLayoutSwitch)?.setIcon(
-                if (currentLayoutSpanCount == 1) R.drawable.ic_grid_large_black_24dp
-                else R.drawable.ic_category_layout_single_row_scroll
+            if (currentLayoutSpanCount == 1) R.drawable.ic_grid_large_black_24dp
+            else R.drawable.ic_category_layout_single_row_scroll
         )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.singleCategoryLayoutSwitch -> {
-                (wallpapersRecyclerView?.layoutManager as GridLayoutManager?)?.let {
+                (viewBinding.wallpapersRecyclerView?.layoutManager as GridLayoutManager?)?.let {
                     changeLayoutRowCount(if (it.spanCount == 1) 2 else 1)
                 }
                 activity?.invalidateOptionsMenu()
@@ -220,7 +237,7 @@ class SingleCategoryFragment : SharedElementsDestination() {
             override fun onAnimationRepeat(animation: Animation) {}
 
             override fun onAnimationEnd(animation: Animation) {
-                (wallpapersRecyclerView.layoutManager as GridLayoutManager).also {
+                (viewBinding.wallpapersRecyclerView.layoutManager as GridLayoutManager).also {
                     it.spanCount = spanCount
                     it.requestLayout()
                 }
@@ -230,10 +247,10 @@ class SingleCategoryFragment : SharedElementsDestination() {
                 val fadeIn = AlphaAnimation(0f, 1f)
                 fadeIn.interpolator = AccelerateInterpolator()
                 fadeIn.duration = shortDuration
-                wallpapersRecyclerView.startAnimation(fadeIn)
+                viewBinding.wallpapersRecyclerView.startAnimation(fadeIn)
             }
         })
-        wallpapersRecyclerView.startAnimation(fadeOut)
+        viewBinding.wallpapersRecyclerView.startAnimation(fadeOut)
     }
 
     /**
@@ -241,16 +258,19 @@ class SingleCategoryFragment : SharedElementsDestination() {
      * Useful when restoring state
      */
     private fun adjustRecyclerViewState() {
-        val layoutManager = wallpapersRecyclerView?.layoutManager as GridLayoutManager?
+        val layoutManager = viewBinding.wallpapersRecyclerView?.layoutManager as GridLayoutManager?
 
         if (layoutManager == null) {
-            Log.e(this@SingleCategoryFragment.TAG, "adjustRecyclerViewState(): layoutManager is null")
+            Log.e(
+                this@SingleCategoryFragment.TAG,
+                "adjustRecyclerViewState(): layoutManager is null"
+            )
             return
         }
 
         // Post to the next tick to wait until layout request has finished
         Handler().post {
-            wallpapersRecyclerView.snapEnabled = currentLayoutSpanCount == 1
+            viewBinding.wallpapersRecyclerView.snapEnabled = currentLayoutSpanCount == 1
         }
     }
 }

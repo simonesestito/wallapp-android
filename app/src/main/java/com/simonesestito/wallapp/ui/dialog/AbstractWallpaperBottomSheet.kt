@@ -34,15 +34,10 @@ import com.simonesestito.wallapp.BOTTOMSHEET_FADE_ANIMATION_DURATION
 import com.simonesestito.wallapp.EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE
 import com.simonesestito.wallapp.R
 import com.simonesestito.wallapp.backend.model.Wallpaper
+import com.simonesestito.wallapp.databinding.WallpaperBottomsheetBinding
 import com.simonesestito.wallapp.di.component.AppInjector
 import com.simonesestito.wallapp.lifecycle.viewmodel.WallpaperSetupViewModel
 import com.simonesestito.wallapp.utils.tryDismiss
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_loading.*
-import kotlinx.android.synthetic.main.wallpaper_bottomsheet_result.*
-import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.view.*
-import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.wallpaperDownloading
-import kotlinx.android.synthetic.main.wallpaper_preview_bottom_sheet.wallpaperFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -65,6 +60,8 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
 
     protected val viewModel: WallpaperSetupViewModel by viewModels { viewModelFactory }
 
+    private lateinit var viewBinding: WallpaperBottomsheetBinding
+
     protected val wallpaperArg by lazy {
         arguments?.getParcelable<Wallpaper>(EXTRA_WALLPAPER_BOTTOMSHEET_PARCELABLE)!!
     }
@@ -74,14 +71,17 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
         AppInjector.getInstance().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.wallpaper_bottomsheet, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater.inflate(R.layout.wallpaper_bottomsheet, container, false)
+        viewBinding = WallpaperBottomsheetBinding.bind(view)
+        return view
+    }
 
     protected fun showFailedResult(@StringRes failedText: Int = R.string.wallpaper_setup_status_failed) {
         hideDownloadLayout()
 
-        wallpaperFeedbackImage?.setImageResource(R.drawable.ic_sentiment_very_dissatisfied_red_24dp)
-        wallpaperFeedbackText?.setText(failedText)
+        viewBinding.wallpaperFeedback.wallpaperFeedbackImage.setImageResource(R.drawable.ic_sentiment_very_dissatisfied_red_24dp)
+        viewBinding.wallpaperFeedback.wallpaperFeedbackText.setText(failedText)
 
         showFeedbackLayout()
     }
@@ -89,8 +89,8 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
     protected fun showSuccessResult(@StringRes successText: Int = R.string.wallpaper_setup_status_success) {
         hideDownloadLayout()
 
-        wallpaperFeedbackImage?.setImageResource(R.drawable.ic_sentiment_very_satisfied_green_24dp)
-        wallpaperFeedbackText?.setText(successText)
+        viewBinding.wallpaperFeedback.wallpaperFeedbackImage.setImageResource(R.drawable.ic_sentiment_very_satisfied_green_24dp)
+        viewBinding.wallpaperFeedback.wallpaperFeedbackText.setText(successText)
 
         showFeedbackLayout()
 
@@ -101,14 +101,16 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
     }
 
     private fun showFeedbackLayout() {
-        if (wallpaperFeedback?.visibility == View.VISIBLE)
+        val wallpaperFeedback = viewBinding.wallpaperFeedback.root
+
+        if (wallpaperFeedback.visibility == View.VISIBLE)
             return
 
-        wallpaperFeedback?.apply {
+        wallpaperFeedback.apply {
             animate()
                     .withStartAction {
-                        wallpaperFeedback?.alpha = 0f
-                        wallpaperFeedback?.visibility = View.VISIBLE
+                        wallpaperFeedback.alpha = 0f
+                        wallpaperFeedback.visibility = View.VISIBLE
                     }.alpha(1f)
                     .setStartDelay(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                     .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
@@ -118,22 +120,24 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
 
     private fun hideDownloadLayout() {
         hideSetupLayout()
+        val wallpaperDownloading = viewBinding.wallpaperDownloading.root
 
-        if (wallpaperDownloading?.visibility != View.VISIBLE)
+        if (wallpaperDownloading.visibility != View.VISIBLE)
             return
 
-        wallpaperDownloading?.apply {
+        wallpaperDownloading.apply {
             animate()
                     .alpha(0f)
                     .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                     .withEndAction {
-                        wallpaperDownloading?.visibility = View.INVISIBLE
+                        wallpaperDownloading.visibility = View.INVISIBLE
                     }.start()
         }
     }
 
     protected fun hideSetupLayout() {
-        if (wallpaperSetup?.visibility != View.VISIBLE)
+        val wallpaperSetup = viewBinding.wallpaperSetup.root
+        if (wallpaperSetup.visibility != View.VISIBLE)
             return
 
         wallpaperSetup.animate()
@@ -141,12 +145,13 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
                 .setDuration(BOTTOMSHEET_FADE_ANIMATION_DURATION)
                 .withEndAction {
                     // Use INVISIBLE instead of GONE to preserve its space in layout
-                    wallpaperSetup?.visibility = View.INVISIBLE
+                    wallpaperSetup.visibility = View.INVISIBLE
                 }.start()
     }
 
     private fun showDownloadLayout() {
         hideSetupLayout()
+        val wallpaperDownloading = viewBinding.wallpaperDownloading.root
         if (wallpaperDownloading.visibility == View.VISIBLE)
             return
 
@@ -161,11 +166,13 @@ abstract class AbstractWallpaperBottomSheet : AbstractAppBottomSheet(),
                 }
                 .start()
 
-        wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
+        viewBinding.wallpaperDownloading.wallpaperDownloadText.setText(R.string.wallpaper_setup_status_downloading)
     }
 
     protected fun updateProgress(progress: Int) {
         showDownloadLayout()
+
+        val wallpaperDownloadProgress = viewBinding.wallpaperDownloading.wallpaperDownloadProgress
 
         if (progress < 0) {
             // Set indeterminate
